@@ -12,6 +12,7 @@ Examples:
 ```text
 laravel-react
 react-vite-spa
+chrome-extension-vanilla
 docs-only
 ```
 
@@ -45,6 +46,7 @@ docs/base-workflow
 docs/laravel-template
 docs/laravel-react-template
 feature/react-vite-template
+feature/chrome-extension-vanilla-template
 fix/semver-tagging-rules
 release/v0.1.0
 ```
@@ -66,6 +68,7 @@ Recommended examples:
 ```text
 Document base agent workflow
 Add Laravel React project template
+Add Chrome extension vanilla template
 Clarify snapshot format
 Fix SemVer release rules
 ```

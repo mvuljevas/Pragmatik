@@ -148,3 +148,40 @@ Risks:
 Next suggested step:
 
 - Define version-file conventions inside the first project template.
+
+## 2026-06-27 - Block 004: Chrome Extension Template Naming
+
+Branch:
+
+- `main`
+
+Current state:
+
+- The template catalog now includes `chrome-extension-vanilla` for Chrome
+  extensions built with native HTML, CSS, and JavaScript.
+- Manifest compatibility is treated as an internal template rule instead of
+  being encoded in the folder name.
+- Chrome extension projects now use `manifest.json` as the default
+  authoritative version source.
+- Repository version has been updated to `0.2.0`.
+
+Decisions:
+
+- Use `chrome-extension-vanilla` as the Chrome extension template name.
+- Keep Manifest V3 requirements inside the template documentation because older
+  manifest versions are deprecated and do not need to shape the folder name.
+- If a Chrome extension also has `package.json.version`, it must match
+  `manifest.json.version`.
+
+Risks:
+
+- The actual `templates/chrome-extension-vanilla/` directory has not been
+  created yet.
+- The template still needs internal compliance docs for Chrome Web Store
+  permissions, packaged assets, remote-code restrictions, and extension smoke
+  testing.
+
+Next suggested step:
+
+- Create `templates/chrome-extension-vanilla/` using EnvatoXperience as the
+  reference structure.

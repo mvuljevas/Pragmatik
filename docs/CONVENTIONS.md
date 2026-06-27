@@ -92,6 +92,7 @@ Examples:
 ```text
 templates/laravel-react/
 templates/react-vite-spa/
+templates/chrome-extension-vanilla/
 templates/docs-only/
 ```
 

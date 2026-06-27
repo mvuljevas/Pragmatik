@@ -106,6 +106,8 @@ Examples:
 - React, Vite, SPA, PWA, or Node projects: update `package.json`.
 - npm projects with a lockfile: keep the lockfile version in sync when the
   package manager updates it.
+- Chrome extension projects: update `manifest.json`; if `package.json` also has
+  a `version` field, keep both versions synchronized.
 - PHP or Laravel projects: use the project's declared version file or config
   when one exists; otherwise create or update the template-defined version file.
 - Documentation-only projects: use the template-defined version file or

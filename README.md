@@ -12,6 +12,7 @@ This repository provides reusable templates for projects such as:
 
 - Laravel + React applications, aligned with the Prisma project workflow.
 - React, Vite, SPA, or PWA applications.
+- Chrome extensions built with vanilla HTML, CSS, and JavaScript.
 - Documentation-only repositories.
 - Future project types with their own stack-specific rules.
 

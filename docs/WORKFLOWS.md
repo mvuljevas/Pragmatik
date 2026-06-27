@@ -149,6 +149,8 @@ Default version sources:
 - React, Vite, SPA, PWA, or Node projects: `package.json`.
 - npm projects with `package-lock.json`: keep lockfile metadata synchronized
   with `package.json`.
+- Chrome extension projects: `manifest.json`; if `package.json` also has a
+  `version` field, keep it synchronized with `manifest.json`.
 - Laravel or PHP projects: use the project's existing version source when one
   exists; otherwise use the template-defined version file.
 - Documentation-only projects: use the template-defined version file when one
