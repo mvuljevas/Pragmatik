@@ -16,11 +16,12 @@ This roadmap is the primary source for next-step suggestions in this repository.
 
 ## Next Milestones
 
-1. Validate the recommendation flow with real new-project prompts.
-2. Refine the first template based on real adoption feedback.
-3. Prototype `project-context-mcp` as a read-only MCP server.
-4. Add template usage examples or copy/adoption instructions.
-5. Review third-party MCP, tracking, and compression recommendations for
+1. Measure whether `lean-context` reduces token usage in real sessions.
+2. Validate the recommendation flow with real new-project prompts.
+3. Refine the first template based on real adoption feedback.
+4. Prototype `project-context-mcp` as a read-only MCP server.
+5. Add template usage examples or copy/adoption instructions.
+6. Review third-party MCP, tracking, and compression recommendations for
    freshness before adding automation.
 
 ## Completed Milestones

@@ -423,3 +423,35 @@ Next suggested step:
 
 - Follow `docs/ROADMAP.md`: validate the recommendation flow with real
   new-project prompts.
+
+## 2026-06-28 - Block 012: Token Impact Debt Review
+
+Branch:
+
+- `main`
+
+Current state:
+
+- Technical debt review found that `lean-context` appears behaviorally useful
+  but does not yet prove token savings with real measurements.
+- `docs/TECHDEBT.md` now tracks this as high-priority AI context debt.
+- `docs/ROADMAP.md` now prioritizes measuring token impact before further
+  refinement.
+- Repository version has been updated to `0.9.1`.
+
+Decisions:
+
+- Treat unmeasured token savings as product debt because quota maximization is
+  the core value of `lean-context`.
+- Measure baseline vs `lean-context` sessions before adding more optimization
+  machinery.
+
+Risks:
+
+- Without measurement, added docs may improve consistency while increasing
+  initial context cost.
+
+Next suggested step:
+
+- Follow `docs/ROADMAP.md`: measure whether `lean-context` reduces token usage
+  in real sessions.
