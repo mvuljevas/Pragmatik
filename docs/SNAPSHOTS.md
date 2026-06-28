@@ -362,3 +362,35 @@ Next suggested step:
 
 - Test the recommendation flow again with a new app idea and verify that it
   recommends an available template.
+
+## 2026-06-28 - Block 010: Next-Step Fallback Rule
+
+Branch:
+
+- `main`
+
+Current state:
+
+- The root workflow, `lean-context`, and all available templates now define a
+  next-step fallback rule.
+- Agents must suggest the next logical step from roadmap first, technical debt
+  second, and user preference third.
+- Repository version has been updated to `0.8.0`.
+
+Decisions:
+
+- `docs/ROADMAP.md` is the primary source for next-step suggestions.
+- `docs/TECHDEBT.md` is the fallback source when roadmap is missing or not
+  actionable.
+- If neither source provides a clear next step, the agent must ask the user how
+  they would like to proceed.
+
+Risks:
+
+- Existing projects without roadmap or technical debt docs will require one
+  user decision before the agent can suggest the next direction.
+
+Next suggested step:
+
+- Use the roadmap-driven fallback to choose between project-context MCP work,
+  technical debt automation, or further template refinement.

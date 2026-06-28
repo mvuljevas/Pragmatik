@@ -56,6 +56,16 @@ useful template and preset combination from the user's project description.
 - Treat MCPs, compression, and tracking tools as optional capabilities.
 - For existing projects, propose an adoption path instead of overwriting files.
 
+## Next-Step Fallback
+
+At the end of every iteration, suggest the next logical step using this order:
+
+1. `docs/ROADMAP.md`.
+2. `docs/TECHDEBT.md`.
+3. Ask the user how they would like to proceed.
+
+Do not invent a next step when neither roadmap nor technical debt provides one.
+
 ## Optional MCPs
 
 - Treat MCP servers as optional accelerators, not required dependencies.

@@ -86,6 +86,8 @@ git diff --check
 - `lean-context` is both stored as a preset and applied to this repository.
 - Agents should recommend templates and presets before copying or applying them.
 - Agents must check `docs/CATALOG.md` before claiming a template can be copied.
+- At iteration close, agents must suggest the next step from roadmap first,
+  technical debt second, and user preference third.
 - Pushes remain explicit; local commits and tags may be created during closed
   versioned iterations.
 

@@ -23,6 +23,7 @@ rg "Versioning|vX.Y.Z|VERSION" README.md AGENTS.md docs
 rg "GitHub|labels|Projects|signed commits" docs presets
 rg "MCP|Resources|Roots|Tools" docs presets
 rg "Next suggested step|Risks|Decisions" docs/SNAPSHOTS.md
+rg "Next-Step Fallback|ROADMAP|TECHDEBT" AGENTS.md docs presets templates
 ```
 
 ## Preset Search

@@ -93,6 +93,22 @@ Each work block should include:
 9. Matching git tag creation for the new version when the iteration is closed.
 10. Suggested next logical step.
 
+## Next-Step Fallback
+
+At the end of every iteration, the agent must suggest the next logical step.
+
+Use this priority order:
+
+1. Use `docs/ROADMAP.md` when it exists and contains an applicable next
+   milestone.
+2. If no roadmap exists or it has no applicable next milestone, use
+   `docs/TECHDEBT.md` when it exists and contains actionable open debt.
+3. If neither source exists or neither contains an actionable next step, ask the
+   user how they would like to proceed.
+
+Do not invent roadmap items when neither roadmap nor technical debt provides a
+clear next action.
+
 ## Versioning
 
 Projects based on these templates use Semantic Versioning for every meaningful

@@ -48,3 +48,10 @@ What should we work on next?
 - Use tags formatted as `vX.Y.Z`.
 - Keep `VERSION` synchronized with the matching tag.
 - Update `docs/SNAPSHOTS.md` when a versioned iteration closes.
+
+## Next-Step Fallback
+
+At the end of every iteration, suggest the next logical step from
+`docs/ROADMAP.md`. If roadmap is missing or not actionable, use
+`docs/TECHDEBT.md`. If neither provides a clear next action, ask the user how
+they would like to proceed.

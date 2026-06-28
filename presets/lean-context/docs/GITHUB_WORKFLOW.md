@@ -67,6 +67,19 @@ When `docs/TECHDEBT.md` exists:
 
 Do not create issues automatically without user approval.
 
+## Next-Step Source
+
+When a GitHub Project is linked, roadmap and technical debt still remain the
+source for next-step suggestions.
+
+Use this order:
+
+1. `docs/ROADMAP.md`.
+2. `docs/TECHDEBT.md`.
+3. GitHub Project items only when the user has asked to work from the board or
+   local docs do not exist.
+4. Ask the user how they would like to proceed.
+
 ## Signed Commits
 
 Prefer signed commits when the user already has signing configured through GPG,

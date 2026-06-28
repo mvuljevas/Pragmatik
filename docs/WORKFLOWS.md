@@ -51,6 +51,21 @@ Each block should close with:
 - Matching git tag created for the new version when the iteration is closed.
 - Next logical step.
 
+## Next-Step Fallback
+
+Every iteration must end with a next logical step.
+
+Use this priority order:
+
+1. `docs/ROADMAP.md`: use the next applicable milestone or planned item.
+2. `docs/TECHDEBT.md`: if the roadmap is missing or not actionable, use the next
+   actionable open debt item.
+3. User choice: if neither roadmap nor technical debt gives a clear next step,
+   ask the user how they would like to proceed.
+
+The agent should not invent project direction when the repository does not
+provide it.
+
 ## Documentation Workflow
 
 Update documentation as part of the work, not as a separate afterthought.

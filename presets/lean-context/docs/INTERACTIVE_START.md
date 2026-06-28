@@ -79,3 +79,11 @@ When a project already has code or documentation:
 - Do not create issues from technical debt without user approval.
 - Do not overwrite existing docs without mapping old content.
 - Do not push commits or tags without explicit approval.
+
+## Iteration Close
+
+Every iteration should end with the next logical step.
+
+Use `docs/ROADMAP.md` first. If it is missing or not actionable, use
+`docs/TECHDEBT.md`. If neither provides a clear next action, ask the user how
+they would like to proceed.
