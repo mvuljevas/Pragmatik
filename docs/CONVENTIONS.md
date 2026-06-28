@@ -81,7 +81,10 @@ This applies to:
 
 ## Reuse Model
 
-Future templates should live under:
+Templates and presets have different responsibilities.
+
+Templates are complete project starting points. Future templates should live
+under:
 
 ```text
 templates/<project-type>/
@@ -104,3 +107,20 @@ templates/_shared/
 
 Each project-type template should still be usable as a self-contained starting
 point.
+
+Presets are reusable workflow layers that can be integrated into templates or
+adopted by existing projects. Presets should live under:
+
+```text
+presets/<preset-name>/
+```
+
+Examples:
+
+```text
+presets/lean-context/
+```
+
+Presets may provide `AGENTS.patch.md`, docs, ignore files, configs, and
+workflow guidance. A preset must not require a project to depend on this
+repository at runtime.

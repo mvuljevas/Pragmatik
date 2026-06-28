@@ -58,6 +58,9 @@ docs/
 Future reusable project templates should live under `templates/`, grouped by
 project type.
 
+Reusable workflow modules should live under `presets/`. Presets are not full
+projects; they are reusable layers that templates can adopt.
+
 ## Shared Standards
 
 All templates in this repository should share:
@@ -72,6 +75,12 @@ All templates in this repository should share:
 - Version-file updates that match the project stack, such as `package.json` for
   React projects.
 - Neutral public metadata without AI tool, agent, or provider names.
+
+## Presets
+
+- [lean-context](presets/lean-context/README.md): context-loading, MCP,
+  compression, usage tracking, and GitHub workflow rules for maximizing useful
+  AI quota.
 
 ## Documentation Map
 

@@ -233,3 +233,20 @@ That means they should suggest or update:
 
 Agents should ask for clarification only when a reasonable assumption would be
 risky or irreversible.
+
+## Lean Context Preset
+
+New templates should integrate `presets/lean-context/` by default unless the
+project type has a clear reason not to.
+
+The preset adds:
+
+- Minimal context loading rules.
+- Search-first workflows.
+- Optional MCP recommendations.
+- Usage tracking and compression guidance.
+- Interactive start and adoption flows.
+- GitHub labels, Projects, signed commit, and technical debt guidance.
+
+Templates should copy the relevant preset files so generated projects remain
+self-contained.

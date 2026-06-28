@@ -1,0 +1,107 @@
+[
+  {
+    "name": "type:feature",
+    "color": "1f883d",
+    "description": "New user-facing or project capability"
+  },
+  {
+    "name": "type:bug",
+    "color": "d1242f",
+    "description": "Incorrect behavior or regression"
+  },
+  {
+    "name": "type:docs",
+    "color": "0969da",
+    "description": "Documentation change"
+  },
+  {
+    "name": "type:techdebt",
+    "color": "bf8700",
+    "description": "Known debt, shortcut, or cleanup item"
+  },
+  {
+    "name": "type:security",
+    "color": "8250df",
+    "description": "Security, privacy, or sensitive workflow"
+  },
+  {
+    "name": "type:chore",
+    "color": "6e7781",
+    "description": "Maintenance or operational work"
+  },
+  {
+    "name": "status:triage",
+    "color": "d0d7de",
+    "description": "Needs review or classification"
+  },
+  {
+    "name": "status:ready",
+    "color": "a2d2ff",
+    "description": "Ready to work"
+  },
+  {
+    "name": "status:blocked",
+    "color": "fbca04",
+    "description": "Blocked by dependency or decision"
+  },
+  {
+    "name": "status:in-progress",
+    "color": "54aeff",
+    "description": "Currently being worked on"
+  },
+  {
+    "name": "priority:high",
+    "color": "cf222e",
+    "description": "High priority"
+  },
+  {
+    "name": "priority:medium",
+    "color": "bf8700",
+    "description": "Medium priority"
+  },
+  {
+    "name": "priority:low",
+    "color": "6e7781",
+    "description": "Low priority"
+  },
+  {
+    "name": "area:workflow",
+    "color": "0969da",
+    "description": "Workflow and process"
+  },
+  {
+    "name": "area:docs",
+    "color": "0969da",
+    "description": "Documentation area"
+  },
+  {
+    "name": "area:template",
+    "color": "0969da",
+    "description": "Template area"
+  },
+  {
+    "name": "area:github",
+    "color": "0969da",
+    "description": "GitHub issues, labels, projects, or releases"
+  },
+  {
+    "name": "area:mcp",
+    "color": "0969da",
+    "description": "Model Context Protocol integration"
+  },
+  {
+    "name": "ai:context",
+    "color": "8250df",
+    "description": "AI context loading and retrieval"
+  },
+  {
+    "name": "ai:mcp",
+    "color": "8250df",
+    "description": "AI MCP integration"
+  },
+  {
+    "name": "ai:compression",
+    "color": "8250df",
+    "description": "AI context compression or token reduction"
+  }
+]

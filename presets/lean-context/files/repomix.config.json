@@ -1,0 +1,38 @@
+{
+  "output": {
+    "filePath": "repomix-output.md",
+    "style": "markdown",
+    "removeComments": false,
+    "removeEmptyLines": false,
+    "showLineNumbers": true
+  },
+  "include": [
+    "README.md",
+    "AGENTS.md",
+    "docs/**/*.md",
+    "src/**/*",
+    "app/**/*",
+    "routes/**/*",
+    "tests/**/*",
+    "manifest.json",
+    "package.json",
+    "composer.json"
+  ],
+  "ignore": {
+    "customPatterns": [
+      "node_modules/**",
+      "vendor/**",
+      "dist/**",
+      "build/**",
+      "coverage/**",
+      ".cache/**",
+      ".env",
+      ".env.*",
+      "package-lock.json",
+      "pnpm-lock.yaml",
+      "yarn.lock",
+      "composer.lock",
+      "*.log"
+    ]
+  }
+}

@@ -185,3 +185,40 @@ Next suggested step:
 
 - Create `templates/chrome-extension-vanilla/` using EnvatoXperience as the
   reference structure.
+
+## 2026-06-28 - Block 005: Lean Context Preset
+
+Branch:
+
+- `main`
+
+Current state:
+
+- The repository now includes `presets/lean-context/` as a reusable preset for
+  maximizing useful AI quota.
+- The preset covers no-MCP context discipline, optional MCP integrations,
+  compression, usage tracking, interactive project starts, GitHub workflows,
+  labels, project fields, and a custom MCP design guide.
+- Root documentation now distinguishes complete project templates from reusable
+  workflow presets.
+- Repository version has been updated to `0.3.0`.
+
+Decisions:
+
+- Use `lean-context` as the final preset name.
+- Keep all reusable preset documentation in professional English.
+- Treat MCPs, compression tools, usage trackers, and GitHub automation as
+  optional capabilities chosen by the user.
+- Require generated templates to remain self-contained after adopting preset
+  files.
+
+Risks:
+
+- `project-context-mcp` is documented as a design guide but not implemented as a
+  server yet.
+- Third-party token tracking and compression tools may change quickly and should
+  be rechecked before hard automation is added.
+
+Next suggested step:
+
+- Create the first concrete template and integrate `lean-context` into it.
