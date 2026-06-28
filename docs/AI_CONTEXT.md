@@ -7,7 +7,7 @@ This file is the compact project summary for agents working in this repository.
 - Name: AGENTS.
 - Purpose: reusable documentation, workflow, preset, and template library for
   AI-assisted software projects.
-- Current version: 0.4.0.
+- Current version: 0.6.0.
 - Primary audience: Mauricio Vuljevas projects and future reusable project
   foundations.
 
@@ -30,6 +30,7 @@ This file is the compact project summary for agents working in this repository.
 │   ├── AI_CONTEXT.md
 │   ├── AI_SEARCH.md
 │   ├── AI_TOKEN_BUDGET.md
+│   ├── CATALOG.md
 │   ├── CONVENTIONS.md
 │   ├── NAMING.md
 │   ├── SNAPSHOTS.md
@@ -61,6 +62,8 @@ git diff --check
 - `README.md`: repository purpose, shared standards, and preset catalog.
 - `AGENTS.md`: active agent workflow rules for this repository.
 - `VERSION`: authoritative version source for this repository.
+- `docs/CATALOG.md`: source of truth for available and planned templates and
+  presets.
 - `docs/SNAPSHOTS.md`: chronological project memory.
 - `docs/CONVENTIONS.md`: template and preset conventions.
 - `docs/WORKFLOWS.md`: shared workflow rules.
@@ -76,12 +79,13 @@ git diff --check
 - Reusable workflow layers live under `presets/<preset-name>/`.
 - `lean-context` is both stored as a preset and applied to this repository.
 - Agents should recommend templates and presets before copying or applying them.
+- Agents must check `docs/CATALOG.md` before claiming a template can be copied.
 - Pushes remain explicit; local commits and tags may be created during closed
   versioned iterations.
 
 ## Current Risks
 
-- Concrete project templates have not been created yet.
+- Concrete project templates are currently planned but not available.
 - `project-context-mcp` is documented as a design guide but not implemented.
 - Third-party MCP, tracking, and compression tools can change quickly and should
   be rechecked before automation is added.

@@ -52,6 +52,7 @@ docs/
   AI_CONTEXT.md
   AI_SEARCH.md
   AI_TOKEN_BUDGET.md
+  CATALOG.md
   CONVENTIONS.md
   NAMING.md
   WORKFLOWS.md
@@ -91,6 +92,7 @@ All templates in this repository should share:
 - [AI Context](docs/AI_CONTEXT.md)
 - [AI Search](docs/AI_SEARCH.md)
 - [AI Token Budget](docs/AI_TOKEN_BUDGET.md)
+- [Catalog](docs/CATALOG.md)
 - [Conventions](docs/CONVENTIONS.md)
 - [Naming](docs/NAMING.md)
 - [Workflows](docs/WORKFLOWS.md)

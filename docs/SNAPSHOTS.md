@@ -289,3 +289,37 @@ Next suggested step:
 
 - Push pending local versions when approved, then create the first concrete
   template using the recommendation flow.
+
+## 2026-06-28 - Block 008: Catalog Source Of Truth
+
+Branch:
+
+- `main`
+
+Current state:
+
+- The repository now has `docs/CATALOG.md` as the source of truth for available
+  and planned templates and presets.
+- The recommendation flow now requires agents to check the catalog before
+  claiming a template can be copied.
+- Planned templates are clearly distinguished from available presets.
+- Repository version has been updated to `0.6.0`.
+
+Decisions:
+
+- `lean-context` is currently available.
+- `docs-only`, `react-vite-spa`, `laravel-react`, and
+  `chrome-extension-vanilla` are planned templates until their directories
+  exist.
+- If the best-fit template is planned but unavailable, agents must say so and
+  recommend a temporary fallback.
+
+Risks:
+
+- The catalog must be kept in sync whenever templates or presets are added,
+  renamed, deprecated, or removed.
+
+Next suggested step:
+
+- Create `templates/react-vite-spa/` or `templates/docs-only/` so recommendation
+  output can point to an available concrete template.

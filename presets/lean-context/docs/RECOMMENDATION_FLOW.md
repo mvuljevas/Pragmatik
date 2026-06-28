@@ -50,6 +50,15 @@ The agent should respond with:
 
 ## Current Template Candidates
 
+Check the repository catalog before recommending a template:
+
+```text
+docs/CATALOG.md
+```
+
+The catalog is the source of truth for whether a template is available,
+planned, draft, or deprecated.
+
 These are current catalog targets. Some may be planned before their directories
 exist.
 
@@ -72,6 +81,8 @@ exist.
 ## Recommendation Rules
 
 - Recommend one primary template.
+- Check `docs/CATALOG.md` before claiming a template can be copied.
+- If the best-fit template is planned but not available, say so clearly.
 - Recommend `lean-context` by default unless the user explicitly wants a minimal
   documentation-only setup.
 - Do not recommend a framework-specific template unless the user's stack matches
@@ -80,8 +91,11 @@ exist.
   optional capability.
 - For existing projects, recommend adoption steps instead of copying a full
   template over the project.
-- If no template fits, recommend `docs-only` plus `lean-context` and document
-  the gap as a future template candidate.
+- If no available template fits, recommend `docs-only` plus `lean-context` as a
+  temporary adoption path.
+- If `docs-only` is also planned and not available, recommend applying
+  `lean-context` directly with a minimal documentation foundation.
+- Document catalog gaps as future template candidates.
 
 ## New Project Response Template
 
