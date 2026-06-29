@@ -23,6 +23,11 @@ project://techdebt
 
 Generic client shape:
 
+```bash
+cp .env.example .env
+cp .codex/config.example.toml .codex/config.toml
+```
+
 ```json
 {
   "mcpServers": {
@@ -72,7 +77,7 @@ Recommended optimizer: Repomix with strict includes and compression.
 Use it only for focused context packs:
 
 ```bash
-rg --files manifest.json background.js content.js docs README.md AGENTS.md | repomix --stdin --compress --token-count-tree
+rg --files manifest.json background.js content.js docs README.md AGENTS.md | npx -y repomix@latest --stdin --config repomix.config.json
 ```
 
 Avoid full-repository packs by default.

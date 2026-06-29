@@ -55,6 +55,8 @@ For a new template, copy or merge:
 - `AGENTS.patch.md` into the template `AGENTS.md`.
 - `docs/*` into the template `docs/`.
 - `files/.aiignore` and `files/.rgignore` into the project root.
+- `files/.env.example` and `files/.codex/config.example.toml` when the project
+  wants optional local AI tool setup.
 - `files/repomix.config.json` only when the project wants explicit repository
   packing support.
 

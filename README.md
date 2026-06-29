@@ -101,6 +101,7 @@ All templates in this repository should share:
 - [AI Context](docs/AI_CONTEXT.md)
 - [AI Search](docs/AI_SEARCH.md)
 - [AI Token Budget](docs/AI_TOKEN_BUDGET.md)
+- [AI Tool Setup](docs/AI_TOOL_SETUP.md)
 - [Catalog](docs/CATALOG.md)
 - [Conventions](docs/CONVENTIONS.md)
 - [Naming](docs/NAMING.md)

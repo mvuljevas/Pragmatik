@@ -1,0 +1,52 @@
+{
+  "$schema": "https://repomix.com/schemas/latest/schema.json",
+  "output": {
+    "filePath": "repomix-output.md",
+    "style": "markdown",
+    "compress": true,
+    "removeComments": false,
+    "removeEmptyLines": true,
+    "showLineNumbers": true,
+    "tokenCountTree": true,
+    "tokenBudget": 100000
+  },
+  "include": [
+    "README.md",
+    "AGENTS.md",
+    "VERSION",
+    "docs/**/*.md",
+    "app/**/*",
+    "routes/**/*",
+    "resources/**/*",
+    "tests/**/*",
+    "composer.json",
+    "package.json"
+  ],
+  "ignore": {
+    "customPatterns": [
+      "node_modules/**",
+      "vendor/**",
+      "public/build/**",
+      "storage/**",
+      "bootstrap/cache/**",
+      ".env",
+      ".env.*",
+      ".codex/config.toml",
+      ".ai-usage-log.md",
+      "package-lock.json",
+      "pnpm-lock.yaml",
+      "yarn.lock",
+      "composer.lock",
+      "repomix-output.md",
+      "tokscale-*.json",
+      "tokscale-*.md",
+      "*.log"
+    ]
+  },
+  "security": {
+    "enableSecurityCheck": true
+  },
+  "tokenCount": {
+    "encoding": "o200k_base"
+  }
+}

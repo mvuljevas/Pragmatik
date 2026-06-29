@@ -1,0 +1,9 @@
+# Copy to `.codex/config.toml` for local project-scoped Codex MCP setup.
+# Never commit `.codex/config.toml`.
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+
+[mcp_servers.context7.env]
+CONTEXT7_API_KEY = "<CONTEXT7_API_KEY>"

@@ -54,6 +54,15 @@ Recommended use:
 - Package documentation.
 - Reducing repeated web searches for library usage.
 
+Codex project setup:
+
+```bash
+cp .env.example .env
+cp .codex/config.example.toml .codex/config.toml
+```
+
+Then set `CONTEXT7_API_KEY` in local ignored configuration.
+
 ### CodeGraphContext
 
 Use for local code graph retrieval and relationship lookup when available.

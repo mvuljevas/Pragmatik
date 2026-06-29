@@ -6,8 +6,13 @@ coverage/
 .vite/
 .env
 .env.*
+.codex/config.toml
+.ai-usage-log.md
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
 *.log
 *.map
+repomix-output.md
+tokscale-*.json
+tokscale-*.md

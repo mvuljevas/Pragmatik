@@ -3,5 +3,9 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+.codex/config.toml
+.ai-usage-log.md
 *.log
 repomix-output.md
+tokscale-*.json
+tokscale-*.md

@@ -213,3 +213,15 @@ Recommended branch examples:
 - Prefer concrete rules over vague guidance.
 - Avoid duplicating shared rules across templates unless the template needs a
   self-contained copy.
+
+## Current Documentation Lookup
+
+- Use Context7 when a task depends on current library, framework, SDK, API, CLI,
+  or cloud-service documentation.
+- Resolve the library first, then query the documentation with the user's
+  specific question.
+- Prefer official or high-reputation library matches.
+- Do not use documentation lookup as a substitute for reading local project
+  rules, implementation files, tests, snapshots, roadmap, or technical debt.
+- Do not expose API keys, `.env` files, or local tool configuration while using
+  MCPs or CLIs.

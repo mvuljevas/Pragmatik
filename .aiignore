@@ -30,6 +30,8 @@ logs/
 .env.*
 !.env.example
 !.env.local.example
+.codex/config.toml
+.ai-usage-log.md
 *.pem
 *.key
 *.p12
@@ -46,3 +48,6 @@ Gemfile.lock
 *.min.js
 *.map
 *.snap
+repomix-output.md
+tokscale-*.json
+tokscale-*.md

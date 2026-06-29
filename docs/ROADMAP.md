@@ -15,6 +15,8 @@ This roadmap is the primary source for next-step suggestions in this repository.
   place.
 - Available templates include optional MCP, Tokscale, and token-reduction
   guidance in `docs/AI_TOOLS.md`.
+- This repository has local Context7 MCP configuration and reusable setup
+  examples without committed secrets.
 
 ## Next Milestones
 
@@ -35,3 +37,4 @@ This roadmap is the primary source for next-step suggestions in this repository.
 - Next-step fallback rule.
 - Root roadmap and technical debt docs.
 - Template-level MCP, tracking, and token-reduction guidance.
+- Local and reusable AI tool setup examples.

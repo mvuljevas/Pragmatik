@@ -13,6 +13,11 @@ guessing from model memory.
 
 Generic local MCP client shape:
 
+```bash
+cp .env.example .env
+cp .codex/config.example.toml .codex/config.toml
+```
+
 ```json
 {
   "mcpServers": {
@@ -58,7 +63,7 @@ Recommended optimizer: Repomix with strict includes and compression.
 Use it only for focused context packs:
 
 ```bash
-rg --files src docs README.md AGENTS.md package.json | repomix --stdin --compress --token-count-tree
+rg --files src docs README.md AGENTS.md package.json | npx -y repomix@latest --stdin --config repomix.config.json
 ```
 
 If the user enables many MCP servers, consider `mcp-compressor` or an MCP tool

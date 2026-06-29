@@ -6,8 +6,13 @@ storage/logs/
 bootstrap/cache/
 .env
 .env.*
+.codex/config.toml
+.ai-usage-log.md
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
 composer.lock
 *.log
+repomix-output.md
+tokscale-*.json
+tokscale-*.md

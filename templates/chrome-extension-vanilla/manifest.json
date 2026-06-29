@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Chrome Extension Vanilla",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A vanilla Chrome extension starter with AGENTS and lean-context workflow.",
   "icons": {},
   "permissions": ["storage", "activeTab"],

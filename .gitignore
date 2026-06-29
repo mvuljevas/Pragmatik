@@ -1,0 +1,22 @@
+.DS_Store
+Thumbs.db
+
+# Local secrets and environment
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# Local AI tool configuration
+.codex/config.toml
+!.codex/config.example.toml
+.ai-usage-log.md
+
+# Generated AI context packs and reports
+repomix-output.md
+tokscale-*.json
+tokscale-*.md
+
+# Logs
+*.log
+logs/

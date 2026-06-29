@@ -456,6 +456,44 @@ Next suggested step:
 - Follow `docs/ROADMAP.md`: measure whether `lean-context` reduces token usage
   in real sessions.
 
+## 2026-06-29 - Block 014: Local AI Tool Setup
+
+Branch:
+
+- `main`
+
+Current state:
+
+- Context7 MCP has been configured locally for this repository through ignored
+  project configuration.
+- `docs/AI_TOOL_SETUP.md` documents Context7, Tokscale, Repomix, and MCP
+  overhead tooling.
+- Root and template `.env.example`, `.codex/config.example.toml`, ignore rules,
+  and Repomix configs are now available for reuse.
+- The generated Context7 skill is present for this repository.
+- Repository version has been updated to `0.11.0`.
+- Template versions have been updated to `0.3.0`.
+
+Decisions:
+
+- Real API keys remain local and ignored.
+- Template and preset files use placeholders only.
+- Tokscale submission remains opt-in; local reports are allowed for
+  measurement.
+- Repomix is the default bundled reduction path for template downloads.
+
+Risks:
+
+- The Context7 key used during setup was pasted into chat and should be rotated
+  if the account treats chat transcripts as non-secret storage.
+- Context7, Tokscale, and Repomix command behavior can change and should be
+  rechecked before automating setup.
+
+Next suggested step:
+
+- Follow `docs/ROADMAP.md`: measure whether `lean-context` reduces token usage
+  in real sessions.
+
 ## 2026-06-29 - Block 013: Template AI Tool Guidance
 
 Branch:

@@ -29,6 +29,14 @@ Recommended use:
 - Finding high-cost workflows.
 - Monitoring repeated context waste.
 
+Local Codex report examples:
+
+```bash
+npx -y tokscale@latest clients
+npx -y tokscale@latest --client codex --today models
+npx -y tokscale@latest --client codex --today report
+```
+
 Policy:
 
 - Treat Tokscale as optional project observability.

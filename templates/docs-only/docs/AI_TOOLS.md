@@ -20,6 +20,13 @@ project://techdebt
 Until a first-party server exists, use Repomix MCP or Repomix CLI only for
 bounded documentation packs.
 
+Codex project setup:
+
+```bash
+cp .env.example .env
+cp .codex/config.example.toml .codex/config.toml
+```
+
 Generic client shape:
 
 ```json
@@ -65,7 +72,7 @@ Recommended optimizer: Repomix with strict includes and compression.
 Use it only after local search identifies relevant files:
 
 ```bash
-rg --files docs README.md AGENTS.md | repomix --stdin --compress --token-count-tree
+rg --files docs README.md AGENTS.md | npx -y repomix@latest --stdin --config repomix.config.json
 ```
 
 Avoid full-repository packs unless the user explicitly requests one.

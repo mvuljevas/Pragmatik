@@ -1,8 +1,12 @@
 # Local and generated files
 .env
 .env.*
+.codex/config.toml
+.ai-usage-log.md
 *.log
 repomix-output.md
+tokscale-*.json
+tokscale-*.md
 .cache/
 dist/
 build/
