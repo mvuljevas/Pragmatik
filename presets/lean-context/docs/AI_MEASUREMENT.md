@@ -84,6 +84,11 @@ Then set `AGENTS_AUTO_RUN_ON_COMMIT=on` in `.agents.env`. Each commit runs
 `scripts/ai-tools.sh run-and-stage` before the commit is created, so the active
 tool run and aggregate report are captured with the iteration.
 
+If remote Tokscale publication is desired, set
+`AGENTS_TOKSCALE_SUBMIT=dry-run` first and inspect the generated
+`.ai-runs/<timestamp>/tokscale-submit.txt`. Set `AGENTS_TOKSCALE_SUBMIT=on`
+only after the user approves external submission.
+
 ## Suggested Prompt
 
 ```text

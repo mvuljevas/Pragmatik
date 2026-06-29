@@ -109,7 +109,8 @@ When `scripts/ai-tools.sh` exists:
 - Commit only aggregate, non-sensitive summaries such as
   `docs/AI_USAGE_REPORT.md`.
 - Do not run Tokscale submission, remote sharing, or MCP mutation commands
-  unless the user explicitly approves them.
+  unless the user explicitly approves them. Tokscale submission must be
+  controlled by `AGENTS_TOKSCALE_SUBMIT=off|dry-run|on`.
 
 ## Lean Context Loading
 

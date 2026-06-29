@@ -58,6 +58,7 @@ AGENTS_CONTEXT7=on
 AGENTS_REPOMIX=on
 AGENTS_TOKSCALE=on
 AGENTS_MCP=ask
+AGENTS_TOKSCALE_SUBMIT=off
 AGENTS_AUTO_RUN_ON_COMMIT=off
 AGENTS_USAGE_REPORT=on
 AGENTS_USAGE_REPORT_TARGET=docs/AI_USAGE_REPORT.md
@@ -150,14 +151,48 @@ npx -y tokscale@latest --client codex --today models
 npx -y tokscale@latest --client codex --today report
 ```
 
-Remote Tokscale login and submission are optional:
+Remote Tokscale login and submission are optional and controlled by
+`AGENTS_TOKSCALE_SUBMIT`:
 
 ```bash
 npx -y tokscale@latest login
-npx -y tokscale@latest submit
+npx -y tokscale@latest submit --client codex --today --dry-run
+npx -y tokscale@latest submit --client codex --today
 ```
 
-Only run submission commands after the user approves sharing usage data.
+Supported submit modes:
+
+- `off`: local reports only; nothing is uploaded.
+- `dry-run`: validate the upload set without submitting it.
+- `on`: submit usage data to the authenticated Tokscale account.
+
+Only set `AGENTS_TOKSCALE_SUBMIT=on` after the user approves sharing usage
+data. If `whoami` reports that Tokscale is not logged in, run
+`npx -y tokscale@latest login` or set `TOKSCALE_API_TOKEN` in a local ignored
+secret store.
+
+Long-running terminal sessions do not need the hook to stay open. Tokscale reads
+the supported client's local session data when the script runs, so the important
+requirement is that the client writes usage data to a supported local location.
+For commit-time automation, the hook captures the usage visible at commit time.
+If a terminal session remains open for hours, run `scripts/ai-tools.sh run`
+manually before comparing results or wait for the next iteration commit.
+
+Coverage depends on the active client. Codex can be read through the `codex`
+client. Cursor, Antigravity, Trae, Warp, Claude, Gemini, and other clients
+should use the matching Tokscale client only when Tokscale reports support for
+that client through:
+
+```bash
+npx -y tokscale@latest clients
+```
+
+When changing clients, update `AGENTS_TOKSCALE_CLIENT` in `.agents.env`.
+Some clients require their own cache or integration commands before Tokscale can
+read complete usage data. Tokscale's local client scan also reports whether a
+client currently has readable messages. At the time this workflow was written,
+Tokscale reported headless capture support for Codex CLI only; other clients
+should be treated as local-log/cache readers unless Tokscale documents otherwise.
 
 ## Repomix
 

@@ -52,13 +52,26 @@ npx -y tokscale@latest --client codex --today report
 ```
 
 Change `--client codex` to the active client when Tokscale supports it.
+Use `npx -y tokscale@latest clients` to verify local coverage before assuming a
+new agent or IDE is being measured. A supported client with `0` readable
+messages is not actually covered until its local cache or integration has been
+configured.
 
 Do not run upload or social sharing commands unless the user approves:
 
 ```bash
 npx -y tokscale@latest login
-npx -y tokscale@latest submit
+npx -y tokscale@latest submit --client codex --today --dry-run
+npx -y tokscale@latest submit --client codex --today
 ```
+
+Templates use `AGENTS_TOKSCALE_SUBMIT=off` by default. Project owners may set
+`dry-run` first, then `on` after confirming what will be uploaded.
+
+Long-running sessions are measured from the client's local usage data at the
+time Tokscale runs. The commit hook captures what is visible at commit time; for
+ongoing terminals, run `scripts/ai-tools.sh run` manually when a measurement
+checkpoint is needed.
 
 ## Repomix Bootstrap
 

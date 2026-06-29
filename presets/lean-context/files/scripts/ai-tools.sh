@@ -50,6 +50,7 @@ AI tool automation
 - Context7: ${AGENTS_CONTEXT7}
 - Repomix: ${AGENTS_REPOMIX}
 - Tokscale: ${AGENTS_TOKSCALE}
+- Tokscale submit: ${AGENTS_TOKSCALE_SUBMIT}
 - MCP: ${AGENTS_MCP}
 - auto run on commit: ${AGENTS_AUTO_RUN_ON_COMMIT}
 - usage report: ${AGENTS_USAGE_REPORT}
@@ -108,6 +109,41 @@ run_tokscale() {
 
   npx -y tokscale@latest --client "$client" "$period_arg" models > "$RUN_DIR/tokscale-models.raw" 2> "$RUN_DIR/tokscale-models.err" || true
   strip_ansi < "$RUN_DIR/tokscale-models.raw" > "$RUN_DIR/tokscale-models.txt" 2>/dev/null || true
+
+  case "$AGENTS_TOKSCALE_SUBMIT" in
+    off|ask|"")
+      TOKSCALE_SUBMIT_STATUS="skipped: ${AGENTS_TOKSCALE_SUBMIT}"
+      ;;
+    dry-run)
+      if npx -y tokscale@latest submit --client "$client" "$period_arg" --dry-run > "$RUN_DIR/tokscale-submit.raw" 2> "$RUN_DIR/tokscale-submit.err"; then
+        strip_ansi < "$RUN_DIR/tokscale-submit.raw" > "$RUN_DIR/tokscale-submit.txt"
+        TOKSCALE_SUBMIT_STATUS="dry-run ok: ${client} ${period}"
+      else
+        strip_ansi < "$RUN_DIR/tokscale-submit.raw" > "$RUN_DIR/tokscale-submit.txt" 2>/dev/null || true
+        TOKSCALE_SUBMIT_STATUS="dry-run failed: see ${RUN_DIR}/tokscale-submit.err"
+      fi
+      ;;
+    on|true|1)
+      if npx -y tokscale@latest whoami > "$RUN_DIR/tokscale-whoami.raw" 2> "$RUN_DIR/tokscale-whoami.err"; then
+        strip_ansi < "$RUN_DIR/tokscale-whoami.raw" > "$RUN_DIR/tokscale-whoami.txt"
+        if rg -q "Not logged in" "$RUN_DIR/tokscale-whoami.txt"; then
+          TOKSCALE_SUBMIT_STATUS="submit failed: not logged in"
+        elif npx -y tokscale@latest submit --client "$client" "$period_arg" > "$RUN_DIR/tokscale-submit.raw" 2> "$RUN_DIR/tokscale-submit.err"; then
+          strip_ansi < "$RUN_DIR/tokscale-submit.raw" > "$RUN_DIR/tokscale-submit.txt"
+          TOKSCALE_SUBMIT_STATUS="submitted: ${client} ${period}"
+        else
+          strip_ansi < "$RUN_DIR/tokscale-submit.raw" > "$RUN_DIR/tokscale-submit.txt" 2>/dev/null || true
+          TOKSCALE_SUBMIT_STATUS="submit failed: see ${RUN_DIR}/tokscale-submit.err"
+        fi
+      else
+        strip_ansi < "$RUN_DIR/tokscale-whoami.raw" > "$RUN_DIR/tokscale-whoami.txt" 2>/dev/null || true
+        TOKSCALE_SUBMIT_STATUS="submit failed: not logged in"
+      fi
+      ;;
+    *)
+      TOKSCALE_SUBMIT_STATUS="skipped: invalid mode ${AGENTS_TOKSCALE_SUBMIT}"
+      ;;
+  esac
 }
 
 repomix_config() {
@@ -195,6 +231,7 @@ EOF
     echo
     echo "- Context7: ${CONTEXT7_STATUS}."
     echo "- Tokscale: ${TOKSCALE_STATUS}."
+    echo "- Tokscale submit: ${TOKSCALE_SUBMIT_STATUS}."
     echo "- Repomix: ${REPOMIX_STATUS}."
     echo "- MCP: ${AGENTS_MCP}."
     echo
@@ -208,6 +245,7 @@ EOF
       echo "| Repomix bounded pack | Not available for this run. |"
     fi
     echo "| Tokscale local report | Generated locally at \`${RUN_DIR}/tokscale-report.txt\` when enabled. |"
+    echo "| Tokscale submit | ${TOKSCALE_SUBMIT_STATUS}. |"
     echo "| Context7 validation | ${CONTEXT7_STATUS}. |"
     echo
     echo "Notes:"
@@ -225,6 +263,7 @@ write_summary() {
 - Context mode: ${AGENTS_CONTEXT_MODE}
 - Context7: ${CONTEXT7_STATUS}
 - Tokscale: ${TOKSCALE_STATUS}
+- Tokscale submit: ${TOKSCALE_SUBMIT_STATUS}
 - Repomix: ${REPOMIX_STATUS}
 - MCP: ${AGENTS_MCP}
 - Usage report target: ${AGENTS_USAGE_REPORT_TARGET}
@@ -267,6 +306,7 @@ AGENTS_CONTEXT_MODE="$(value_for AGENTS_CONTEXT_MODE "lean-context")"
 AGENTS_CONTEXT7="$(value_for AGENTS_CONTEXT7 "ask")"
 AGENTS_REPOMIX="$(value_for AGENTS_REPOMIX "ask")"
 AGENTS_TOKSCALE="$(value_for AGENTS_TOKSCALE "ask")"
+AGENTS_TOKSCALE_SUBMIT="$(value_for AGENTS_TOKSCALE_SUBMIT "off")"
 AGENTS_MCP="$(value_for AGENTS_MCP "ask")"
 AGENTS_AUTO_RUN_ON_COMMIT="$(value_for AGENTS_AUTO_RUN_ON_COMMIT "off")"
 AGENTS_USAGE_REPORT="$(value_for AGENTS_USAGE_REPORT "off")"
@@ -274,9 +314,15 @@ AGENTS_USAGE_REPORT_TARGET="$(value_for AGENTS_USAGE_REPORT_TARGET "docs/AI_USAG
 AGENTS_EXPERIMENT_ID="$(value_for AGENTS_EXPERIMENT_ID "")"
 AGENTS_EXPERIMENT_RUN="$(value_for AGENTS_EXPERIMENT_RUN "$RUN_ID")"
 AGENTS_EXPERIMENT_TASK="$(value_for AGENTS_EXPERIMENT_TASK "")"
+TOKSCALE_API_TOKEN_VALUE="$(value_for TOKSCALE_API_TOKEN "")"
+
+if [ -n "$TOKSCALE_API_TOKEN_VALUE" ]; then
+  export TOKSCALE_API_TOKEN="$TOKSCALE_API_TOKEN_VALUE"
+fi
 
 CONTEXT7_STATUS="not run"
 TOKSCALE_STATUS="not run"
+TOKSCALE_SUBMIT_STATUS="not run"
 REPOMIX_STATUS="not run"
 
 case "$COMMAND" in

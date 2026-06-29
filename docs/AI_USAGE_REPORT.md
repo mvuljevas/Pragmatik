@@ -113,3 +113,99 @@ Notes:
 
 - Local raw outputs are stored under `.ai-runs/20260629T172719Z/` and remain ignored.
 - Treat Tokscale grouping as approximate unless validated manually.
+
+## 2026-06-29 - Automated AI Tool Run 20260629T232848Z
+
+Scope:
+
+- Repository: AGENTS.
+- Context mode: `lean-context`.
+- Experiment ID: `agents-repo-token-measurement`.
+- Experiment run: `lean-context-local-001`.
+- Task: Configure AGENTS repository for lean-context usage measurement.
+
+Tool state:
+
+- Context7: ok: /vitejs/vite.
+- Tokscale: ok: codex today.
+- Tokscale submit: submit failed: see .ai-runs/20260629T232848Z/tokscale-submit.err.
+- Repomix: ok.
+- MCP: ask.
+
+Measurements:
+
+| Source | Result |
+| --- | --- |
+| Repomix bounded pack | 112 files, 74,713 tokens, 295,265 chars. |
+| Tokscale local report | Generated locally at `.ai-runs/20260629T232848Z/tokscale-report.txt` when enabled. |
+| Tokscale submit | submit failed: see .ai-runs/20260629T232848Z/tokscale-submit.err. |
+| Context7 validation | ok: /vitejs/vite. |
+
+Notes:
+
+- Local raw outputs are stored under `.ai-runs/20260629T232848Z/` and remain ignored.
+- Treat Tokscale grouping as approximate unless validated manually.
+
+## 2026-06-29 - Automated AI Tool Run 20260629T233122Z
+
+Scope:
+
+- Repository: AGENTS.
+- Context mode: `lean-context`.
+- Experiment ID: `agents-repo-token-measurement`.
+- Experiment run: `lean-context-local-001`.
+- Task: Configure AGENTS repository for lean-context usage measurement.
+
+Tool state:
+
+- Context7: ok: /vitejs/vite.
+- Tokscale: ok: codex today.
+- Tokscale submit: submit failed: not logged in.
+- Repomix: ok.
+- MCP: ask.
+
+Measurements:
+
+| Source | Result |
+| --- | --- |
+| Repomix bounded pack | 112 files, 76,179 tokens, 301,889 chars. |
+| Tokscale local report | Generated locally at `.ai-runs/20260629T233122Z/tokscale-report.txt` when enabled. |
+| Tokscale submit | submit failed: not logged in. |
+| Context7 validation | ok: /vitejs/vite. |
+
+Notes:
+
+- Local raw outputs are stored under `.ai-runs/20260629T233122Z/` and remain ignored.
+- Treat Tokscale grouping as approximate unless validated manually.
+
+## 2026-06-29 - Automated AI Tool Run 20260629T233258Z
+
+Scope:
+
+- Repository: AGENTS.
+- Context mode: `lean-context`.
+- Experiment ID: `agents-repo-token-measurement`.
+- Experiment run: `lean-context-local-001`.
+- Task: Configure AGENTS repository for lean-context usage measurement.
+
+Tool state:
+
+- Context7: ok: /vitejs/vite.
+- Tokscale: ok: codex today.
+- Tokscale submit: submit failed: not logged in.
+- Repomix: ok.
+- MCP: ask.
+
+Measurements:
+
+| Source | Result |
+| --- | --- |
+| Repomix bounded pack | 112 files, 76,675 tokens, 303,636 chars. |
+| Tokscale local report | Generated locally at `.ai-runs/20260629T233258Z/tokscale-report.txt` when enabled. |
+| Tokscale submit | submit failed: not logged in. |
+| Context7 validation | ok: /vitejs/vite. |
+
+Notes:
+
+- Local raw outputs are stored under `.ai-runs/20260629T233258Z/` and remain ignored.
+- Treat Tokscale grouping as approximate unless validated manually.

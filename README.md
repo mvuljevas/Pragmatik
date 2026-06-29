@@ -119,7 +119,9 @@ usage-tracking, and token-reduction guidance for that project type.
 Use `scripts/ai-tools.sh run` to execute the configured local AI tools and
 append aggregate usage summaries when enabled. Use
 `scripts/ai-tools.sh install-hooks` with `AGENTS_AUTO_RUN_ON_COMMIT=on` to run
-active tools automatically before each iteration commit.
+active tools automatically before each iteration commit. Tokscale dashboard
+submission is available through `AGENTS_TOKSCALE_SUBMIT=off|dry-run|on` and is
+disabled by default in templates.
 
 ## License
 

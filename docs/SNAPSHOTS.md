@@ -604,6 +604,43 @@ Next suggested step:
 - Follow `docs/ROADMAP.md`: implement the first `project-context-mcp` prototype
   so context can be exposed through bounded read-only resources.
 
+## 2026-06-29 - Block 020: Tokscale Submission Control
+
+Branch:
+
+- `main`
+
+Current state:
+
+- `scripts/ai-tools.sh` supports `AGENTS_TOKSCALE_SUBMIT=off|dry-run|on`.
+- Root, preset, and templates include the same submit-aware automation script.
+- `.agents.env.example` keeps remote submission `off` by default.
+- Documentation now distinguishes local Tokscale reports from remote dashboard
+  submission.
+- Documentation explains that Tokscale coverage depends on the active client
+  and should be checked with `npx -y tokscale@latest clients`.
+- Repository version has been updated to `0.17.0`.
+- Template versions have been updated to `0.8.0`.
+
+Decisions:
+
+- Templates expose remote submission but do not enable it by default.
+- This repository may enable submission locally after explicit user approval.
+- Long-running terminal sessions are handled by reading local client session
+  data at run/commit time, not by keeping the hook process alive.
+
+Risks:
+
+- Remote dashboard data will remain empty until Tokscale is authenticated with
+  `login` or `TOKSCALE_API_TOKEN`.
+- Some clients require client-specific Tokscale integrations or caches before
+  coverage is complete.
+
+Next suggested step:
+
+- Follow `docs/ROADMAP.md`: implement the first `project-context-mcp` prototype
+  so context can be exposed through bounded read-only resources.
+
 ## 2026-06-29 - Block 015: Multi-Client Tool Bootstrap
 
 Branch:
