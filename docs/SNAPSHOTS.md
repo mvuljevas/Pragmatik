@@ -690,6 +690,50 @@ Next suggested step:
   `AGENTS_CONTEXT_MODE=baseline` and compare against automated
   `lean-context` runs.
 
+## 2026-06-30 - Block 026: AGENTS CLI Foundation
+
+Branch:
+
+- `main`
+
+Current state:
+
+- The repository now includes npm package metadata for `@mvuljevas/agents`.
+- `cli/agents.js` provides the `agents` command with lowercase flags for help,
+  init, setup, doctor, run, dashboard, suggest, and MCP scaffold flows.
+- `agents --dashboard` serves a local dashboard using local reports and tool
+  detection.
+- `agents --setup` previews additive changes for existing repositories and does
+  not replace normal `dev` scripts by default.
+- `agents --suggest --issue` prepares a template request issue draft and can
+  create it with GitHub CLI only when explicitly confirmed.
+- `docs/AGENTS_CLI.md` and `docs/AI_TOOL_REGISTRY.md` document the new CLI and
+  optional tool registry.
+- Templates now include `package.json` project tooling for AGENTS where useful.
+- Repository version has been updated to `0.20.0`.
+- Template versions have been updated to `0.11.0`.
+
+Decisions:
+
+- `agents` is the public command and flags are lowercase only.
+- Tools remain optional; local-safe options can be preselected by the wizard but
+  still require confirmation before installation or config changes.
+- Existing repositories receive additive wrappers such as `agents:dev`; normal
+  project scripts are not replaced by default.
+
+Risks:
+
+- The MCP scaffold is not yet a complete MCP runtime.
+- The dashboard is intentionally minimal and should be refined after testing in
+  external projects.
+- The npm package should be tested with `npm pack` or a clean install before
+  publishing.
+
+Next suggested step:
+
+- Follow `docs/ROADMAP.md`: publish or locally pack `@mvuljevas/agents` and
+  test installation in a clean external project.
+
 ## 2026-06-30 - Block 023: AI Tool Script Structure Audit
 
 Branch:

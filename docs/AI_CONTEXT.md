@@ -7,15 +7,15 @@ This file is the compact project summary for agents working in this repository.
 - Name: AGENTS.
 - Purpose: reusable documentation, workflow, preset, and template library for
   AI-assisted software projects.
-- Current version: 0.19.0.
+- Current version: 0.20.0.
 - Primary audience: Mauricio Vuljevas projects and future reusable project
   foundations.
 
 ## Stack
 
-- Runtime: documentation-only repository.
+- Runtime: Node.js CLI plus documentation and templates.
 - Frameworks: none.
-- Package manager: none.
+- Package manager: npm.
 - Version source: `VERSION`.
 - Release tags: `vX.Y.Z`.
 
@@ -26,12 +26,17 @@ This file is the compact project summary for agents working in this repository.
 ├── AGENTS.md
 ├── README.md
 ├── VERSION
+├── package.json
+├── cli/
+│   └── agents.js
 ├── docs/
+│   ├── AGENTS_CLI.md
 │   ├── AI_CONTEXT.md
 │   ├── AI_CLIENTS.md
 │   ├── AI_SEARCH.md
 │   ├── AI_MEASUREMENT.md
 │   ├── AI_TOOL_SETUP.md
+│   ├── AI_TOOL_REGISTRY.md
 │   ├── AI_USAGE_REPORT.md
 │   ├── AI_OPTIMIZATION_REPORT.md
 │   ├── AI_TOKEN_BUDGET.md
@@ -61,6 +66,11 @@ This file is the compact project summary for agents working in this repository.
 # inspect state
 git status --short --branch
 
+# CLI
+node cli/agents.js --doctor
+node cli/agents.js --setup --dry-run
+node cli/agents.js --dashboard --no-open
+
 # search
 rg "pattern"
 rg --files
@@ -78,6 +88,11 @@ git diff --check
 - `README.md`: repository purpose, shared standards, and preset catalog.
 - `AGENTS.md`: active agent workflow rules for this repository.
 - `VERSION`: authoritative version source for this repository.
+- `package.json`: npm package metadata for `@mvuljevas/agents`.
+- `cli/agents.js`: project CLI with `agents --help`, setup, doctor,
+  dashboard, suggest, run, and MCP scaffold commands.
+- `docs/AGENTS_CLI.md`: public CLI usage guide.
+- `docs/AI_TOOL_REGISTRY.md`: optional tool registry and adapter contract.
 - `docs/CATALOG.md`: source of truth for available and planned templates and
   presets.
 - `docs/ROADMAP.md`: primary source for next-step suggestions.
@@ -133,7 +148,7 @@ git diff --check
 - Commit-time automation is available through
   `bash scripts/ai-tools.sh install-hooks` and `.githooks/pre-commit`.
 - Tokscale remote dashboard submission is available through
-  `AGENTS_TOKSCALE_SUBMIT=on|dry-run|off`; templates default to `on`.
+  `AGENTS_TOKSCALE_SUBMIT=on|dry-run|off`; templates default to `dry-run`.
 - Tokscale coverage is client-dependent and must be checked with
   `npx -y tokscale@latest clients` when users switch agents or IDEs.
 - Tokscale is authenticated locally for this repository and a successful Codex
@@ -141,9 +156,7 @@ git diff --check
 - Tokscale automation supports multi-client measurement through
   `AGENTS_TOKSCALE_CLIENTS` and optional Cursor, Antigravity, and Warp sync
   commands.
-- Template `.agents.env.example` files default to active Context7, Repomix,
-  Tokscale, usage reports, optimization reports, and Tokscale submit, with
-  documented opt-down modes for dry-run and local-only runs.
+- Template `.agents.env.example` files keep external tools optional while enabling dashboard-ready local reporting defaults.
 - A blind non-Codex coverage probe showed that unsupported local agents can run
   successfully while Tokscale records only supported local client data.
 - Tokscale is treated as observability only; Repomix compression and MCP
@@ -152,10 +165,16 @@ git diff --check
   technical debt second, and user preference third.
 - Pushes remain explicit; local commits and tags may be created during closed
   versioned iterations.
+- `agents` is the public CLI command. Flags are lowercase only.
+- The CLI is the preferred setup and dashboard path; `scripts/ai-tools.sh`
+  remains a compatibility backend.
+- Existing repositories should receive additive scripts such as `agents:dev`,
+  not automatic replacement of normal `dev` scripts.
 
 ## Current Risks
 
-- `project-context-mcp` is documented as a design guide but not implemented.
+- `agents --mcp-create` creates an initial read-only MCP scaffold, but it is not
+  a full MCP runtime implementation yet.
 - `lean-context` has not yet proven token savings with real measurements.
 - Third-party MCP, tracking, and compression tools can change quickly and should
   be rechecked before automation is added.

@@ -4,7 +4,7 @@
 
 - Name:
 - Purpose:
-- Current version: 0.10.0.
+- Current version: 0.11.0.
 - Version source: `VERSION`.
 
 ## Stack

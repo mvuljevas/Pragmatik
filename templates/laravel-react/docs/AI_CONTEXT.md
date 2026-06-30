@@ -4,7 +4,7 @@
 
 - Name: Laravel React.
 - Purpose: Laravel workflow foundation with React-capable frontend guidance.
-- Current version: 0.10.0.
+- Current version: 0.11.0.
 - Version source: existing app version source or `VERSION`.
 
 ## Stack

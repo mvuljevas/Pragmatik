@@ -84,10 +84,7 @@ Then set `AGENTS_AUTO_RUN_ON_COMMIT=on` in `.agents.env`. Each commit runs
 `bash scripts/ai-tools.sh run-and-stage` before the commit is created, so the active
 tool run and aggregate report are captured with the iteration.
 
-Tokscale submit defaults to `on` in this repository and templates. For local
-validation without publishing, set `AGENTS_TOKSCALE_SUBMIT=dry-run` and inspect
-the generated `.ai-runs/<timestamp>/tokscale-submit.txt`. For local-only
-measurement, set `AGENTS_TOKSCALE_SUBMIT=off`.
+Tokscale submit defaults to `dry-run` in reusable samples. Inspect `.ai-runs/<timestamp>/tokscale-submit.txt`, set `AGENTS_TOKSCALE_SUBMIT=on` only after confirming external submission, or use `off` for local-only measurement.
 
 ## Suggested Prompt
 

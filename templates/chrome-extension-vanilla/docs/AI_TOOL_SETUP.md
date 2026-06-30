@@ -1,12 +1,12 @@
 # AI Tool Setup
 
 This repository supports AI tooling for current documentation lookup, usage
-tracking, bounded context packing, and local optimization reporting.
+tracking, bounded context packing, local optimization reporting, and a local
+AGENTS dashboard.
 
-Template defaults turn Context7, Repomix, Tokscale, usage reporting, optimization
-reporting, and Tokscale submit on. Users may opt down to `dry-run` or `off`.
-Credentials, browser login, MCP mutation, and machine-wide setup still require
-explicit user action.
+The preferred interface is the `agents` CLI. Tools remain optional: credentials,
+browser login, MCP mutation, package installation, and machine-wide setup still
+require explicit user action.
 
 ## Trigger During Repository Analysis
 
@@ -18,10 +18,12 @@ should include an AI tooling check after reading the project docs:
    disabled for measurement and skip setup.
 3. Read `docs/AI_TOOLS.md`, `docs/AI_CLIENTS.md`, and this file when present.
 4. Detect the active client when possible.
-5. Run `bash scripts/ai-tools.sh check` when present.
+5. Run `agents --doctor` when the CLI is available; otherwise run
+   `bash scripts/ai-tools.sh check` when present.
 6. Report whether Context7, Tokscale, Repomix CLI, MCP examples, global
    `tokscale`, Tokscale login, and selected client syncs are available.
-7. Offer `bash scripts/ai-tools.sh setup-machine` when machine-wide setup is missing.
+7. Offer `agents --setup` when setup is missing. Fall back to
+   `bash scripts/ai-tools.sh setup-machine` for compatibility.
 8. Ask before writing local config, adding secrets, starting MCP servers,
    logging in, or changing machine-wide client integrations.
 9. Continue normal project analysis even when optional tooling is missing.
@@ -46,7 +48,18 @@ See `docs/AI_MEASUREMENT.md` for the full A/B workflow.
 
 ## Automation
 
-Use the local automation script to run every active tool:
+Use the AGENTS CLI for project setup and automation:
+
+```bash
+agents --doctor
+agents --setup
+agents --run
+agents --dashboard
+agents --suggest --idea "React PWA"
+agents --mcp-create
+```
+
+The shell script remains as a compatibility backend:
 
 ```bash
 bash scripts/ai-tools.sh check
@@ -55,9 +68,7 @@ bash scripts/ai-tools.sh run
 bash scripts/ai-tools.sh dashboard
 ```
 
-The script reads `.agents.env` and runs tools marked as `on`. The bundled
-defaults are enabled so new projects immediately produce local reports once
-required credentials and client caches exist.
+The script reads `.agents.env` and runs tools marked as `on`. The bundled defaults keep external tools optional; the setup wizard can preselect local-safe tools for confirmation.
 
 Execution order:
 
@@ -67,7 +78,7 @@ Execution order:
 4. Run client-specific Tokscale sync steps for Cursor, Antigravity, and Warp
    when selected and enabled.
 5. Generate Tokscale local reports for the selected clients.
-6. Submit Tokscale data when `AGENTS_TOKSCALE_SUBMIT=on`, validate without
+6. Submit Tokscale data when `AGENTS_TOKSCALE_SUBMIT=dry-run`, validate without
    uploading when `dry-run`, or skip when `off`.
 7. Export Tokscale graph data for local dashboard and optimization reporting.
 8. Generate the bounded Repomix pack after tracking steps complete.
@@ -82,15 +93,19 @@ heavy step.
 Supported flags:
 
 ```text
-AGENTS_CONTEXT7=on
-AGENTS_REPOMIX=on
-AGENTS_TOKSCALE=on
+AGENTS_CONTEXT7=ask
+AGENTS_REPOMIX=ask
+AGENTS_TOKSCALE=ask
 AGENTS_MCP=ask
+AGENTS_TOKLESS=ask
+AGENTS_DASHBOARD=on
+AGENTS_DASHBOARD_AUTOSTART=on
+AGENTS_DASHBOARD_WRAPPER_ONLY=on
 AGENTS_TOKSCALE_CLIENTS=codex,cursor,antigravity,claude,gemini,warp
 AGENTS_TOKSCALE_CURSOR_SYNC=on
 AGENTS_TOKSCALE_ANTIGRAVITY_SYNC=on
 AGENTS_TOKSCALE_WARP_SYNC=on
-AGENTS_TOKSCALE_SUBMIT=on
+AGENTS_TOKSCALE_SUBMIT=dry-run
 AGENTS_AUTO_RUN_ON_COMMIT=off
 AGENTS_USAGE_REPORT=on
 AGENTS_USAGE_REPORT_TARGET=docs/AI_USAGE_REPORT.md
@@ -103,10 +118,15 @@ Outputs:
 - Raw local logs: `.ai-runs/<timestamp>/`.
 - Optional aggregate report: `docs/AI_USAGE_REPORT.md`.
 - Optional optimization report: `docs/AI_OPTIMIZATION_REPORT.md`.
+- Optional AGENTS local config: `.agents/config.json`.
+- Optional rollback notes: `.agents/ROLLBACK.md`.
 
 Agents should run `bash scripts/ai-tools.sh run` at the end of an iteration when
 tools are active. Raw logs remain ignored; only aggregate summaries should be
 committed.
+
+Prefer `agents --run` for new projects because it starts the AGENTS dashboard
+and delegates to the compatibility backend when available.
 
 ## Commit Hook Automation
 
@@ -220,7 +240,7 @@ The legacy `AGENTS_TOKSCALE_CLIENT` flag remains supported for single-client
 setups. Prefer `AGENTS_TOKSCALE_CLIENTS` when users switch between agents.
 
 Remote Tokscale login and submission are controlled by `AGENTS_TOKSCALE_SUBMIT`.
-Templates default to `on`; users can opt down before running automation:
+Templates default to `dry-run`; users can switch to `on` after confirming external submission:
 
 ```bash
 npx -y tokscale@latest login

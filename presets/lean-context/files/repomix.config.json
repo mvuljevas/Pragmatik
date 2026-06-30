@@ -8,7 +8,7 @@
     "removeEmptyLines": true,
     "showLineNumbers": true,
     "tokenCountTree": true,
-    "tokenBudget": 120000
+    "tokenBudget": 150000
   },
   "include": [
     "README.md",

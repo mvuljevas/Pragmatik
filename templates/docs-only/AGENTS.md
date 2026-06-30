@@ -34,8 +34,7 @@ What should we work on next?
 ```
 
 During analysis, also check `docs/AI_TOOLS.md`, `docs/AI_CLIENTS.md`, and
-`docs/AI_TOOL_SETUP.md` when present. Run `bash scripts/ai-tools.sh check` when the
-script exists. Report whether Context7, Tokscale, Repomix CLI, MCP config
+`docs/AI_TOOL_SETUP.md` when present. Run `agents --doctor` when available; otherwise run `bash scripts/ai-tools.sh check` when the script exists. Report whether Context7, Tokscale, Repomix CLI, MCP config
 examples, global Tokscale access, Tokscale login, and selected client syncs are
 available. Offer `bash scripts/ai-tools.sh setup-machine` when machine-wide Tokscale
 or client setup is missing. Ask before writing secrets, changing machine-wide
@@ -54,13 +53,13 @@ integrations, or enabling MCP servers.
 
 ## AI Tool Automation
 
-- Run `bash scripts/ai-tools.sh check` during repository analysis when AI tooling is
+- Run `agents --doctor` when available; otherwise run `bash scripts/ai-tools.sh check` during repository analysis when AI tooling is
   relevant.
-- Run `bash scripts/ai-tools.sh setup-machine` when the user wants guided global
+- Run `agents --setup` when available; otherwise run `bash scripts/ai-tools.sh setup-machine` when the user wants guided global
   Tokscale and client setup.
-- Run `bash scripts/ai-tools.sh dashboard` when the user wants local dashboard
+- Run `agents --dashboard` when available; otherwise run `bash scripts/ai-tools.sh dashboard` when the user wants local dashboard
   commands or report locations.
-- Run `bash scripts/ai-tools.sh run` at the end of an iteration when `.agents.env`
+- Run `agents --run` when available; otherwise run `bash scripts/ai-tools.sh run` at the end of an iteration when `.agents.env`
   marks one or more tools as `on`.
 - When `.githooks/pre-commit` exists and the user wants automatic iteration
   closure, run `bash scripts/ai-tools.sh install-hooks` once and set
@@ -71,8 +70,7 @@ integrations, or enabling MCP servers.
   summaries such as `docs/AI_USAGE_REPORT.md` and
   `docs/AI_OPTIMIZATION_REPORT.md`.
 - Tokscale submit is controlled by `AGENTS_TOKSCALE_SUBMIT=on|dry-run|off`.
-  Templates default to `on`; use `dry-run` or `off` for validation or
-  local-only runs.
+  Templates default to `dry-run`; use `on` only after user confirmation or `off` for local-only runs.
 
 ## Versioning
 

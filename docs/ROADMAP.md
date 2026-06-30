@@ -21,7 +21,7 @@ This roadmap is the primary source for next-step suggestions in this repository.
 - Available templates include Codex, Cursor, generic MCP, Context7, Tokscale,
   and Repomix setup examples.
 - Available templates include baseline vs `lean-context` measurement flags, log
-  examples, default-on Tokscale submission, and opt-down modes.
+  examples, optional Tokscale submission with dry-run defaults and opt-in external submit.
 - AGENTS has an initial local `lean-context` usage report.
 - Active AI tools can be automated through `scripts/ai-tools.sh`.
 - Iteration commits can run active tools automatically through the optional
@@ -29,15 +29,19 @@ This roadmap is the primary source for next-step suggestions in this repository.
 - Root, preset, and templates include the AI tool automation script.
 - Root, preset, and templates include local optimization reports and guided
   Tokscale machine setup.
+- AGENTS now ships an npm package with the `agents` CLI for doctor, setup,
+  dashboard, run, suggest, and MCP scaffold flows.
 
 ## Next Milestones
 
-1. Measure whether `lean-context` reduces token usage in real sessions.
-2. Validate the recommendation flow with real new-project prompts.
-3. Refine the first template based on real adoption feedback.
-4. Prototype `project-context-mcp` as a read-only MCP server.
-5. Add template usage examples or copy/adoption instructions.
-6. Review third-party MCP, tracking, and compression recommendations for
+1. Publish or locally pack `@mvuljevas/agents` and test installation in a clean
+   external project.
+2. Measure whether `lean-context` reduces token usage in real sessions.
+3. Validate the recommendation flow with real new-project prompts.
+4. Refine the first template based on real adoption feedback.
+5. Expand `agents --mcp-create` into a full read-only MCP server runtime.
+6. Add template usage examples or copy/adoption instructions.
+7. Review third-party MCP, tracking, and compression recommendations for
    freshness before adding automation.
 
 ## Completed Milestones
@@ -57,3 +61,5 @@ This roadmap is the primary source for next-step suggestions in this repository.
 - Automated local AI tool execution for active tools.
 - Default-on Tokscale coverage, guided setup, local dashboard commands, and
   optimization reports for root, preset, and templates.
+- Initial AGENTS CLI package with lowercase flags, local dashboard, setup
+  preview, template suggestion, and MCP scaffold command.

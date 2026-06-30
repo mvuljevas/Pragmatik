@@ -46,12 +46,14 @@ The agent must:
    template workflow.
 7. Check optional AI tooling guidance in `docs/AI_TOOLS.md`,
    `docs/AI_CLIENTS.md`, and `docs/AI_TOOL_SETUP.md` when present.
-8. Run `bash scripts/ai-tools.sh check` when present.
+8. Run `agents --doctor` when the AGENTS CLI is installed; otherwise run
+   `bash scripts/ai-tools.sh check` when present.
 9. Detect the active AI client when possible and report whether Context7,
    Tokscale, Repomix CLI, MCP configuration, Tokscale login, global Tokscale
    command access, and selected client syncs appear available.
-10. Offer `bash scripts/ai-tools.sh setup-machine` when machine-wide Tokscale or
-   client setup is missing.
+10. Offer `agents --setup` when tooling, dashboard, or client setup is missing.
+   Fall back to `bash scripts/ai-tools.sh setup-machine` when the CLI is not
+   available.
 11. Ask before writing secrets, creating local config, enabling MCP servers, or
    changing machine-wide integrations.
 12. Summarize the current state.
@@ -101,6 +103,8 @@ the user wants the recommended setup applied.
 
 When `scripts/ai-tools.sh` exists:
 
+- Prefer `agents --doctor`, `agents --setup`, `agents --run`, and
+  `agents --dashboard` when the AGENTS CLI is installed.
 - Run `bash scripts/ai-tools.sh check` during repository analysis when AI tooling is
   relevant.
 - Run `bash scripts/ai-tools.sh setup-machine` when the user wants guided global
@@ -119,8 +123,7 @@ When `scripts/ai-tools.sh` exists:
 - Commit only aggregate, non-sensitive summaries such as
   `docs/AI_USAGE_REPORT.md` and `docs/AI_OPTIMIZATION_REPORT.md`.
 - Tokscale submission must be controlled by
-  `AGENTS_TOKSCALE_SUBMIT=on|dry-run|off`. Templates default to `on`; use
-  `dry-run` or `off` when the user wants validation or local-only runs.
+  `AGENTS_TOKSCALE_SUBMIT=on|dry-run|off`. Templates default to `dry-run`; use `on` only after user confirmation or `off` for local-only runs.
 - Do not run remote sharing commands outside Tokscale submit, write secrets, or
   run MCP mutation commands unless the user explicitly approves them.
 

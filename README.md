@@ -6,6 +6,16 @@ software projects.
 The goal is to standardize how projects define agent behavior, documentation
 rules, snapshots, versioning, naming, and repeatable delivery workflows.
 
+AGENTS also ships a project CLI:
+
+```bash
+npx @mvuljevas/agents --help
+npx @mvuljevas/agents --setup
+npx @mvuljevas/agents --dashboard
+```
+
+When installed as a project dependency, use the `agents` command directly.
+
 ## Purpose
 
 This repository provides reusable templates for projects such as:
@@ -98,12 +108,14 @@ All templates in this repository should share:
 ## Documentation Map
 
 - [Agent rules](AGENTS.md)
+- [AGENTS CLI](docs/AGENTS_CLI.md)
 - [AI Context](docs/AI_CONTEXT.md)
 - [AI Clients](docs/AI_CLIENTS.md)
 - [AI Search](docs/AI_SEARCH.md)
 - [AI Measurement](docs/AI_MEASUREMENT.md)
 - [AI Token Budget](docs/AI_TOKEN_BUDGET.md)
 - [AI Tool Setup](docs/AI_TOOL_SETUP.md)
+- [AI Tool Registry](docs/AI_TOOL_REGISTRY.md)
 - [AI Usage Report](docs/AI_USAGE_REPORT.md)
 - [AI Optimization Report](docs/AI_OPTIMIZATION_REPORT.md)
 - [Catalog](docs/CATALOG.md)
@@ -117,15 +129,15 @@ All templates in this repository should share:
 Each available template also includes `docs/AI_TOOLS.md` with MCP,
 usage-tracking, and token-reduction guidance for that project type.
 
-Use `bash scripts/ai-tools.sh check` during repository analysis, then
-`bash scripts/ai-tools.sh setup-machine` when Tokscale or client setup is missing.
-Use `bash scripts/ai-tools.sh run` to execute configured AI tools, append aggregate
-usage summaries, and append optimization observations when enabled. Use
-`bash scripts/ai-tools.sh dashboard` for Tokscale TUI and report locations.
+Use `agents --doctor` during repository analysis, then `agents --setup` when
+tooling or dashboard setup is missing. Use `agents --run` to execute configured
+AI tools, append aggregate usage summaries, and append optimization observations
+when enabled. Use `agents --dashboard` for the local AGENTS dashboard.
 
-Template defaults enable Context7, Repomix, Tokscale, usage reports,
-optimization reports, and Tokscale submit. Users can opt down with
-`AGENTS_TOKSCALE_SUBMIT=dry-run` or `AGENTS_TOKSCALE_SUBMIT=off`.
+`scripts/ai-tools.sh` remains available as a compatibility backend for existing
+templates and hooks.
+
+Template defaults keep external tools optional. The AGENTS dashboard and local reports are available by default, while external submission stays in `dry-run` until the user chooses `on`.
 Multi-client measurement is available through `AGENTS_TOKSCALE_CLIENTS`, with
 ready defaults for Codex, Cursor, Antigravity, Claude, Gemini, and Warp.
 

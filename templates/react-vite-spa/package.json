@@ -1,9 +1,15 @@
 {
   "name": "react-vite-spa",
   "private": true,
-  "version": "0.10.0",
+  "version": "0.11.0",
   "type": "module",
   "scripts": {
+    "agents": "agents --help",
+    "agents:init": "agents --init",
+    "agents:setup": "agents --setup",
+    "agents:doctor": "agents --doctor",
+    "agents:dashboard": "agents --dashboard",
+    "agents:dev": "agents --run -- npm run dev",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
@@ -14,5 +20,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@mvuljevas/agents": "^0.20.0"
+  }
 }
