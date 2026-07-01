@@ -9,6 +9,6 @@
     "agents:dashboard": "agents --dashboard"
   },
   "devDependencies": {
-    "@mvuljevas/agents": "^0.20.1"
+    "@mvuljevas/agents": "^0.21.0"
   }
 }

@@ -4,7 +4,7 @@
 
 - Name: Chrome Extension Vanilla.
 - Purpose: Manifest V3 Chrome extension starter with AGENTS and lean-context.
-- Current version: 0.11.1.
+- Current version: 0.12.0.
 - Version source: `manifest.json`.
 
 ## Stack

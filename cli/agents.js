@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 
-const VERSION = "0.20.4";
+const VERSION = "0.21.0";
 const ROOT = process.cwd();
 const CLI_DIR = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(CLI_DIR, "..");
@@ -106,7 +106,7 @@ const LOWER_FLAGS = new Set([
 ]);
 
 main().catch((error) => {
-  console.error(`agents: ${error.message}`);
+  printError(error.message);
   process.exitCode = 1;
 });
 
@@ -153,30 +153,54 @@ async function main() {
 function rejectUppercaseFlags(args) {
   for (const arg of args) {
     if (arg.startsWith("--") && /[A-Z]/.test(arg)) {
-      throw new Error(`flags are lowercase only: ${arg}`);
+      throw new Error(`Unsupported option ${arg}. Run agents --help to see supported commands.`);
     }
     if (arg.startsWith("--") && !LOWER_FLAGS.has(arg) && !arg.includes("=")) {
-      throw new Error(`unsupported flag: ${arg}`);
+      throw new Error(`Unsupported option ${arg}. Run agents --help to see supported commands.`);
     }
   }
 }
 
 function printHelp() {
+  const project = detectProject(ROOT);
   console.log(`AGENTS ${VERSION}
 
-Usage:
-  agents --help
-  agents --init [--dry-run] [--yes]
-  agents --setup [--dry-run] [--yes]
-  agents --doctor
-  agents --run -- <command>
-  agents --dashboard [--port 8787] [--no-open]
-  agents --suggest [--idea "..."] [--issue] [--dry-run]
-  agents --mcp-create [--dry-run]
+Project governance, AI-tool setup, local dashboard, and template guidance for
+new or existing repositories.
 
-Rules:
-  - Tools are optional and reversible.
-  - Existing repositories are changed only after preview and confirmation.
+Usage:
+  agents --help                         Show this guide.
+  agents --doctor                       Inspect the current repository.
+  agents --init [--dry-run] [--yes]     Prepare a new project.
+  agents --setup [--dry-run] [--yes]    Adopt AGENTS in an existing project.
+  agents --run -- <command>             Run a command with AGENTS dashboard.
+  agents --dashboard [--no-open]        Start the local dashboard.
+  agents --suggest --idea "..."         Recommend a template and preset.
+  agents --mcp-create [--dry-run]       Scaffold a read-only project MCP.
+
+Common flows:
+  New project:
+    agents --init
+
+  Existing project:
+    agents --doctor
+    agents --setup --dry-run
+    agents --setup
+
+  Project without Node artifacts:
+    npx -y @mvuljevas/agents --doctor
+    npx -y @mvuljevas/agents --setup
+
+Safety:
+  - Setup always previews changes before writing.
+  - Interactive runs ask for confirmation before writing.
+  - Non-interactive runs require --yes to write.
+  - Existing package scripts are not replaced by default.
+
+Detected here:
+  - stack: ${project.stack.name}
+  - state: ${project.projectState}
+  - next: ${recommendedCommand(project)}
 `);
 }
 
@@ -184,13 +208,18 @@ function detectProject(cwd) {
   const packageJson = readJson(join(cwd, "package.json"));
   const env = readEnv(join(cwd, ".agents.env")) || readEnv(join(cwd, ".agents.env.example"));
   const templates = listTemplates();
+  const stack = detectStack(cwd, packageJson);
   return {
     cwd,
     isGit: existsSync(join(cwd, ".git")),
     hasAgents: existsSync(join(cwd, "AGENTS.md")),
+    hasReadme: existsSync(join(cwd, "README.md")),
+    hasDocs: existsSync(join(cwd, "docs")),
     hasPackageJson: Boolean(packageJson),
     packageJson,
     packageManager: detectPackageManager(cwd),
+    stack,
+    projectState: detectProjectState(cwd, packageJson),
     scripts: packageJson?.scripts || {},
     hasAiRuns: existsSync(join(cwd, ".ai-runs")),
     env,
@@ -201,23 +230,113 @@ function detectProject(cwd) {
 }
 
 function printDoctor(project) {
-  console.log("AGENTS doctor");
-  console.log(`- cwd: ${project.cwd}`);
-  console.log(`- git: ${project.isGit ? "yes" : "no"}`);
-  console.log(`- AGENTS.md: ${project.hasAgents ? "present" : "missing"}`);
-  console.log(`- package.json: ${project.hasPackageJson ? "present" : "missing"}`);
-  console.log(`- package manager: ${project.packageManager}`);
-  console.log(`- dashboard data: ${project.hasAiRuns ? "present" : "missing"}`);
-  console.log(`- npm scripts: ${Object.keys(project.scripts).join(", ") || "none"}`);
-  console.log(`- detected clients: ${project.clients.join(", ") || "none"}`);
-  console.log("Tools:");
-  for (const tool of project.tools) {
-    console.log(`- ${tool.id}: ${tool.available ? "available" : "missing"} (${tool.category}, ${tool.maturity})`);
+  const assessment = assessProject(project);
+  printSection("AGENTS doctor");
+  printKV("Repository", project.cwd);
+  printKV("State", project.projectState);
+  printKV("Stack", `${project.stack.name} (${project.stack.confidence})`);
+  printKV("Git", project.isGit ? "yes" : "no");
+  printKV("AGENTS.md", project.hasAgents ? "present" : "missing");
+  printKV("README.md", project.hasReadme ? "present" : "missing");
+  printKV("docs/", project.hasDocs ? "present" : "missing");
+  printKV("Package manager", project.packageManager);
+  printKV("Dashboard data", project.hasAiRuns ? "present" : "missing");
+  printKV("Detected clients", project.clients.join(", ") || "none");
+
+  printSection("Readiness");
+  for (const item of assessment) {
+    console.log(`${statusIcon(item.level)} ${item.label}: ${item.message}`);
   }
-  console.log("Templates:");
+
+  printSection("Optional tools");
+  for (const tool of project.tools) {
+    console.log(`${tool.available ? "ok" : "--"} ${tool.id.padEnd(21)} ${tool.available ? "available" : "missing"}  ${tool.category}  ${tool.maturity}`);
+  }
+
+  printSection("Templates");
   for (const template of project.templates) {
     console.log(`- ${template.name}: ${template.available ? "available" : "missing"}`);
   }
+
+  printSection("Recommended next step");
+  console.log(`- ${recommendedCommand(project)}`);
+}
+
+function detectStack(cwd, packageJson) {
+  if (existsSync(join(cwd, "artisan")) || existsSync(join(cwd, "composer.json")) && readText(join(cwd, "composer.json")).includes("laravel/framework")) {
+    return { name: packageJson ? "laravel-node" : "laravel", confidence: "high" };
+  }
+  if (existsSync(join(cwd, "manifest.json"))) {
+    const manifest = readJson(join(cwd, "manifest.json"));
+    if (manifest?.manifest_version) return { name: "chrome-extension-vanilla", confidence: "high" };
+  }
+  if (packageJson?.dependencies?.vite || packageJson?.devDependencies?.vite) {
+    return { name: "react-vite-spa", confidence: packageJson.dependencies?.react || packageJson.devDependencies?.react ? "high" : "medium" };
+  }
+  if (packageJson) return { name: "node", confidence: "medium" };
+  if (existsSync(join(cwd, "README.md")) || existsSync(join(cwd, "docs"))) return { name: "docs-only", confidence: "medium" };
+  return { name: "unknown", confidence: "low" };
+}
+
+function detectProjectState(cwd, packageJson) {
+  if (existsSync(join(cwd, "AGENTS.md")) && existsSync(join(cwd, ".agents.env"))) return "agents-configured";
+  if (existsSync(join(cwd, "AGENTS.md"))) return "agents-partial";
+  if (packageJson || existsSync(join(cwd, "composer.json")) || existsSync(join(cwd, "artisan")) || existsSync(join(cwd, "manifest.json"))) return "existing-project";
+  return "new-or-empty";
+}
+
+function assessProject(project) {
+  const items = [];
+  items.push({
+    level: project.hasAgents ? "ok" : "warn",
+    label: "Governance",
+    message: project.hasAgents ? "AGENTS.md is present." : "AGENTS.md is missing; run agents --setup to add project rules."
+  });
+  items.push({
+    level: project.env ? "ok" : "warn",
+    label: "Local config",
+    message: project.env ? ".agents.env or sample config is present." : ".agents.env is missing; setup can create non-secret local defaults."
+  });
+  items.push({
+    level: project.hasReadme ? "ok" : "warn",
+    label: "README",
+    message: project.hasReadme ? "README.md is present." : "README.md is missing; templates should include one."
+  });
+  items.push({
+    level: project.stack.confidence === "low" ? "warn" : "ok",
+    label: "Stack",
+    message: project.stack.confidence === "low" ? "Stack was not recognized; use agents --suggest --idea to choose a template." : `Detected ${project.stack.name}.`
+  });
+  items.push({
+    level: project.tools.some((tool) => tool.available) ? "ok" : "info",
+    label: "AI tools",
+    message: project.tools.some((tool) => tool.available) ? "At least one optional AI tool is available." : "No optional AI tools were found; setup remains usable without them."
+  });
+  return items;
+}
+
+function recommendedCommand(project) {
+  if (!project.hasAgents) return "Run agents --setup --dry-run, then agents --setup after reviewing the preview.";
+  if (!project.env) return "Run agents --setup --dry-run to create local non-secret AGENTS config.";
+  if (!project.hasAiRuns) return "Run agents --run to generate the first local usage and optimization reports.";
+  return "Run agents --dashboard to review coverage, reports, and next actions.";
+}
+
+function printSetupIntro(project, initMode) {
+  printSection(initMode ? "Initialize project" : "Adopt AGENTS");
+  printKV("Repository", project.cwd);
+  printKV("Detected stack", `${project.stack.name} (${project.stack.confidence})`);
+  printKV("Detected state", project.projectState);
+  console.log("");
+  console.log("This wizard can create local AGENTS configuration, rollback notes, optional npm scripts when package.json exists, and safe AI-tool defaults.");
+  console.log("No external tool is mandatory.");
+}
+
+function recommendationReason(template) {
+  if (template === "react-vite-spa") return "The idea mentions React, Vite, SPA, or PWA terms.";
+  if (template === "laravel-react") return "The idea mentions Laravel, PHP, or Inertia-style application terms.";
+  if (template === "chrome-extension-vanilla") return "The idea mentions Chrome, browser, or extension terms.";
+  return "No stack-specific signal was detected, so the docs-only foundation is safest.";
 }
 
 async function setupProject({ initMode, dryRun, yes }) {
@@ -229,6 +348,8 @@ async function setupProject({ initMode, dryRun, yes }) {
     privacy: "dry-run",
     selectedTools: TOOL_REGISTRY.filter((tool) => tool.defaultSelected).map((tool) => tool.id)
   };
+
+  printSetupIntro(project, initMode);
 
   if (interactive) {
     const rl = createInterface({ input, output });
@@ -245,6 +366,12 @@ async function setupProject({ initMode, dryRun, yes }) {
   printChangePreview(changes, dryRun);
   printToolGuidance(answers.selectedTools);
   if (dryRun) return;
+  if (!yes && !interactive) {
+    console.log("");
+    console.log("No changes were written.");
+    console.log("Reason: this shell is non-interactive. Re-run with --yes after reviewing the preview.");
+    return;
+  }
   if (!yes && interactive) {
     const rl = createInterface({ input, output });
     const confirmed = await ask(rl, "Apply these changes? [y/N]", "N");
@@ -255,12 +382,40 @@ async function setupProject({ initMode, dryRun, yes }) {
     }
   }
   applyChanges(changes);
-  console.log("Setup complete. Run agents --doctor to verify.");
+  printSection("Setup complete");
+  console.log("- Run agents --doctor to verify repository readiness.");
+  console.log("- Run agents --dashboard to inspect local usage and tooling status.");
 }
 
 function buildSetupChanges(project, answers) {
   const changes = [];
   const envPath = join(ROOT, ".agents.env");
+  if (!project.hasAgents) {
+    changes.push({
+      path: join(ROOT, "AGENTS.md"),
+      mode: "create",
+      content: renderProjectAgents(project, answers)
+    });
+  }
+  if (!project.hasReadme) {
+    changes.push({
+      path: join(ROOT, "README.md"),
+      mode: "create",
+      content: renderProjectReadme(project)
+    });
+  }
+  const docs = {
+    "docs/AI_CONTEXT.md": renderProjectAiContext(project),
+    "docs/ROADMAP.md": renderProjectRoadmap(),
+    "docs/SNAPSHOTS.md": renderProjectSnapshots(project),
+    "docs/TECHDEBT.md": renderProjectTechDebt()
+  };
+  for (const [path, content] of Object.entries(docs)) {
+    const absolute = join(ROOT, path);
+    if (!existsSync(absolute)) {
+      changes.push({ path: absolute, mode: "create", content });
+    }
+  }
   if (!existsSync(envPath)) {
     changes.push({
       path: envPath,
@@ -321,6 +476,149 @@ function buildSetupChanges(project, answers) {
   return changes;
 }
 
+function renderProjectAgents(project, answers) {
+  return `# Agent Workflow
+
+This repository uses AGENTS project governance.
+
+## Start
+
+When the user asks to analyze the repository, inspect the project with minimal
+context first:
+
+1. Read \`README.md\`, \`AGENTS.md\`, and \`docs/AI_CONTEXT.md\`.
+2. Check \`docs/SNAPSHOTS.md\`, \`docs/ROADMAP.md\`, and \`docs/TECHDEBT.md\`.
+3. Inspect git status and the detected stack.
+4. Summarize the current state.
+5. Ask what the user wants to build or change next.
+
+Recognize prompts such as:
+
+- "Analiza el repo."
+- "Analyze this repository."
+- "What is the current state of this project?"
+
+## Rules
+
+- Do not overwrite existing project conventions without confirmation.
+- Preview file changes before applying them.
+- Keep README, roadmap, snapshots, and technical debt updated when project state changes.
+- Use Semantic Versioning for meaningful iterations when the project defines a version source.
+- Treat optional AI tools as opt-in unless local config explicitly enables them.
+
+## Local Setup
+
+- Setup profile: ${answers.profile}
+- Submit mode: ${answers.privacy}
+- Selected tools: ${answers.selectedTools.join(", ") || "none"}
+- Detected stack at setup: ${project.stack.name}
+`;
+}
+
+function renderProjectReadme(project) {
+  return `# ${projectName(project)}
+
+Project initialized with AGENTS workflow guidance.
+
+## Start
+
+\`\`\`bash
+agents --doctor
+agents --setup --dry-run
+agents --dashboard
+\`\`\`
+
+If this project does not use Node, run AGENTS through \`npx\`:
+
+\`\`\`bash
+npx -y @mvuljevas/agents --doctor
+\`\`\`
+
+## Documentation
+
+- \`AGENTS.md\`: agent workflow rules.
+- \`docs/AI_CONTEXT.md\`: compact project context.
+- \`docs/ROADMAP.md\`: next milestones.
+- \`docs/SNAPSHOTS.md\`: project memory.
+- \`docs/TECHDEBT.md\`: accepted debt and cleanup items.
+`;
+}
+
+function renderProjectAiContext(project) {
+  return `# AI Context
+
+Compact context for agents working in this repository.
+
+## Project
+
+- Name: ${projectName(project)}.
+- Detected stack: ${project.stack.name}.
+- Project state: ${project.projectState}.
+- Package manager: ${project.packageManager}.
+
+## Start Here
+
+1. Read \`README.md\` and \`AGENTS.md\`.
+2. Review recent entries in \`docs/SNAPSHOTS.md\`.
+3. Check open items in \`docs/ROADMAP.md\` and \`docs/TECHDEBT.md\`.
+4. Use focused search before opening large files.
+`;
+}
+
+function renderProjectRoadmap() {
+  return `# Roadmap
+
+Track the next logical milestones for this project.
+
+## Next Milestones
+
+1. Define the project goal.
+2. Confirm the target stack and runtime commands.
+3. Establish the first implementation milestone.
+
+## Completed Milestones
+
+- AGENTS workflow initialized.
+`;
+}
+
+function renderProjectSnapshots(project) {
+  const date = new Date().toISOString().slice(0, 10);
+  return `# Snapshots
+
+Chronological project memory for agents and maintainers.
+
+## ${date} - AGENTS Workflow Initialized
+
+Current state:
+
+- AGENTS workflow files were created.
+- Detected stack: ${project.stack.name}.
+- Project state: ${project.projectState}.
+
+Next suggested step:
+
+- Define what should be built or changed first.
+`;
+}
+
+function renderProjectTechDebt() {
+  return `# Technical Debt
+
+Track accepted shortcuts, risks, and cleanup items.
+
+## Open
+
+| ID | Priority | Area | Debt | Impact | Planned Resolution | GitHub |
+| --- | --- | --- | --- | --- | --- | --- |
+
+## Resolved
+
+| ID | Priority | Area | Debt | Resolution |
+| --- | --- | --- | --- | --- |
+`;
+}
+
 function renderAgentsEnv(answers) {
   return `# Local non-secret AGENTS configuration.
 AGENTS_CONTEXT_MODE=lean-context
@@ -353,18 +651,23 @@ any updated files from version control.
 }
 
 function printChangePreview(changes, dryRun) {
-  console.log(`AGENTS setup preview${dryRun ? " (dry-run)" : ""}`);
+  printSection(`Setup preview${dryRun ? " (dry-run)" : ""}`);
+  if (changes.length === 0) {
+    console.log("- No file changes required.");
+    return;
+  }
   for (const change of changes) {
-    console.log(`- ${change.mode}: ${relative(change.path)}`);
+    const note = change.mode === "skip" ? "already exists" : "pending";
+    console.log(`- ${change.mode.padEnd(6)} ${relative(change.path)} (${note})`);
   }
 }
 
 function printToolGuidance(selectedTools) {
+  printSection("Tool guidance");
   if (selectedTools.length === 0) {
-    console.log("No optional tools selected.");
+    console.log("- No optional tools selected.");
     return;
   }
-  console.log("Selected tool guidance:");
   for (const id of selectedTools) {
     const tool = TOOL_REGISTRY.find((entry) => entry.id === id);
     if (!tool) {
@@ -400,6 +703,7 @@ async function runWithDashboard(args) {
   const command = separator >= 0 ? args.slice(separator + 1) : [];
   const server = await startDashboard({ keepAlive: false, open: false });
   if (command.length === 0) {
+    printSection("Running AGENTS tools");
     await runAiTools();
     await closeServer(server);
     return;
@@ -525,8 +829,14 @@ function suggestTemplate({ idea, issue, dryRun, yes }) {
   if (/react|vite|spa|pwa/.test(normalized)) template = "react-vite-spa";
   if (/laravel|inertia|php/.test(normalized)) template = "laravel-react";
   if (/chrome|extension|browser/.test(normalized)) template = "chrome-extension-vanilla";
-  console.log(`Recommended template: ${template}`);
-  console.log("Recommended preset: lean-context");
+  printSection("Recommendation");
+  printKV("Template", template);
+  printKV("Preset", "lean-context");
+  printKV("Reason", recommendationReason(template));
+  console.log("");
+  console.log("Next:");
+  console.log(`- Start from templates/${template}/ when creating a new project.`);
+  console.log("- Apply presets/lean-context/ when adopting an existing project.");
   if (issue) {
     const body = [
       "# Template Request",
@@ -598,12 +908,14 @@ function packageVersion() {
 console.log(JSON.stringify({ resources: Object.keys(resources) }, null, 2));
 `;
   if (dryRun) {
-    console.log(`Would create: ${relative(target)}`);
+    printSection("MCP scaffold preview");
+    console.log(`- create ${relative(target)}`);
     return;
   }
   mkdirSync(dirname(target), { recursive: true });
   writeFileSync(target, content);
-  console.log(`Created ${relative(target)}`);
+  printSection("MCP scaffold complete");
+  console.log(`- Created ${relative(target)}`);
 }
 
 function listTemplates() {
@@ -667,6 +979,31 @@ function readText(path) {
   }
 }
 
+function printSection(title) {
+  console.log("");
+  console.log(title);
+  console.log("-".repeat(title.length));
+}
+
+function printKV(label, value) {
+  console.log(`${label.padEnd(18)} ${value}`);
+}
+
+function statusIcon(level) {
+  if (level === "ok") return "ok ";
+  if (level === "warn") return "warn";
+  return "info";
+}
+
+function printError(message) {
+  console.error("");
+  console.error("AGENTS error");
+  console.error("------------");
+  console.error(message);
+  console.error("");
+  console.error("Run agents --help for usage and examples.");
+}
+
 function matchLast(text, regex) {
   const matches = [...text.matchAll(new RegExp(regex.source, "g"))];
   return matches.length ? matches.at(-1)[1] : "";
@@ -689,6 +1026,11 @@ function numberArg(args, flag) {
 
 function relative(path) {
   return path.replace(`${ROOT}/`, "");
+}
+
+function projectName(project) {
+  if (project.packageJson?.name) return project.packageJson.name;
+  return ROOT.split(/[\\/]/).filter(Boolean).at(-1) || "project";
 }
 
 function escapeHtml(value) {

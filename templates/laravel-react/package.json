@@ -10,6 +10,6 @@
     "agents:dev": "agents --run -- npm run dev"
   },
   "devDependencies": {
-    "@mvuljevas/agents": "^0.20.1"
+    "@mvuljevas/agents": "^0.21.0"
   }
 }

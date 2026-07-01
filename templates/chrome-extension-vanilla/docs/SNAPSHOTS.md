@@ -102,3 +102,29 @@ Risks:
 Next suggested step:
 
 - Run `npm run agents:doctor` after creating a project from this template.
+
+## 2026-07-01 - Block 005: Professional CLI Interaction
+
+Branch:
+
+- `main`
+
+Current state:
+
+- AGENTS CLI documentation now describes command actions, common flows, safe
+  setup behavior, non-Node usage, and error handling.
+- Template dev dependency guidance now targets `@mvuljevas/agents` `^0.21.0`.
+- Template version has been updated to `0.12.0`.
+
+Decisions:
+
+- Keep `agents` as the single guided entrypoint for doctor, setup, dashboard,
+  recommendation, and MCP scaffold flows.
+
+Risks:
+
+- Clean external install validation is still pending.
+
+Next suggested step:
+
+- Run `npm run agents:doctor` after creating a project from this template.

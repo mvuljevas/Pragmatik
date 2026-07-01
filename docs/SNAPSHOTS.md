@@ -856,6 +856,44 @@ Next suggested step:
 - Follow `docs/ROADMAP.md`: test `@mvuljevas/agents` from a clean external
   project using `npm pack` or local link.
 
+## 2026-07-01 - Block 031: Professional CLI Interaction
+
+Branch:
+
+- `main`
+
+Current state:
+
+- `agents --help` now shows purpose, command actions, common flows, safety
+  rules, project-without-Node usage, detected state, and recommended next step.
+- `agents --doctor` now prints stack-aware diagnostics, readiness checks,
+  optional tool status, available templates, and an actionable next command.
+- `agents --setup` now creates useful base workflow files when absent:
+  `AGENTS.md`, `README.md`, `docs/AI_CONTEXT.md`, `docs/ROADMAP.md`,
+  `docs/SNAPSHOTS.md`, and `docs/TECHDEBT.md`.
+- Non-interactive setup no longer writes files unless `--yes` is provided.
+- `agents --suggest` now explains the recommendation and next action.
+- CLI documentation was updated in root, `lean-context`, and all templates.
+- Repository version has been updated to `0.21.0`.
+- Template versions have been updated to `0.12.0`.
+
+Decisions:
+
+- Keep the public CLI dependency-free so it can run through `npx` in Laravel,
+  PHP, documentation-only, Chrome extension, React, and other project types.
+- Prefer mature CLI behavior: clear help, explicit next steps, safe previews,
+  confirmation before writes, useful errors, and automation-friendly `--yes`.
+
+Risks:
+
+- Template copying and full install flows still need clean external project
+  validation before npm publication.
+
+Next suggested step:
+
+- Follow `docs/ROADMAP.md`: test `@mvuljevas/agents` from a clean external
+  project using `npm pack` or local link.
+
 ## 2026-06-30 - Block 023: AI Tool Script Structure Audit
 
 Branch:

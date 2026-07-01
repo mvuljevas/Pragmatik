@@ -29,8 +29,8 @@ This roadmap is the primary source for next-step suggestions in this repository.
 - Root, preset, and templates include the AI tool automation script.
 - Root, preset, and templates include local optimization reports and guided
   Tokscale machine setup.
-- AGENTS now ships an npm package with the `agents` CLI for doctor, setup,
-  dashboard, run, suggest, and MCP scaffold flows.
+- AGENTS now ships an npm package with the `agents` CLI for professional
+  help, doctor, setup, dashboard, run, suggest, and MCP scaffold flows.
 
 ## Next Milestones
 
@@ -61,5 +61,8 @@ This roadmap is the primary source for next-step suggestions in this repository.
 - Automated local AI tool execution for active tools.
 - Default-on Tokscale coverage, guided setup, local dashboard commands, and
   optimization reports for root, preset, and templates.
-- Initial AGENTS CLI package with lowercase flags, local dashboard, setup
-  preview, template suggestion, and MCP scaffold command.
+- Initial AGENTS CLI package with local dashboard, setup preview, template
+  suggestion, and MCP scaffold command.
+- Professionalized AGENTS CLI interaction with clearer help, stack-aware
+  diagnostics, safe non-interactive setup behavior, and useful base-file
+  previews for projects with or without Node.
