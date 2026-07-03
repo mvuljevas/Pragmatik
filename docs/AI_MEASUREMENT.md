@@ -1,7 +1,7 @@
 # AI Measurement
 
-Use this workflow to compare the same task across two identical repositories:
-one baseline run and one `lean-context` run.
+Use this workflow to compare the same task across two matching runs: one
+baseline run and one `lean-context` run.
 
 ## Local Mode File
 
@@ -54,14 +54,49 @@ Expected behavior:
   context packs.
 - Record the run label and tool state when a local usage log exists.
 
-## Recommended A/B Setup
+## Repeatable Local Pair
 
-1. Create two identical repositories from the same template.
+Use the paired automation when you want a clean local comparison appended to
+`docs/AI_USAGE_REPORT.md` without hand-editing:
+
+```bash
+AGENTS_MEASUREMENT_PAIR_ID=issue-5-adoption-001 \
+AGENTS_MEASUREMENT_TASK="Run the same adoption prompt in both modes" \
+bash scripts/ai-tools.sh measure-pair
+```
+
+The command runs two profiles with matching labels:
+
+- `AGENTS_CONTEXT_MODE=baseline`
+- `AGENTS_CONTEXT_MODE=lean-context`
+
+It stores raw outputs under `.ai-runs/<pair>-baseline/` and
+`.ai-runs/<pair>-lean-context/`, keeps Tokscale submission off by default, and
+appends a comparison section to `docs/AI_USAGE_REPORT.md`.
+
+Default paired-measurement flags:
+
+```text
+AGENTS_MEASUREMENT_CONTEXT7=off
+AGENTS_MEASUREMENT_REPOMIX=on
+AGENTS_MEASUREMENT_TOKSCALE=on
+AGENTS_MEASUREMENT_TOKSCALE_SUBMIT=off
+AGENTS_MEASUREMENT_USAGE_REPORT=on
+```
+
+Set any of those values in `.agents.env` or as process-level overrides when a
+specific experiment needs different tool coverage.
+
+## Two-Repository A/B Setup
+
+1. Create two identical repositories from the same template or same commit.
 2. In repository A, set `AGENTS_CONTEXT_MODE=baseline`.
 3. In repository B, set `AGENTS_CONTEXT_MODE=lean-context`.
 4. Use the same prompt in both repositories.
 5. Use Tokscale or the active client's usage report to capture token usage.
-6. Record results in `.ai-usage-log.md`.
+6. Run `bash scripts/ai-tools.sh measure-pair` when both sides should be
+   summarized into the aggregate report, or run `bash scripts/ai-tools.sh run`
+   separately in each repository.
 7. Compare total tokens, output quality, repeated context, and time to useful
    result.
 
@@ -69,10 +104,12 @@ To automate active tools in each repository:
 
 ```bash
 bash scripts/ai-tools.sh run
+bash scripts/ai-tools.sh measure-pair
 ```
 
 Set `AGENTS_USAGE_REPORT=on` to append an aggregate summary to
-`docs/AI_USAGE_REPORT.md`.
+`docs/AI_USAGE_REPORT.md`. `measure-pair` sets report output on by default
+unless `AGENTS_MEASUREMENT_USAGE_REPORT=off`.
 
 For automatic iteration closure, install the versioned pre-commit hook:
 
