@@ -16,13 +16,13 @@ should include an AI tooling check after reading the project docs:
 1. Check `.agents.env` when present.
 2. If `AGENTS_CONTEXT_MODE=baseline`, report that optional AI tooling is
    disabled for measurement and skip setup.
-3. Read `docs/AI_TOOLS.md`, `docs/AI_CLIENTS.md`, and this file when present.
+3. Read `docs/AI_CLIENTS.md`, this file, and related AI docs when present.
 4. Detect the active client when possible.
-5. Run `agents --doctor` when the CLI is available; otherwise run
+5. Run `agents doctor` when the CLI is available; otherwise run
    `bash scripts/ai-tools.sh check` when present.
 6. Report whether Context7, Tokscale, Repomix CLI, MCP examples, global
    `tokscale`, Tokscale login, and selected client syncs are available.
-7. Offer `agents --setup` when setup is missing. Fall back to
+7. Offer `agents setup` when setup is missing. Fall back to
    `bash scripts/ai-tools.sh setup-machine` for compatibility.
 8. Ask before writing local config, adding secrets, starting MCP servers,
    logging in, or changing machine-wide client integrations.
@@ -51,12 +51,12 @@ See `docs/AI_MEASUREMENT.md` for the full A/B workflow.
 Use the AGENTS CLI for project setup and automation:
 
 ```bash
-agents --doctor
-agents --setup
-agents --run
-agents --dashboard
-agents --suggest --idea "React PWA"
-agents --mcp-create
+agents doctor
+agents setup
+agents run
+agents dashboard
+agents suggest --idea "React PWA"
+agents mcp-create
 ```
 
 The shell script remains as a compatibility backend:
@@ -65,6 +65,7 @@ The shell script remains as a compatibility backend:
 bash scripts/ai-tools.sh check
 bash scripts/ai-tools.sh setup-machine
 bash scripts/ai-tools.sh run
+bash scripts/ai-tools.sh measure-pair
 bash scripts/ai-tools.sh dashboard
 ```
 
@@ -111,6 +112,13 @@ AGENTS_USAGE_REPORT=on
 AGENTS_USAGE_REPORT_TARGET=docs/AI_USAGE_REPORT.md
 AGENTS_OPTIMIZATION_REPORT=on
 AGENTS_OPTIMIZATION_REPORT_TARGET=docs/AI_OPTIMIZATION_REPORT.md
+AGENTS_MEASUREMENT_PAIR_ID=
+AGENTS_MEASUREMENT_TASK=
+AGENTS_MEASUREMENT_CONTEXT7=off
+AGENTS_MEASUREMENT_REPOMIX=on
+AGENTS_MEASUREMENT_TOKSCALE=on
+AGENTS_MEASUREMENT_TOKSCALE_SUBMIT=off
+AGENTS_MEASUREMENT_USAGE_REPORT=on
 ```
 
 Outputs:
@@ -125,7 +133,12 @@ Agents should run `bash scripts/ai-tools.sh run` at the end of an iteration when
 tools are active. Raw logs remain ignored; only aggregate summaries should be
 committed.
 
-Prefer `agents --run` for new projects because it starts the AGENTS dashboard
+Use `bash scripts/ai-tools.sh measure-pair` for baseline-vs-`lean-context`
+comparisons. It creates matched baseline and `lean-context` raw-output
+directories, keeps Tokscale submit off by default, and appends a comparison
+table to `docs/AI_USAGE_REPORT.md`.
+
+Prefer `agents run` for new projects because it starts the AGENTS dashboard
 and delegates to the compatibility backend when available.
 
 ## Commit Hook Automation

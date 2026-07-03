@@ -80,6 +80,11 @@ ensure_run_dir() {
   mkdir -p "$RUN_DIR"
 }
 
+reset_run_dir() {
+  RUN_ID="$1"
+  RUN_DIR=".ai-runs/${RUN_ID}"
+}
+
 run_tokscale_cmd() {
   "${TOKSCALE_BIN[@]}" "$@"
 }
@@ -307,6 +312,31 @@ print(value)
 PY
 }
 
+number_or_blank() {
+  printf '%s' "$1" | tr -d ',[:space:]'
+}
+
+percent_delta() {
+  local baseline="$1"
+  local candidate="$2"
+  python3 - "$baseline" "$candidate" <<'PY' 2>/dev/null || true
+import sys
+
+try:
+    baseline = float(sys.argv[1])
+    candidate = float(sys.argv[2])
+except ValueError:
+    sys.exit(0)
+
+if baseline == 0:
+    sys.exit(0)
+
+delta = ((candidate - baseline) / baseline) * 100
+sign = "+" if delta > 0 else ""
+print(f"{sign}{delta:.1f}%")
+PY
+}
+
 append_usage_report() {
   if ! bool_on "$AGENTS_USAGE_REPORT"; then
     return 0
@@ -374,6 +404,73 @@ EOF
     echo
     echo "- Local raw outputs are stored under \`${RUN_DIR}/\` and remain ignored."
     echo "- Treat Tokscale grouping as approximate unless validated manually."
+  } >> "$target"
+}
+
+append_measurement_comparison() {
+  if ! bool_on "$AGENTS_USAGE_REPORT"; then
+    return 0
+  fi
+
+  local target="$AGENTS_USAGE_REPORT_TARGET"
+  mkdir -p "$(dirname "$target")"
+  if [ ! -f "$target" ]; then
+    cat > "$target" <<'EOF'
+# AI Usage Report
+
+This file records aggregate, non-sensitive AI usage observations for this
+repository. Personal logs, raw transcripts, local dashboard data, API keys, and
+tool credentials must stay out of version control.
+EOF
+  fi
+
+  local pair_id="$1"
+  local baseline_run="$2"
+  local lean_run="$3"
+  local baseline_dir="$4"
+  local lean_dir="$5"
+  local baseline_repomix_tokens="$6"
+  local lean_repomix_tokens="$7"
+  local baseline_tokscale_tokens="$8"
+  local lean_tokscale_tokens="$9"
+  local baseline_cost="${10}"
+  local lean_cost="${11}"
+  local task="${12}"
+
+  local repomix_delta tokscale_delta cost_delta
+  repomix_delta="$(percent_delta "$(number_or_blank "$baseline_repomix_tokens")" "$(number_or_blank "$lean_repomix_tokens")")"
+  tokscale_delta="$(percent_delta "$(number_or_blank "$baseline_tokscale_tokens")" "$(number_or_blank "$lean_tokscale_tokens")")"
+  cost_delta="$(percent_delta "$(number_or_blank "$baseline_cost")" "$(number_or_blank "$lean_cost")")"
+
+  {
+    echo
+    echo "## $(date -u +%Y-%m-%d) - Baseline vs lean-context Measurement ${pair_id}"
+    echo
+    echo "Scope:"
+    echo
+    echo "- Repository: $(basename "$ROOT_DIR")."
+    echo "- Experiment ID: \`${pair_id}\`."
+    echo "- Task: ${task:-unspecified}"
+    echo "- Baseline run: \`${baseline_run}\`."
+    echo "- lean-context run: \`${lean_run}\`."
+    echo
+    echo "Measurements:"
+    echo
+    echo "| Metric | baseline | lean-context | Delta |"
+    echo "| --- | --- | --- | --- |"
+    echo "| Repomix bounded pack tokens | ${baseline_repomix_tokens:-not available} | ${lean_repomix_tokens:-not available} | ${repomix_delta:-not available} |"
+    echo "| Tokscale measured tokens | ${baseline_tokscale_tokens:-not available} | ${lean_tokscale_tokens:-not available} | ${tokscale_delta:-not available} |"
+    echo "| Tokscale measured cost | ${baseline_cost:-not available} | ${lean_cost:-not available} | ${cost_delta:-not available} |"
+    echo
+    echo "Run data:"
+    echo
+    echo "- Baseline raw outputs: \`${baseline_dir}/\`."
+    echo "- lean-context raw outputs: \`${lean_dir}/\`."
+    echo
+    echo "Interpretation:"
+    echo
+    echo "- Treat Tokscale grouping as approximate unless validated manually."
+    echo "- This automated comparison records available measurements; output quality and repeated-context behavior still require reviewer judgment."
   } >> "$target"
 }
 
@@ -464,6 +561,83 @@ run_active_tools() {
   append_usage_report
   append_optimization_report
   echo "AI tool run complete: ${RUN_DIR}"
+}
+
+run_measurement_pair() {
+  local pair_id base_task original_mode original_run original_id original_task
+  local original_context7 original_repomix original_tokscale original_submit original_usage_report original_optimization_report
+  pair_id="$(value_for AGENTS_MEASUREMENT_PAIR_ID "")"
+  if [ -z "$pair_id" ]; then
+    pair_id="measurement-${RUN_ID}"
+  fi
+  base_task="$(value_for AGENTS_MEASUREMENT_TASK "$AGENTS_EXPERIMENT_TASK")"
+  if [ -z "$base_task" ]; then
+    base_task="baseline vs lean-context measurement"
+  fi
+
+  original_mode="$AGENTS_CONTEXT_MODE"
+  original_id="$AGENTS_EXPERIMENT_ID"
+  original_run="$AGENTS_EXPERIMENT_RUN"
+  original_task="$AGENTS_EXPERIMENT_TASK"
+  original_context7="$AGENTS_CONTEXT7"
+  original_repomix="$AGENTS_REPOMIX"
+  original_tokscale="$AGENTS_TOKSCALE"
+  original_submit="$AGENTS_TOKSCALE_SUBMIT"
+  original_usage_report="$AGENTS_USAGE_REPORT"
+  original_optimization_report="$AGENTS_OPTIMIZATION_REPORT"
+
+  AGENTS_CONTEXT7="$(value_for AGENTS_MEASUREMENT_CONTEXT7 "off")"
+  AGENTS_REPOMIX="$(value_for AGENTS_MEASUREMENT_REPOMIX "on")"
+  AGENTS_TOKSCALE="$(value_for AGENTS_MEASUREMENT_TOKSCALE "on")"
+  AGENTS_TOKSCALE_SUBMIT="$(value_for AGENTS_MEASUREMENT_TOKSCALE_SUBMIT "off")"
+  AGENTS_USAGE_REPORT="off"
+  AGENTS_OPTIMIZATION_REPORT="off"
+  AGENTS_EXPERIMENT_ID="$pair_id"
+  AGENTS_EXPERIMENT_TASK="$base_task"
+
+  local baseline_run lean_run baseline_dir lean_dir
+  local baseline_repomix_tokens lean_repomix_tokens baseline_tokscale_tokens lean_tokscale_tokens baseline_cost lean_cost
+
+  baseline_run="${pair_id}-baseline"
+  reset_run_dir "$baseline_run"
+  AGENTS_CONTEXT_MODE="baseline"
+  AGENTS_EXPERIMENT_RUN="$baseline_run"
+  run_active_tools
+  baseline_dir="$RUN_DIR"
+  baseline_repomix_tokens="$(extract_repomix_metric "Total Tokens")"
+  baseline_tokscale_tokens="$(extract_tokscale_summary "totalTokens")"
+  baseline_cost="$(extract_tokscale_summary "totalCost")"
+
+  lean_run="${pair_id}-lean-context"
+  reset_run_dir "$lean_run"
+  AGENTS_CONTEXT_MODE="lean-context"
+  AGENTS_EXPERIMENT_RUN="$lean_run"
+  run_active_tools
+  lean_dir="$RUN_DIR"
+  lean_repomix_tokens="$(extract_repomix_metric "Total Tokens")"
+  lean_tokscale_tokens="$(extract_tokscale_summary "totalTokens")"
+  lean_cost="$(extract_tokscale_summary "totalCost")"
+
+  AGENTS_USAGE_REPORT="$(value_for AGENTS_MEASUREMENT_USAGE_REPORT "on")"
+  AGENTS_OPTIMIZATION_REPORT="$original_optimization_report"
+  append_measurement_comparison "$pair_id" "$baseline_run" "$lean_run" "$baseline_dir" "$lean_dir" \
+    "$baseline_repomix_tokens" "$lean_repomix_tokens" "$baseline_tokscale_tokens" "$lean_tokscale_tokens" "$baseline_cost" "$lean_cost" "$base_task"
+
+  AGENTS_CONTEXT_MODE="$original_mode"
+  AGENTS_EXPERIMENT_ID="$original_id"
+  AGENTS_EXPERIMENT_RUN="$original_run"
+  AGENTS_EXPERIMENT_TASK="$original_task"
+  AGENTS_CONTEXT7="$original_context7"
+  AGENTS_REPOMIX="$original_repomix"
+  AGENTS_TOKSCALE="$original_tokscale"
+  AGENTS_TOKSCALE_SUBMIT="$original_submit"
+  AGENTS_USAGE_REPORT="$original_usage_report"
+  AGENTS_OPTIMIZATION_REPORT="$original_optimization_report"
+
+  echo "Measurement pair complete: ${pair_id}"
+  echo "- baseline: ${baseline_dir}"
+  echo "- lean-context: ${lean_dir}"
+  echo "- report: ${AGENTS_USAGE_REPORT_TARGET}"
 }
 
 install_hooks() {
@@ -636,6 +810,9 @@ case "$COMMAND" in
   run)
     run_active_tools
     ;;
+  measure-pair)
+    run_measurement_pair
+    ;;
   run-and-stage)
     run_active_tools
     stage_usage_report
@@ -650,7 +827,7 @@ case "$COMMAND" in
     dashboard
     ;;
   *)
-    echo "Usage: scripts/ai-tools.sh [check|run|run-and-stage|install-hooks|setup-machine|dashboard]" >&2
+    echo "Usage: scripts/ai-tools.sh [check|run|measure-pair|run-and-stage|install-hooks|setup-machine|dashboard]" >&2
     exit 2
     ;;
 esac

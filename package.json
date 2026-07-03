@@ -1,6 +1,6 @@
 {
   "name": "@mvuljevas/agents",
-  "version": "0.24.1",
+  "version": "0.25.0",
   "description": "Reusable AGENTS templates, workflows, and guided AI tooling setup.",
   "license": "MIT",
   "type": "module",
@@ -30,6 +30,7 @@
     "agents:init": "node cli/agents.js init",
     "agents:setup": "node cli/agents.js setup",
     "agents:dashboard": "node cli/agents.js dashboard",
+    "agents:measure": "bash scripts/ai-tools.sh measure-pair",
     "agents:dev": "node cli/agents.js run -- npm run dev",
     "test": "node cli/agents.js doctor && node cli/agents.js setup --dry-run && node cli/agents.js mcp-create --dry-run && node cli/agents.js suggest --idea \"React PWA\" --issue --dry-run"
   },

@@ -8,7 +8,7 @@ import { emitKeypressEvents } from "node:readline";
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 
-const VERSION = "0.24.1";
+const VERSION = "0.25.0";
 const ROOT = process.cwd();
 const CLI_DIR = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(CLI_DIR, "..");
@@ -629,6 +629,7 @@ function buildSetupChanges(project, answers) {
       "agents:init": "agents init",
       "agents:setup": "agents setup",
       "agents:dashboard": "agents dashboard",
+      "agents:measure": "bash scripts/ai-tools.sh measure-pair",
       "agents:dev": "agents run -- npm run dev"
     };
     let changed = false;

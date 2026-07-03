@@ -65,6 +65,7 @@ The shell script remains as a compatibility backend:
 bash scripts/ai-tools.sh check
 bash scripts/ai-tools.sh setup-machine
 bash scripts/ai-tools.sh run
+bash scripts/ai-tools.sh measure-pair
 bash scripts/ai-tools.sh dashboard
 ```
 
@@ -111,6 +112,13 @@ AGENTS_USAGE_REPORT=on
 AGENTS_USAGE_REPORT_TARGET=docs/AI_USAGE_REPORT.md
 AGENTS_OPTIMIZATION_REPORT=on
 AGENTS_OPTIMIZATION_REPORT_TARGET=docs/AI_OPTIMIZATION_REPORT.md
+AGENTS_MEASUREMENT_PAIR_ID=
+AGENTS_MEASUREMENT_TASK=
+AGENTS_MEASUREMENT_CONTEXT7=off
+AGENTS_MEASUREMENT_REPOMIX=on
+AGENTS_MEASUREMENT_TOKSCALE=on
+AGENTS_MEASUREMENT_TOKSCALE_SUBMIT=off
+AGENTS_MEASUREMENT_USAGE_REPORT=on
 ```
 
 Outputs:
@@ -124,6 +132,11 @@ Outputs:
 Agents should run `bash scripts/ai-tools.sh run` at the end of an iteration when
 tools are active. Raw logs remain ignored; only aggregate summaries should be
 committed.
+
+Use `bash scripts/ai-tools.sh measure-pair` for baseline-vs-`lean-context`
+comparisons. It creates matched baseline and `lean-context` raw-output
+directories, keeps Tokscale submit off by default, and appends a comparison
+table to `docs/AI_USAGE_REPORT.md`.
 
 Prefer `agents run` for new projects because it starts the AGENTS dashboard
 and delegates to the compatibility backend when available.

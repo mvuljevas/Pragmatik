@@ -135,7 +135,9 @@ AI tools, append aggregate usage summaries, and append optimization observations
 when enabled. Use `agents dashboard` for the local AGENTS dashboard.
 
 `scripts/ai-tools.sh` remains available as a compatibility backend for existing
-templates and hooks.
+templates and hooks. Use `bash scripts/ai-tools.sh measure-pair` or
+`npm run agents:measure` to run a matched baseline-vs-`lean-context`
+measurement and append the comparison to `docs/AI_USAGE_REPORT.md`.
 
 Template defaults keep external tools optional. The AGENTS dashboard and local reports are available by default, while external submission stays in `dry-run` until the user chooses `on`.
 Multi-client measurement is available through `AGENTS_TOKSCALE_CLIENTS`, with
