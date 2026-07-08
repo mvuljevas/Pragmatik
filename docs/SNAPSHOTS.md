@@ -57,7 +57,7 @@ Current state:
 - `docs/NAMING.md` updated to reflect the final package and binary name.
 - `docs/INSTALLATION.md` updated with the correct install commands.
 - `docs/ROADMAP.md` milestone 1 (naming resolution) marked as completed.
-- Repository version has been updated to `0.25.0`.
+- Repository version has been updated to `0.3.0`.
 
 Decisions:
 
@@ -1150,7 +1150,7 @@ Current state:
   measurement-pair override flags.
 - `npm run agents:measure` is available in this repository, and the CLI setup
   wizard offers the same script for adopters with `package.json`.
-- Repository version has been updated to `0.25.0`.
+- Repository version has been updated to `0.3.0`.
 - Template versions have been updated to `0.15.0`.
 
 Decisions:
