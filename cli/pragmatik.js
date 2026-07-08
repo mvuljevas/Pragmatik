@@ -169,7 +169,7 @@ async function main() {
     return;
   }
 
-  throw new Error(`unknown command. Run agents help.`);
+  throw new Error(`unknown command. Run pragmatik help.`);
 }
 
 function normalizeArgs(args) {
@@ -185,10 +185,10 @@ function normalizeArgs(args) {
 function rejectUppercaseFlags(args) {
   for (const arg of args) {
     if (arg.startsWith("--") && /[A-Z]/.test(arg)) {
-      throw new Error(`Unsupported option ${arg}. Run agents help to see supported commands.`);
+      throw new Error(`Unsupported option ${arg}. Run pragmatik help to see supported commands.`);
     }
     if (arg.startsWith("--") && !LOWER_FLAGS.has(arg) && !arg.includes("=")) {
-      throw new Error(`Unsupported option ${arg}. Run agents help to see supported commands.`);
+      throw new Error(`Unsupported option ${arg}. Run pragmatik help to see supported commands.`);
     }
   }
 }
@@ -931,7 +931,7 @@ function printToolGuidance(selectedTools) {
       console.log("  auth: none by default; run tokless --help to choose plugins.");
     }
     if (tool.id === "repomix") {
-      console.log("  auth: none; AGENTS uses bounded local context packs.");
+      console.log("  auth: none; Pragmatik uses bounded local context packs.");
     }
     if (tool.id === "context7") {
       console.log("  auth: set CONTEXT7_API_KEY in a local ignored secret store.");
@@ -1008,7 +1008,7 @@ function renderDashboard(project) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AGENTS Dashboard</title>
+<title>Pragmatik Dashboard</title>
 <style>
 body{margin:0;font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f7f8fb;color:#12151c}
 main{max-width:1120px;margin:0 auto;padding:32px}
@@ -1023,7 +1023,7 @@ td,th{padding:10px;border-bottom:1px solid #eef0f4;text-align:left;font-size:14p
 </head>
 <body>
 <main>
-<h1>AGENTS Dashboard</h1>
+<h1>Pragmatik Dashboard</h1>
 <p class="muted">${escapeHtml(data.cwd)}</p>
 <section class="grid">
 <div class="card">Detected agents<div class="value">${data.clients.length}</div></div>
@@ -1067,7 +1067,7 @@ function nextActions(project) {
   const actions = [];
   if (!project.tools.find((tool) => tool.id === "tokscale")?.available) actions.push("Install or use npx Tokscale for usage measurement.");
   if (!project.tools.find((tool) => tool.id === "tokless")?.available) actions.push("Tokless is optional; install it only if you want prompt/plugin optimization.");
-  if (!project.hasAgents) actions.push("Add AGENTS.md or run agents setup to adopt governance rules.");
+  if (!project.hasAgents) actions.push("Add AGENTS.md or run pragmatik setup to adopt governance rules.");
   if (actions.length === 0) actions.push("Run a matched baseline vs optimized task before claiming savings.");
   return actions;
 }
@@ -1104,7 +1104,7 @@ function suggestTemplate({ idea, issue, dryRun, yes }) {
         "issue",
         "create",
         "--repo",
-        "mvuljevas/AGENTS",
+        "mvuljevas/Pragmatik",
         "--title",
         "Add template for requested project type",
         "--body",
@@ -1370,11 +1370,11 @@ function statusIcon(level) {
 
 function printError(message) {
   console.error("");
-  console.error("AGENTS error");
-  console.error("------------");
+  console.error("Pragmatik error");
+  console.error("---------------");
   console.error(message);
   console.error("");
-  console.error("Run agents help for usage and examples.");
+  console.error("Run pragmatik help for usage and examples.");
 }
 
 function matchLast(text, regex) {
