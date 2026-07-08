@@ -1,6 +1,7 @@
 # Technical Debt
 
-Track accepted shortcuts, risks, and cleanup items for this repository.
+Track accepted shortcuts, risks, and cleanup items for this repository on the
+[Pragmatik Project Board](https://github.com/users/mvuljevas/projects/8).
 
 ## Open
 

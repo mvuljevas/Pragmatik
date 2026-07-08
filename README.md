@@ -129,6 +129,10 @@ All templates in this repository should share:
 - [Snapshots](docs/SNAPSHOTS.md)
 - [Technical Debt](docs/TECHDEBT.md)
 
+## GitHub Project
+
+- [Pragmatik Project Board](https://github.com/users/mvuljevas/projects/8) — tracks milestones, issues, and work items.
+
 Use `pragmatik doctor` during repository analysis, then `pragmatik setup` when
 tooling or dashboard setup is missing. Use `pragmatik run` to execute configured
 AI tools, append aggregate usage summaries, and append optimization observations
