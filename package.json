@@ -3,6 +3,15 @@
   "version": "0.25.0",
   "description": "Reusable Pragmatik templates, workflows, and guided AI tooling setup.",
   "license": "MIT",
+  "homepage": "https://github.com/mvuljevas/Pragmatik#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mvuljevas/Pragmatik.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mvuljevas/Pragmatik/issues"
+  },
+  "keywords": ["agents", "ai", "workflow", "templates", "governance", "cli"],
   "type": "module",
   "bin": {
     "pragmatik": "./cli/pragmatik.js"
