@@ -146,6 +146,9 @@ git diff --check
 - This repository has local ignored measurement files active and an initial
   aggregate usage report.
 - Active tools can be automated with `bash scripts/ai-tools.sh run`.
+- Matched baseline-vs-`lean-context` comparisons can be automated with
+  `bash scripts/ai-tools.sh measure-pair`; the command appends a comparison
+  table to `docs/AI_USAGE_REPORT.md`.
 - Root, preset, and templates now include the same AI tool automation script.
 - Commit-time automation is available through
   `bash scripts/ai-tools.sh install-hooks` and `.githooks/pre-commit`.

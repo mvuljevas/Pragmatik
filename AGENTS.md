@@ -113,6 +113,9 @@ When `scripts/ai-tools.sh` exists:
   commands or report locations.
 - Run `bash scripts/ai-tools.sh run` at the end of an iteration when `.agents.env`
   marks one or more tools as `on`.
+- Run `bash scripts/ai-tools.sh measure-pair` when a matched baseline and
+  `lean-context` comparison should be appended to `docs/AI_USAGE_REPORT.md`
+  without hand-editing.
 - When `.githooks/pre-commit` exists and the user wants automatic iteration
   closure, run `bash scripts/ai-tools.sh install-hooks` once and set
   `AGENTS_AUTO_RUN_ON_COMMIT=on` in `.agents.env`.

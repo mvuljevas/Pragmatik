@@ -1132,6 +1132,46 @@ Next suggested step:
 - Follow `docs/ROADMAP.md`: resolve public package naming, then design the real
   AGENTS dashboard.
 
+## 2026-07-03 - Block 037: Repeatable Context Measurement Pair
+
+Branch:
+
+- `main`
+
+Current state:
+
+- `scripts/ai-tools.sh measure-pair` runs matched `baseline` and
+  `lean-context` profiles with one experiment ID.
+- The command keeps raw outputs under `.ai-runs/<pair>-baseline/` and
+  `.ai-runs/<pair>-lean-context/`.
+- The command appends a comparison table to `docs/AI_USAGE_REPORT.md` by
+  default, including available Repomix and Tokscale measurements.
+- Root, preset, and template `.agents.env.example` files now include
+  measurement-pair override flags.
+- `npm run agents:measure` is available in this repository, and the CLI setup
+  wizard offers the same script for adopters with `package.json`.
+- Repository version has been updated to `0.25.0`.
+- Template versions have been updated to `0.15.0`.
+
+Decisions:
+
+- Keep Tokscale submission off for paired measurements unless explicitly
+  overridden.
+- Treat the paired command as measurement automation, not proof of savings by
+  itself; output quality and repeated-context behavior still need review.
+
+Risks:
+
+- Tokscale grouping remains approximate and can report unavailable totals when
+  the selected client has no readable usage data.
+- A same-repository paired tool run does not replace a real A/B task run in two
+  matching sessions.
+
+Next suggested step:
+
+- Follow `docs/ROADMAP.md`: run real paired measurements and update
+  `lean-context` guidance based on the evidence.
+
 ## 2026-06-30 - Block 023: AI Tool Script Structure Audit
 
 Branch:
