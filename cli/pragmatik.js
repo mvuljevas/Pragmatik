@@ -8,7 +8,7 @@ import { emitKeypressEvents } from "node:readline";
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 
-const VERSION = "0.3.0";
+const VERSION = "0.3.1";
 const ROOT = process.cwd();
 const CLI_DIR = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(CLI_DIR, "..");
