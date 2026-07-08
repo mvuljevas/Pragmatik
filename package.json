@@ -6,15 +6,22 @@
   "homepage": "https://github.com/mvuljevas/Pragmatik#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mvuljevas/Pragmatik.git"
+    "url": "git+https://github.com/mvuljevas/Pragmatik.git"
   },
   "bugs": {
     "url": "https://github.com/mvuljevas/Pragmatik/issues"
   },
-  "keywords": ["agents", "ai", "workflow", "templates", "governance", "cli"],
+  "keywords": [
+    "agents",
+    "ai",
+    "workflow",
+    "templates",
+    "governance",
+    "cli"
+  ],
   "type": "module",
   "bin": {
-    "pragmatik": "./cli/pragmatik.js"
+    "pragmatik": "cli/pragmatik.js"
   },
   "files": [
     "AGENTS.md",
