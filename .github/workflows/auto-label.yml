@@ -1,0 +1,67 @@
+name: Auto-label issues
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply labels based on issue title
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = context.payload.issue.title;
+            const issueNumber = context.payload.issue.number;
+            const existingLabels = context.payload.issue.labels.map(l => l.name);
+
+            const RULES = [
+              { match: /\bTD-\d+/i,                              labels: ['type:techdebt'] },
+              { match: /\b(feat(ure)?|add|implement|prototype)\b/i, labels: ['type:feature'] },
+              { match: /\b(fix|bug|patch|repair)\b/i,            labels: ['type:bug'] },
+              { match: /\b(doc|docs|documentation|readme)\b/i,   labels: ['type:docs'] },
+              { match: /\b(template|preset|scaffold|monorepo|boilerplate)\b/i, labels: ['area:template'] },
+              { match: /\b(mcp|model.?context|context.?server)\b/i, labels: ['area:mcp', 'ai:mcp'] },
+              { match: /\b(dashboard|ui|visual|workflow|process|gitflow|ci|action|cli|npm|package|install|binary)\b/i, labels: ['area:workflow'] },
+              { match: /\b(doc|docs|readme|snapshot|roadmap|changelog)\b/i, labels: ['area:docs'] },
+              { match: /\b(github|issue|label|project.?board)\b/i, labels: ['area:github'] },
+              { match: /\b(token|lean.?context|repomix|tokscale|compression)\b/i, labels: ['ai:context'] },
+              { match: /\b(typescript|electron|android|web)\b/i,   labels: ['area:template'] },
+              { match: /\b(critical|urgent|blocker)\b/i,           labels: ['priority:high'] },
+            ];
+
+            const PRIORITY = ['priority:high', 'priority:medium', 'priority:low'];
+            const STATUS   = ['status:triage', 'status:ready', 'status:blocked'];
+
+            const toAdd = new Set();
+            for (const rule of RULES) {
+              if (rule.match.test(title)) {
+                for (const l of rule.labels) toAdd.add(l);
+              }
+            }
+
+            const allLabels = [...new Set([...existingLabels, ...toAdd])];
+            const hasPriority = allLabels.some(l => PRIORITY.includes(l));
+            const hasStatus   = existingLabels.some(l => STATUS.includes(l));
+
+            if (!hasPriority) toAdd.add('priority:medium');
+            if (!hasStatus)   toAdd.add('status:triage');
+
+            const newLabels = [...toAdd].filter(l => !existingLabels.includes(l));
+
+            if (newLabels.length === 0) {
+              console.log('No new labels to add.');
+              return;
+            }
+
+            console.log(`Adding labels to #${issueNumber}: ${newLabels.join(', ')}`);
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: issueNumber,
+              labels: newLabels,
+            });

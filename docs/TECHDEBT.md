@@ -11,13 +11,14 @@ Track accepted shortcuts, risks, and cleanup items for this repository on the
 
 ## Resolved
 
-| ID | Priority | Area | Debt | Resolution |
-| --- | --- | --- | --- | --- |
-| TD-000 | Medium | GitHub | Technical debt automation needed a root `TECHDEBT.md` source. | Added this file and linked open debt to GitHub issues and Project cards. |
-| TD-001 | Medium | MCP | `project-context-mcp` was documented but not implemented. | Resolved in v0.3.0 by implementing a fully compliant stdio-based JSON-RPC 2.0 MCP server generated via CLI. |
-| TD-002 | Medium | Docs | The catalog had to be kept synchronized manually when templates or presets changed. | Resolved in v0.3.0 by adding `scripts/check-catalog.js` automated check which enforces synchronization during testing. |
-| TD-003 | High | AI Context | `lean-context` had no automated way to prove token savings. | Resolved in v0.3.0 by adding `measure-pair` command to `scripts/ai-tools.sh` which compares baseline vs `lean-context` and appends reports. |
-| TD-004 | High | Packaging | `@mvuljevas/pragmatik` was not validated from a clean external install. | Verified npm publish of `@mvuljevas/pragmatik@0.3.0` and tested successful global install. |
-| TD-005 | Medium | Versioning | Version drift was possible between files. | Added `scripts/check-versions.js` consistency test automated inside package.json `"test"` script. |
-| TD-006 | Low | Packaging | `package-lock.json` policy was undecided for this npm package repository. | Root `package-lock.json` is ignored while the package has no dependencies; template projects may include lockfiles when their stack benefits from reproducible application installs. |
-| TD-007 | High | Packaging | The desired unscoped npm package name `agents` was already taken. | Renamed the project to Pragmatik (`@mvuljevas/pragmatik` / `pragmatik`). |
+| ID | Priority | Area | Debt | Resolution | GitHub |
+| --- | --- | --- | --- | --- | --- |
+| TD-000 | Medium | GitHub | Technical debt automation needed a root `TECHDEBT.md` source. | Added this file and linked open debt to GitHub issues and Project cards. | — |
+| TD-001 | Medium | MCP | `project-context-mcp` was documented but not implemented. | Resolved in v0.3.0 by implementing a fully compliant stdio-based JSON-RPC 2.0 MCP server generated via CLI. | [#2](https://github.com/mvuljevas/Pragmatik/issues/2) |
+| TD-002 | Medium | Docs | The catalog had to be kept synchronized manually when templates or presets changed. | Resolved in v0.3.0 by adding `scripts/check-catalog.js` automated check which enforces synchronization during testing. | [#4](https://github.com/mvuljevas/Pragmatik/issues/4) |
+| TD-003 | High | AI Context | `lean-context` had no automated way to prove token savings. | Resolved in v0.3.0 by adding `measure-pair` command to `scripts/ai-tools.sh` which compares baseline vs `lean-context` and appends reports. | [#5](https://github.com/mvuljevas/Pragmatik/issues/5) |
+| TD-004 | High | Packaging | `@mvuljevas/pragmatik` was not validated from a clean external install. | Verified npm publish of `@mvuljevas/pragmatik@0.3.0` and tested successful global install. | [#8](https://github.com/mvuljevas/Pragmatik/issues/8) |
+| TD-005 | Medium | Versioning | Version drift was possible between files. | Added `scripts/check-versions.js` consistency test automated inside package.json `"test"` script. | [#7](https://github.com/mvuljevas/Pragmatik/issues/7) |
+| TD-006 | Low | Packaging | `package-lock.json` policy was undecided for this npm package repository. | Root `package-lock.json` is ignored while the package has no dependencies; template projects may include lockfiles when their stack benefits from reproducible application installs. | — |
+| TD-007 | High | Packaging | The desired unscoped npm package name `agents` was already taken. | Renamed the project to Pragmatik (`@mvuljevas/pragmatik` / `pragmatik`). | [#9](https://github.com/mvuljevas/Pragmatik/issues/9) |
+

@@ -1,0 +1,83 @@
+name: Sync TECHDEBT to issues
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/TECHDEBT.md'
+
+permissions:
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Close resolved issues from TECHDEBT.md
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const content = fs.readFileSync('docs/TECHDEBT.md', 'utf8');
+
+            // Find ## Resolved section
+            const resolvedMatch = content.match(/## Resolved[\s\S]*/);
+            if (!resolvedMatch) {
+              console.log('No Resolved section found in TECHDEBT.md');
+              return;
+            }
+
+            // Extract issue numbers from GitHub URLs in the Resolved section
+            const urlPattern = /https?:\/\/github\.com\/[^/]+\/[^/]+\/issues\/(\d+)/g;
+            const resolvedNums = new Set();
+            for (const m of resolvedMatch[0].matchAll(urlPattern)) {
+              resolvedNums.add(parseInt(m[1], 10));
+            }
+
+            if (resolvedNums.size === 0) {
+              console.log('No GitHub issue links found in Resolved section.');
+              return;
+            }
+
+            console.log(`Found resolved issue numbers: ${[...resolvedNums].join(', ')}`);
+
+            for (const num of resolvedNums) {
+              let issue;
+              try {
+                const resp = await github.rest.issues.get({
+                  owner: context.repo.owner,
+                  repo:  context.repo.repo,
+                  issue_number: num,
+                });
+                issue = resp.data;
+              } catch (err) {
+                console.log(`Issue #${num} not found, skipping.`);
+                continue;
+              }
+
+              if (issue.state === 'closed') {
+                console.log(`#${num} already closed, skipping.`);
+                continue;
+              }
+
+              console.log(`Closing #${num}: ${issue.title}`);
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo:  context.repo.repo,
+                issue_number: num,
+                body: 'Automatically closed: this item is listed as resolved in [`docs/TECHDEBT.md`](../blob/main/docs/TECHDEBT.md).',
+              });
+
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo:  context.repo.repo,
+                issue_number: num,
+                state: 'closed',
+                state_reason: 'completed',
+              });
+
+              console.log(`✓ #${num} closed`);
+            }

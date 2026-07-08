@@ -53,6 +53,9 @@
     "gf:hotfix": "node scripts/gitflow.js hotfix",
     "gf:promote": "node scripts/gitflow.js promote",
     "gf:status": "node scripts/gitflow.js status",
+    "issues:triage": "node scripts/issues-sync.js triage",
+    "issues:label": "node scripts/issues-sync.js label-all",
+    "issues:close-resolved": "node scripts/issues-sync.js close-resolved",
     "test": "node scripts/check-versions.js && node scripts/check-catalog.js && node cli/pragmatik.js doctor && node cli/pragmatik.js setup --dry-run && node cli/pragmatik.js mcp-create --dry-run && node cli/pragmatik.js suggest --idea \"React PWA\" --issue --dry-run"
   },
   "engines": {
