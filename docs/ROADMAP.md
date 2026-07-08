@@ -68,13 +68,14 @@ This roadmap is the primary source for next-step suggestions in this repository.
   Antigravity, OpenCode, and local-model workflows.
 - Baseline vs `lean-context` measurement workflow.
 - Repeatable baseline vs `lean-context` paired-measurement automation.
-- Initial AGENTS `lean-context` usage measurement.
+- Initial Pragmatik `lean-context` usage measurement.
 - Automated local AI tool execution for active tools.
 - Default-on Tokscale coverage, guided setup, local dashboard commands, and
   optimization reports for root, preset, and templates.
-- Initial AGENTS CLI package with local dashboard, setup preview, template
+- Initial Pragmatik CLI package with local dashboard, setup preview, template
   suggestion, and MCP scaffold command.
-- Professionalized AGENTS CLI interaction with clearer help, stack-aware
+- Professionalized Pragmatik CLI interaction with clearer help, stack-aware
   diagnostics, safe non-interactive setup behavior, and useful base-file
   previews for projects with or without Node.
 - Simplified CLI usage around subcommands and lightweight template shells.
+- Gitflow merge automation via `scripts/gitflow.js` with `npm run gf:*` shortcuts.

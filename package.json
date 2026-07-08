@@ -47,6 +47,12 @@
     "pragmatik:setup": "node cli/pragmatik.js setup",
     "pragmatik:dashboard": "node cli/pragmatik.js dashboard",
     "pragmatik:dev": "node cli/pragmatik.js run -- npm run dev",
+    "gf:feature": "node scripts/gitflow.js feature",
+    "gf:fix": "node scripts/gitflow.js fix",
+    "gf:release": "node scripts/gitflow.js release",
+    "gf:hotfix": "node scripts/gitflow.js hotfix",
+    "gf:promote": "node scripts/gitflow.js promote",
+    "gf:status": "node scripts/gitflow.js status",
     "test": "node scripts/check-versions.js && node scripts/check-catalog.js && node cli/pragmatik.js doctor && node cli/pragmatik.js setup --dry-run && node cli/pragmatik.js mcp-create --dry-run && node cli/pragmatik.js suggest --idea \"React PWA\" --issue --dry-run"
   },
   "engines": {
