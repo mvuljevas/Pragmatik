@@ -38,10 +38,10 @@ This roadmap is the primary source for next-step suggestions in this repository.
 
 ## Next Milestones
 
-1. Resolve the final public package and binary name for AGENTS.
-2. Design and implement a real local AGENTS dashboard or remove the command
+1. ~~Resolve the final public package and binary name for Pragmatik.~~ (resolved: `@mvuljevas/pragmatik` / `pragmatik`)
+2. Design and implement a real local Pragmatik dashboard or remove the command
    until it exists.
-3. Publish or locally pack `@mvuljevas/agents` and test installation in a clean
+3. Publish `@mvuljevas/pragmatik` to npm and test installation in a clean
    external project.
 4. Measure whether `lean-context` reduces token usage in real sessions.
 5. Validate the recommendation flow with real new-project prompts.

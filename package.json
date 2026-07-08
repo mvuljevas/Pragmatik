@@ -1,11 +1,11 @@
 {
-  "name": "@mvuljevas/agents",
-  "version": "0.24.1",
-  "description": "Reusable AGENTS templates, workflows, and guided AI tooling setup.",
+  "name": "@mvuljevas/pragmatik",
+  "version": "0.25.0",
+  "description": "Reusable Pragmatik templates, workflows, and guided AI tooling setup.",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "agents": "./cli/agents.js"
+    "pragmatik": "./cli/pragmatik.js"
   },
   "files": [
     "AGENTS.md",
@@ -25,13 +25,13 @@
     "repomix.config.json"
   ],
   "scripts": {
-    "agents": "node cli/agents.js doctor",
-    "agents:help": "node cli/agents.js help",
-    "agents:init": "node cli/agents.js init",
-    "agents:setup": "node cli/agents.js setup",
-    "agents:dashboard": "node cli/agents.js dashboard",
-    "agents:dev": "node cli/agents.js run -- npm run dev",
-    "test": "node cli/agents.js doctor && node cli/agents.js setup --dry-run && node cli/agents.js mcp-create --dry-run && node cli/agents.js suggest --idea \"React PWA\" --issue --dry-run"
+    "pragmatik": "node cli/pragmatik.js doctor",
+    "pragmatik:help": "node cli/pragmatik.js help",
+    "pragmatik:init": "node cli/pragmatik.js init",
+    "pragmatik:setup": "node cli/pragmatik.js setup",
+    "pragmatik:dashboard": "node cli/pragmatik.js dashboard",
+    "pragmatik:dev": "node cli/pragmatik.js run -- npm run dev",
+    "test": "node cli/pragmatik.js doctor && node cli/pragmatik.js setup --dry-run && node cli/pragmatik.js mcp-create --dry-run && node cli/pragmatik.js suggest --idea \"React PWA\" --issue --dry-run"
   },
   "engines": {
     "node": ">=20"

@@ -8,7 +8,7 @@ import { emitKeypressEvents } from "node:readline";
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 
-const VERSION = "0.24.1";
+const VERSION = "0.25.0";
 const ROOT = process.cwd();
 const CLI_DIR = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(CLI_DIR, "..");
@@ -195,33 +195,33 @@ function rejectUppercaseFlags(args) {
 
 function printHelp() {
   const project = detectProject(ROOT);
-  console.log(`AGENTS ${VERSION}
+  console.log(`Pragmatik ${VERSION}
 
 Project governance, AI-tool setup, local dashboard, and template guidance for
 new or existing repositories.
 
 Usage:
-  agents help                           Show this guide.
-  agents doctor                         Inspect the current repository.
-  agents init [--dry-run] [--yes]       Prepare a new project.
-  agents setup [--dry-run] [--yes]      Adopt AGENTS in an existing project.
-  agents run -- <command>               Run a command with AGENTS dashboard.
-  agents dashboard [--no-open]          Show dashboard status; real UI is planned.
-  agents suggest --idea "..."           Recommend a template and preset.
-  agents mcp-create [--dry-run]         Scaffold a read-only project MCP.
+  pragmatik help                           Show this guide.
+  pragmatik doctor                         Inspect the current repository.
+  pragmatik init [--dry-run] [--yes]       Prepare a new project.
+  pragmatik setup [--dry-run] [--yes]      Adopt Pragmatik in an existing project.
+  pragmatik run -- <command>               Run a command with Pragmatik dashboard.
+  pragmatik dashboard [--no-open]          Show dashboard status; real UI is planned.
+  pragmatik suggest --idea "..."           Recommend a template and preset.
+  pragmatik mcp-create [--dry-run]         Scaffold a read-only project MCP.
 
 Common flows:
   New project:
-    agents init
+    pragmatik init
 
   Existing project:
-    agents doctor
-    agents setup --dry-run
-    agents setup
+    pragmatik doctor
+    pragmatik setup --dry-run
+    pragmatik setup
 
   Project without Node artifacts:
-    npx -y @mvuljevas/agents doctor
-    npx -y @mvuljevas/agents setup
+    npx -y @mvuljevas/pragmatik doctor
+    npx -y @mvuljevas/pragmatik setup
 
 Safety:
   - Setup always previews changes before writing.
@@ -264,7 +264,7 @@ function detectProject(cwd) {
 
 function printDoctor(project) {
   const assessment = assessProject(project);
-  printSection("AGENTS doctor");
+  printSection("Pragmatik doctor");
   printKV("Repository", project.cwd);
   printKV("State", project.projectState);
   printKV("Stack", `${project.stack.name} (${project.stack.confidence})`);
@@ -296,12 +296,12 @@ function printDoctor(project) {
 }
 
 function printDashboardUnavailable(project) {
-  printSection("AGENTS dashboard");
-  console.log("A real AGENTS dashboard UI is not implemented yet.");
+  printSection("Pragmatik dashboard");
+  console.log("A real Pragmatik dashboard UI is not implemented yet.");
   console.log("");
   console.log("Available now:");
-  console.log("- agents doctor: repository readiness and tool status.");
-  console.log("- agents run: execute configured local AI tooling and append reports.");
+  console.log("- pragmatik doctor: repository readiness and tool status.");
+  console.log("- pragmatik run: execute configured local AI tooling and append reports.");
   console.log("- docs/AI_USAGE_REPORT.md: aggregate usage observations.");
   console.log("- docs/AI_OPTIMIZATION_REPORT.md: aggregate optimization observations.");
   console.log("");
@@ -311,7 +311,7 @@ function printDashboardUnavailable(project) {
   printKV("Tools available", `${project.tools.filter((tool) => tool.available).length}/${project.tools.length}`);
   console.log("");
   console.log("Next:");
-  console.log("- Use agents doctor for current status.");
+  console.log("- Use pragmatik doctor for current status.");
   console.log("- Track the real dashboard as a roadmap item before exposing this as a UI.");
 }
 
@@ -361,7 +361,7 @@ function assessProject(project) {
   items.push({
     level: project.hasAgents ? "ok" : "warn",
     label: "Governance",
-    message: project.hasAgents ? "AGENTS.md is present." : "AGENTS.md is missing; run agents setup to add project rules."
+    message: project.hasAgents ? "AGENTS.md is present." : "AGENTS.md is missing; run pragmatik setup to add project rules."
   });
   items.push({
     level: project.env ? "ok" : "warn",
@@ -387,24 +387,24 @@ function assessProject(project) {
 }
 
 function recommendedCommand(project) {
-  if (project.projectState === "github-minimal") return "Run agents suggest --idea \"...\" to choose a template, then agents init --dry-run.";
-  if (!project.hasAgents) return "Run agents setup --dry-run, then agents setup after reviewing the preview.";
-  if (!project.env) return "Run agents setup --dry-run to create local non-secret AGENTS config.";
-  if (!project.hasAiRuns) return "Run agents run to generate the first local usage and optimization reports.";
-  return "Run agents dashboard to review coverage, reports, and next actions.";
+  if (project.projectState === "github-minimal") return "Run pragmatik suggest --idea \"...\" to choose a template, then pragmatik init --dry-run.";
+  if (!project.hasAgents) return "Run pragmatik setup --dry-run, then pragmatik setup after reviewing the preview.";
+  if (!project.env) return "Run pragmatik setup --dry-run to create local non-secret Pragmatik config.";
+  if (!project.hasAiRuns) return "Run pragmatik run to generate the first local usage and optimization reports.";
+  return "Run pragmatik dashboard to review coverage, reports, and next actions.";
 }
 
 function printSetupIntro(project, initMode) {
-  printSection(initMode ? "Initialize project" : "Adopt AGENTS");
+  printSection(initMode ? "Initialize project" : "Adopt Pragmatik");
   printKV("Repository", project.cwd);
   printKV("Detected stack", `${project.stack.name} (${project.stack.confidence})`);
   printKV("Detected state", project.projectState);
   console.log("");
   if (project.projectState === "github-minimal") {
     console.log("This looks like a freshly created GitHub repository with only minimal files.");
-    console.log("AGENTS will treat it as a new project and can complete README, .gitignore, and .gitattributes after preview.");
+    console.log("Pragmatik will treat it as a new project and can complete README, .gitignore, and .gitattributes after preview.");
   }
-  console.log("This wizard can create local AGENTS configuration, rollback notes, optional npm scripts when package.json exists, and safe AI-tool defaults.");
+  console.log("This wizard can create local Pragmatik configuration, rollback notes, optional npm scripts when package.json exists, and safe AI-tool defaults.");
   console.log("No external tool is mandatory.");
 }
 
@@ -472,7 +472,7 @@ function printToolConflictNotes(selectedTools, project) {
   }
   for (const id of selectedTools) {
     const tool = project.tools.find((entry) => entry.id === id);
-    if (tool && !tool.available) console.log(`- ${id} is not installed. AGENTS will write config guidance, not install it automatically.`);
+    if (tool && !tool.available) console.log(`- ${id} is not installed. Pragmatik will write config guidance, not install it automatically.`);
   }
 }
 
@@ -514,7 +514,7 @@ async function setupProject({ initMode, dryRun, yes }) {
       title: "Project mode",
       options: [
         { value: "new", label: "New project", shortcut: "n", description: "Start from a GitHub-minimal or empty repository." },
-        { value: "existing", label: "Existing project", shortcut: "e", description: "Adopt AGENTS without overwriting existing conventions." }
+        { value: "existing", label: "Existing project", shortcut: "e", description: "Adopt Pragmatik without overwriting existing conventions." }
       ],
       defaultValue: answers.projectMode
     });
@@ -560,8 +560,8 @@ async function setupProject({ initMode, dryRun, yes }) {
   }
   applyChanges(changes);
   printSection("Setup complete");
-  console.log("- Run agents doctor to verify repository readiness.");
-  console.log("- Run agents dashboard to inspect local usage and tooling status.");
+  console.log("- Run pragmatik doctor to verify repository readiness.");
+  console.log("- Run pragmatik dashboard to inspect local usage and tooling status.");
 }
 
 function buildSetupChanges(project, answers) {
@@ -624,12 +624,12 @@ function buildSetupChanges(project, answers) {
     const nextPackage = structuredClone(project.packageJson);
     nextPackage.scripts = nextPackage.scripts || {};
     const scripts = {
-      agents: "agents doctor",
-      "agents:help": "agents help",
-      "agents:init": "agents init",
-      "agents:setup": "agents setup",
-      "agents:dashboard": "agents dashboard",
-      "agents:dev": "agents run -- npm run dev"
+      pragmatik: "pragmatik doctor",
+      "pragmatik:help": "pragmatik help",
+      "pragmatik:init": "pragmatik init",
+      "pragmatik:setup": "pragmatik setup",
+      "pragmatik:dashboard": "pragmatik dashboard",
+      "pragmatik:dev": "pragmatik run -- npm run dev"
     };
     let changed = false;
     for (const [key, value] of Object.entries(scripts)) {
@@ -638,11 +638,11 @@ function buildSetupChanges(project, answers) {
         changed = true;
       }
     }
-    if (nextPackage.name !== "@mvuljevas/agents") {
+    if (nextPackage.name !== "@mvuljevas/pragmatik") {
       nextPackage.devDependencies = nextPackage.devDependencies || {};
     }
-    if (nextPackage.name !== "@mvuljevas/agents" && !nextPackage.devDependencies["@mvuljevas/agents"]) {
-      nextPackage.devDependencies["@mvuljevas/agents"] = `^${VERSION}`;
+    if (nextPackage.name !== "@mvuljevas/pragmatik" && !nextPackage.devDependencies["@mvuljevas/pragmatik"]) {
+      nextPackage.devDependencies["@mvuljevas/pragmatik"] = `^${VERSION}`;
       changed = true;
     }
     if (changed) {
@@ -676,7 +676,7 @@ function buildSetupChanges(project, answers) {
 function renderProjectAgents(project, answers) {
   return `# Agent Workflow
 
-This repository uses AGENTS project governance.
+This repository uses Pragmatik project governance.
 
 ## Start
 
@@ -715,7 +715,7 @@ Recognize prompts such as:
 function renderProjectReadme(project) {
   return `# ${projectName(project)}
 
-Project initialized with AGENTS workflow guidance.
+Project initialized with Pragmatik workflow guidance.
 
 ## Project Goal
 
@@ -724,15 +724,15 @@ Define what this project will build.
 ## Start
 
 \`\`\`bash
-agents doctor
-agents setup --dry-run
-agents dashboard
+pragmatik doctor
+pragmatik setup --dry-run
+pragmatik dashboard
 \`\`\`
 
-If this project does not use Node, run AGENTS through \`npx\`:
+If this project does not use Node, run Pragmatik through \`npx\`:
 
 \`\`\`bash
-npx -y @mvuljevas/agents doctor
+npx -y @mvuljevas/pragmatik doctor
 \`\`\`
 
 ## Documentation
@@ -827,7 +827,7 @@ Track the next logical milestones for this project.
 
 ## Completed Milestones
 
-- AGENTS workflow initialized.
+- Pragmatik workflow initialized.
 `;
 }
 
@@ -837,11 +837,11 @@ function renderProjectSnapshots(project) {
 
 Chronological project memory for agents and maintainers.
 
-## ${date} - AGENTS Workflow Initialized
+## ${date} - Pragmatik Workflow Initialized
 
 Current state:
 
-- AGENTS workflow files were created.
+- Pragmatik workflow files were created.
 - Detected stack: ${project.stack.name}.
 - Project state: ${project.projectState}.
 
@@ -869,7 +869,7 @@ Track accepted shortcuts, risks, and cleanup items.
 }
 
 function renderAgentsEnv(answers) {
-  return `# Local non-secret AGENTS configuration.
+  return `# Local non-secret Pragmatik configuration.
 AGENTS_CONTEXT_MODE=lean-context
 AGENTS_SETUP_PROFILE=${answers.profile}
 AGENTS_SELECTED_TOOLS=${answers.selectedTools.join(",")}
@@ -886,9 +886,9 @@ AGENTS_MCP=ask
 }
 
 function renderRollback(changes, answers) {
-  return `# AGENTS Rollback Notes
+  return `# Pragmatik Rollback Notes
 
-Generated by AGENTS ${VERSION}.
+Generated by Pragmatik ${VERSION}.
 
 Profile: ${answers.profile}
 Submit mode: ${answers.privacy}
@@ -952,12 +952,12 @@ async function runWithDashboard(args) {
   const command = separator >= 0 ? args.slice(separator + 1) : [];
   const server = await startDashboard({ keepAlive: false, open: false });
   if (command.length === 0) {
-    printSection("Running AGENTS tools");
+    printSection("Running Pragmatik tools");
     await runAiTools();
     await closeServer(server);
     return;
   }
-  console.log(`AGENTS dashboard: ${server.url}`);
+  console.log(`Pragmatik dashboard: ${server.url}`);
   const child = spawn(command[0], command.slice(1), { stdio: "inherit", shell: process.platform === "win32" });
   child.on("exit", async (code) => {
     await closeServer(server);
@@ -992,7 +992,7 @@ async function startDashboard({ keepAlive, open, port = 8787 }) {
   const selectedPort = await listen(server, port);
   const url = `http://127.0.0.1:${selectedPort}`;
   server.url = url;
-  console.log(`AGENTS dashboard: ${url}`);
+  console.log(`Pragmatik dashboard: ${url}`);
   if (open) openUrl(url);
   if (keepAlive) {
     console.log("Press Ctrl+C to stop.");

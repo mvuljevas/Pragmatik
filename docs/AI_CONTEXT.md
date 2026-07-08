@@ -4,10 +4,10 @@ This file is the compact project summary for agents working in this repository.
 
 ## Project
 
-- Name: AGENTS.
+- Name: Pragmatik.
 - Purpose: reusable documentation, workflow, preset, and template library for
   AI-assisted software projects.
-- Current version: 0.24.1.
+- Current version: 0.25.0.
 - Primary audience: Mauricio Vuljevas projects and future reusable project
   foundations.
 
@@ -28,7 +28,7 @@ This file is the compact project summary for agents working in this repository.
 ├── VERSION
 ├── package.json
 ├── cli/
-│   └── agents.js
+│   └── pragmatik.js
 ├── docs/
 │   ├── AGENTS_CLI.md
 │   ├── AI_CONTEXT.md
@@ -68,9 +68,9 @@ This file is the compact project summary for agents working in this repository.
 git status --short --branch
 
 # CLI
-node cli/agents.js doctor
-node cli/agents.js setup --dry-run
-node cli/agents.js dashboard --no-open
+node cli/pragmatik.js doctor
+node cli/pragmatik.js setup --dry-run
+node cli/pragmatik.js dashboard --no-open
 
 # search
 rg "pattern"
@@ -89,8 +89,8 @@ git diff --check
 - `README.md`: repository purpose, shared standards, and preset catalog.
 - `AGENTS.md`: active agent workflow rules for this repository.
 - `VERSION`: authoritative version source for this repository.
-- `package.json`: npm package metadata for `@mvuljevas/agents`.
-- `cli/agents.js`: project CLI with `agents help`, setup, doctor,
+- `package.json`: npm package metadata for `@mvuljevas/pragmatik`.
+- `cli/pragmatik.js`: project CLI with `pragmatik help`, setup, doctor,
   dashboard, suggest, run, and MCP scaffold commands.
 - `docs/AGENTS_CLI.md`: public CLI usage guide.
 - `docs/AI_TOOL_REGISTRY.md`: optional tool registry and adapter contract.

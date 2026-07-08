@@ -70,7 +70,7 @@ Decisions:
 
 Risks:
 
-- `@mvuljevas/agents` must be published or linked before package install works from a clean external project.
+- `@mvuljevas/pragmatik` must be published or linked before package install works from a clean external project.
 
 Next suggested step:
 
@@ -95,7 +95,7 @@ Decisions:
 
 Risks:
 
-- `@mvuljevas/agents` must be published or linked before package install works
+- `@mvuljevas/pragmatik` must be published or linked before package install works
   from a clean external project.
 
 Next suggested step:
@@ -112,7 +112,7 @@ Current state:
 
 - AGENTS CLI documentation now describes command actions, common flows, safe
   setup behavior, non-Node usage, and error handling.
-- Template dev dependency guidance now targets `@mvuljevas/agents` `^0.21.0`.
+- Template dev dependency guidance now targets `@mvuljevas/pragmatik` `^0.21.0`.
 - Template version has been updated to `0.12.0`.
 
 Decisions:

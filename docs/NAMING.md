@@ -30,12 +30,12 @@ new-project
 The public package and binary name must be short, memorable, and available on
 the target distribution channel.
 
-Do not document `npm install agents` or `npm i agents` as available unless the
-package name is actually owned by this project. The unscoped npm name `agents`
-is already taken, so final package naming is tracked as technical debt.
+Do not document binary names as available unless they are actually published and
+installable. The public package is `@mvuljevas/pragmatik` and the binary is
+`pragmatik`.
 
-Until naming is resolved, use the local scoped package name
-`@mvuljevas/agents` for development and package testing.
+For development and local package testing, use:
+`@mvuljevas/pragmatik`.
 
 ## Branch Names
 

@@ -1,20 +1,20 @@
-# AGENTS
+# Pragmatik
 
-AGENTS is a reusable documentation and workflow template library for AI-assisted
+Pragmatik is a reusable documentation and workflow template library for AI-assisted
 software projects.
 
 The goal is to standardize how projects define agent behavior, documentation
 rules, snapshots, versioning, naming, and repeatable delivery workflows.
 
-AGENTS also ships a project CLI:
+Pragmatik also ships a project CLI:
 
 ```bash
-npx @mvuljevas/agents help
-npx @mvuljevas/agents setup
-npx @mvuljevas/agents dashboard
+npx @mvuljevas/pragmatik help
+npx @mvuljevas/pragmatik setup
+npx @mvuljevas/pragmatik dashboard
 ```
 
-When installed as a project dependency, use the `agents` command directly.
+When installed as a project dependency, use the `pragmatik` command directly.
 
 ## Purpose
 
@@ -72,7 +72,7 @@ docs/
 ```
 
 Reusable project templates live under `templates/`, grouped by project type.
-Templates are AGENTS shells, not complete generated applications. They provide
+Templates are Pragmatik shells, not complete generated applications. They provide
 governance, minimal project docs, ignores, and setup context; real application
 files are created after the user describes what should be built.
 
@@ -110,7 +110,7 @@ All templates in this repository should share:
 ## Documentation Map
 
 - [Agent rules](AGENTS.md)
-- [AGENTS CLI](docs/AGENTS_CLI.md)
+- [Pragmatik CLI](docs/AGENTS_CLI.md)
 - [Installation](docs/INSTALLATION.md)
 - [AI Context](docs/AI_CONTEXT.md)
 - [AI Clients](docs/AI_CLIENTS.md)
@@ -129,15 +129,15 @@ All templates in this repository should share:
 - [Snapshots](docs/SNAPSHOTS.md)
 - [Technical Debt](docs/TECHDEBT.md)
 
-Use `agents doctor` during repository analysis, then `agents setup` when
-tooling or dashboard setup is missing. Use `agents run` to execute configured
+Use `pragmatik doctor` during repository analysis, then `pragmatik setup` when
+tooling or dashboard setup is missing. Use `pragmatik run` to execute configured
 AI tools, append aggregate usage summaries, and append optimization observations
-when enabled. Use `agents dashboard` for the local AGENTS dashboard.
+when enabled. Use `pragmatik dashboard` for the local Pragmatik dashboard.
 
 `scripts/ai-tools.sh` remains available as a compatibility backend for existing
 templates and hooks.
 
-Template defaults keep external tools optional. The AGENTS dashboard and local reports are available by default, while external submission stays in `dry-run` until the user chooses `on`.
+Template defaults keep external tools optional. The Pragmatik dashboard and local reports are available by default, while external submission stays in `dry-run` until the user chooses `on`.
 Multi-client measurement is available through `AGENTS_TOKSCALE_CLIENTS`, with
 ready defaults for Codex, Cursor, Antigravity, Claude, Gemini, and Warp.
 

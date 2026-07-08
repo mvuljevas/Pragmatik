@@ -39,6 +39,49 @@ Next suggested step:
 - Link or reference decisions when a fuller document exists.
 - Keep chronological order from oldest to newest.
 
+## 2026-07-07 - Block 037: Project Rename to Pragmatik
+
+Branch:
+
+- `main`
+
+Current state:
+
+- The project has been renamed from AGENTS to Pragmatik.
+- npm package name changed from `@mvuljevas/agents` to `@mvuljevas/pragmatik`.
+- CLI binary changed from `agents` to `pragmatik`.
+- `cli/agents.js` renamed to `cli/pragmatik.js`.
+- All documentation, templates, and preset references updated.
+- TD-007 (package naming conflict) is now resolved and moved to the Resolved
+  section of `docs/TECHDEBT.md`.
+- `docs/NAMING.md` updated to reflect the final package and binary name.
+- `docs/INSTALLATION.md` updated with the correct install commands.
+- `docs/ROADMAP.md` milestone 1 (naming resolution) marked as completed.
+- Repository version has been updated to `0.25.0`.
+
+Decisions:
+
+- Use `@mvuljevas/pragmatik` as the final scoped npm package name.
+- Use `pragmatik` as the binary command name.
+- Keep `AGENTS.md` as the filename for the agent rules file because it is a
+  recognized convention for AI tooling (Codex, Cursor, Antigravity, etc.).
+- Historical snapshot content is left intact as an immutable record.
+
+Risks:
+
+- GitHub repository and issues still reference the old name `AGENTS`. The
+  repository should be renamed on GitHub before the next push.
+- Existing GitHub issue URLs in `docs/TECHDEBT.md` have been updated to
+  `mvuljevas/pragmatik` but will only resolve after the GitHub rename.
+- `@mvuljevas/pragmatik` has not yet been published to npm or validated from a
+  clean external install (TD-004 remains open).
+
+Next suggested step:
+
+- Rename the GitHub repository to `pragmatik`.
+- Publish `@mvuljevas/pragmatik` to npm with `npm publish --access public` and
+  validate with `npm install -g @mvuljevas/pragmatik`.
+
 ## 2026-06-27 - Block 001: Base Repository Structure
 
 Branch:
