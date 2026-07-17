@@ -8,7 +8,7 @@ import { emitKeypressEvents } from "node:readline";
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 
-const VERSION = "0.3.5";
+const VERSION = "0.3.6";
 const ROOT = process.cwd();
 
 const CLI_DIR = dirname(fileURLToPath(import.meta.url));
@@ -107,12 +107,23 @@ const LOWER_FLAGS = new Set([
   "--dashboard",
   "--suggest",
   "--mcp-create",
+  "--measure",
+  "--report",
+  "--login",
   "--dry-run",
   "--yes",
   "--issue",
   "--idea",
   "--port",
-  "--no-open"
+  "--no-open",
+  "--client",
+  "--session-id",
+  "--since",
+  "--human-hours",
+  "--hourly-rate",
+  "--task",
+  "--model-price-input",
+  "--model-price-output"
 ]);
 
 const COMMANDS = new Set([
@@ -124,7 +135,10 @@ const COMMANDS = new Set([
   "dashboard",
   "run",
   "suggest",
-  "mcp-create"
+  "mcp-create",
+  "measure",
+  "report",
+  "login"
 ]);
 
 main().catch((error) => {
@@ -169,6 +183,18 @@ async function main() {
     createProjectMcp({ dryRun: args.includes("--dry-run") });
     return;
   }
+  if (args.includes("--measure")) {
+    await runMeasure(args);
+    return;
+  }
+  if (args.includes("--report")) {
+    await runReport();
+    return;
+  }
+  if (args.includes("--login")) {
+    await runLogin();
+    return;
+  }
 
   throw new Error(`unknown command. Run pragmatik help.`);
 }
@@ -210,6 +236,9 @@ Usage:
   pragmatik dashboard [--no-open]          Show dashboard status; real UI is planned.
   pragmatik suggest --idea "..."           Recommend a template and preset.
   pragmatik mcp-create [--dry-run]         Scaffold a read-only project MCP.
+  pragmatik login                          Authenticate machine with Pragmatik.
+  pragmatik measure [options]              Parse transcripts and calculate session metrics.
+  pragmatik report                         Print comparative session report in console.
 
 Common flows:
   New project:
@@ -1313,6 +1342,39 @@ function handleRequest(req) {
   console.log(`- Created ${relative(target)}`);
 }
 
+async function runMeasure(args) {
+  const client = valueArg(args, "--client") || "autodetected";
+  const sessionId = valueArg(args, "--session-id") || "latest";
+  const since = valueArg(args, "--since") || "all";
+  const humanHours = numberArgWithFallback(args, "--human-hours", null);
+  const hourlyRate = numberArgWithFallback(args, "--hourly-rate", 80);
+  const task = valueArg(args, "--task") || "autodetected";
+  const priceInput = numberArgWithFallback(args, "--model-price-input", null);
+  const priceOutput = numberArgWithFallback(args, "--model-price-output", null);
+
+  printSection("Pragmatik Measure (v0.3.6 - CLI structure)");
+  console.log("Parsed Options:");
+  console.log(`- client:       ${client}`);
+  console.log(`- session-id:   ${sessionId}`);
+  console.log(`- since:        ${since}`);
+  console.log(`- human-hours:  ${humanHours !== null ? humanHours + " hours" : "not provided"}`);
+  console.log(`- hourly-rate:  $${hourlyRate.toFixed(2)}/hour`);
+  console.log(`- task:         ${task}`);
+  console.log(`- price-input:  ${priceInput !== null ? "$" + priceInput.toFixed(2) + "/1M tokens" : "built-in"}`);
+  console.log(`- price-output: ${priceOutput !== null ? "$" + priceOutput.toFixed(2) + "/1M tokens" : "built-in"}`);
+  console.log("\nStatus: Local measurement logic will be implemented in Phase B (v0.4.0).");
+}
+
+async function runReport() {
+  printSection("Pragmatik Report (v0.3.6 - CLI structure)");
+  console.log("Status: Comparative analysis reporting logic will be implemented in Phase B (v0.4.0).");
+}
+
+async function runLogin() {
+  printSection("Pragmatik Login (v0.3.6 - CLI structure)");
+  console.log("Status: Global authentication logic (OAuth prep) will be implemented in Phase B (v0.4.0).");
+}
+
 function listTemplates() {
   const root = existsSync(join(ROOT, "templates")) ? ROOT : PACKAGE_ROOT;
   const templatesDir = join(root, "templates");
@@ -1558,6 +1620,13 @@ function valueArg(args, flag) {
 function numberArg(args, flag) {
   const value = Number(valueArg(args, flag));
   return Number.isFinite(value) && value > 0 ? value : 8787;
+}
+
+function numberArgWithFallback(args, flag, fallback) {
+  const raw = valueArg(args, flag);
+  if (!raw) return fallback;
+  const value = Number(raw);
+  return Number.isFinite(value) && value >= 0 ? value : fallback;
 }
 
 function relative(path) {

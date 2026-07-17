@@ -1608,3 +1608,36 @@ Risks:
 Next suggested step:
 
 - Follow `docs/ROADMAP.md` milestone 2: implement `pragmatik measure` (v0.4.0).
+
+## 2026-07-17 - Block 043: CLI Structure and Command Definitions (v0.3.6)
+
+Branch:
+
+- `develop`
+
+Current state:
+
+- Commands `measure`, `report`, and `login` are registered in the CLI commands Set.
+- Argument parsing and valid flags configured (including options `--client`,
+  `--session-id`, `--since`, `--human-hours`, `--hourly-rate`, `--task`,
+  `--model-price-input`, `--model-price-output`).
+- Helper function `numberArgWithFallback` added to parse numeric inputs.
+- Help guide (`printHelp`) and CLI documentation (`docs/PRAGMATIK_CLI.md`) updated
+  to document parameters and commands.
+- CLI changes propagated to all template/preset documentation folders.
+- Repository version has been updated to `0.3.6`.
+
+Decisions:
+
+- Scaffold command parameters and help blocks first to ensure all CLI arguments are accepted.
+- Implement command execution blocks as placeholders to print parsed options.
+
+Risks:
+
+- Actual parsing of transcripts and rendering of reports remains unimplemented
+  until Phase B (v0.4.0).
+
+Next suggested step:
+
+- Follow `docs/ROADMAP.md` milestone 2: implement local transcript parsing logic and checksum generation (v0.4.0).
+

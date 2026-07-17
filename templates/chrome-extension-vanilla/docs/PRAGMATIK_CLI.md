@@ -26,6 +26,9 @@ pragmatik run -- <command>             Run a command with the Pragmatik dashboar
 pragmatik dashboard [--no-open]        Show dashboard status. The real UI is planned, not implemented.
 pragmatik suggest --idea "..."         Recommend a template and preset from a project idea.
 pragmatik mcp-create [--dry-run]       Scaffold a read-only project MCP.
+pragmatik login                        Authenticate the local machine globally with Pragmatik.
+pragmatik measure [options]            Parse local transcripts and calculate session metrics.
+pragmatik report                       Print comparative session report in console.
 ```
 
 ## Safe Defaults
@@ -164,6 +167,28 @@ For template selection:
 ```bash
 pragmatik suggest --idea "Laravel CRM with React"
 ```
+
+## Autonomous Measurement
+
+Pragmatik provides built-in, local-first commands to measure AI resource usage and calculate equivalent human cost/time savings.
+
+### `pragmatik measure`
+
+Parses local AI client transcripts and computes metrics.
+
+Options:
+- `--client <name>`: AI client log format to read (`antigravity`, `claude`).
+- `--session-id <id>`: Session identifier to measure. Defaults to the latest session.
+- `--since <timestamp>`: Filter events since a specific timestamp.
+- `--human-hours <n>`: Estimated human hours for the task (used for comparison).
+- `--hourly-rate <n>`: Developer hourly rate in USD.
+- `--task <desc>`: Task description for the session log.
+- `--model-price-input <n>`: Cost in USD per 1M input tokens.
+- `--model-price-output <n>`: Cost in USD per 1M output tokens.
+
+### `pragmatik report`
+
+Renders the calculated comparison metrics in a clean tabular view directly in the console.
 
 ## Error Handling
 
