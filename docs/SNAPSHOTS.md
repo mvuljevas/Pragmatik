@@ -1575,3 +1575,36 @@ Next suggested step:
   Antigravity and Claude Code transcript readers, session.json, and
   `pragmatik report` (v0.4.0).
 
+## 2026-07-17 - Block 042: Versioned config and secret separation (v0.3.5)
+
+Branch:
+
+- `develop`
+
+Current state:
+
+- `.agents.env` is now a tracked (versioned) file in git to store team-wide,
+  non-secret configurations (profiles, modes, hourly rate defaults).
+- `.agents.env` has been removed from `.gitignore` templates and file lists.
+- Secrets (like `CONTEXT7_API_KEY`, `TOKSCALE_API_TOKEN`) are strictly managed in
+  `.env` (which remains git-ignored).
+- `cli/pragmatik.js` setup logic is updated to check and propose adding secret
+  placeholders directly to `.env` during `init` and `setup` runs.
+- Documentation references updated to reflect `.agents.env` versioning and
+  `.env` secret separation.
+- Repository version has been updated to `0.3.5`.
+
+Decisions:
+
+- Do not ignore `.agents.env`. Track it to keep shared team settings consistent.
+- Auto-generate placeholders in `.env` for selected tools to make workspace
+  configuration friction-free.
+
+Risks:
+
+- Developers must be trained not to place API keys or private tokens inside
+  `.agents.env`. Placeholders are explicitly created in `.env` to prevent this.
+
+Next suggested step:
+
+- Follow `docs/ROADMAP.md` milestone 2: implement `pragmatik measure` (v0.4.0).

@@ -30,10 +30,9 @@ should include an AI tooling check after reading the project docs:
 
 ## Measurement Mode
 
-Use `.agents.env` for non-secret experiment flags:
+Since `.agents.env` is versioned directly in the repository, you only need to copy the local log file template:
 
 ```bash
-cp .agents.env.example .agents.env
 cp .ai-usage-log.example.md .ai-usage-log.md
 ```
 

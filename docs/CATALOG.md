@@ -23,7 +23,7 @@ Agents must check this file before recommending a template or preset.
 
 Available templates are intentionally lightweight shells. They include
 `AGENTS.md`, `README.md`, `VERSION`, `.gitignore`, `.gitattributes`,
-`.agents.env.example`, `docs/AI_CONTEXT.md`, `docs/ROADMAP.md`,
+`.agents.env`, `docs/AI_CONTEXT.md`, `docs/ROADMAP.md`,
 `docs/SNAPSHOTS.md`, `docs/TECHDEBT.md`, and CLI guidance. They do not include
 framework runtime files, generated app files, or stack package manifests.
 

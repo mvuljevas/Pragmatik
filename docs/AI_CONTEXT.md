@@ -141,7 +141,7 @@ git diff --check
 - Analysis prompts trigger an optional AI tool check before implementation work.
 - Templates include Codex, Cursor, Warp, generic MCP, Context7, Tokscale, and
   Repomix setup examples while keeping real config files ignored.
-- Templates include `.agents.env.example` and `.ai-usage-log.example.md` for
+- Templates include `.agents.env` and `.ai-usage-log.example.md` for
   comparable baseline vs `lean-context` runs.
 - This repository has local ignored measurement files active and an initial
   aggregate usage report.
@@ -161,7 +161,7 @@ git diff --check
 - Tokscale automation supports multi-client measurement through
   `AGENTS_TOKSCALE_CLIENTS` and optional Cursor, Antigravity, and Warp sync
   commands.
-- Template `.agents.env.example` files keep external tools optional while enabling dashboard-ready local reporting defaults.
+- Template `.agents.env` files keep external tools optional while enabling dashboard-ready local reporting defaults.
 - A blind non-Codex coverage probe showed that unsupported local agents can run
   successfully while Tokscale records only supported local client data.
 - Tokscale is treated as observability only; Repomix compression and MCP

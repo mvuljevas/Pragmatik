@@ -1,6 +1,6 @@
 {
   "name": "@mvuljevas/pragmatik",
-  "version": "0.3.4",
+  "version": "0.3.5",
 
   "description": "Reusable Pragmatik templates, workflows, and guided AI tooling setup.",
   "license": "MIT",
@@ -36,7 +36,7 @@
     "scripts/",
     "templates/",
     "templates/**/.gitignore",
-    ".agents.env.example",
+    ".agents.env",
     ".aiignore",
     ".rgignore",
     "repomix.config.json"

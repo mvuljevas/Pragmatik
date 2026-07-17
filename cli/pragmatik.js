@@ -8,7 +8,7 @@ import { emitKeypressEvents } from "node:readline";
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 
-const VERSION = "0.3.4";
+const VERSION = "0.3.5";
 const ROOT = process.cwd();
 
 const CLI_DIR = dirname(fileURLToPath(import.meta.url));
@@ -486,8 +486,8 @@ async function guideSelectedTools(selectedTools, answers) {
       console.log(`  Selected submit mode: ${answers.privacy}.`);
       console.log("  Run later: npx -y tokscale@latest login");
     } else if (id === "context7") {
-      console.log("- Context7: requires an API key. Store it in a local ignored secret file, not in committed docs.");
-      console.log("  Example local key name: CONTEXT7_API_KEY.");
+      console.log("- Context7: requires an API key. Pragmatik will propose adding CONTEXT7_API_KEY placeholder to `.env`.");
+      console.log("  Do NOT commit secrets to `.agents.env` (which is versioned).");
     } else if (id === "tokless") {
       console.log("- Tokless: configure only the plugins you intend to use. Measure before and after enabling it.");
     } else if (id === "repomix") {
@@ -621,6 +621,30 @@ function buildSetupChanges(project, answers) {
       content: renderAgentsEnv(answers)
     });
   }
+  const dotenvPath = join(ROOT, ".env");
+  let dotenvContent = "";
+  if (existsSync(dotenvPath)) {
+    dotenvContent = readText(dotenvPath);
+  }
+  let dotenvUpdated = false;
+  let secretLines = [];
+  if (answers.selectedTools.includes("context7")) {
+    if (!dotenvContent.includes("CONTEXT7_API_KEY")) {
+      secretLines.push("# Context7 API Key (secret)\nCONTEXT7_API_KEY=");
+      dotenvUpdated = true;
+    }
+  }
+  if (dotenvUpdated) {
+    if (dotenvContent && !dotenvContent.endsWith("\n")) {
+      dotenvContent += "\n";
+    }
+    dotenvContent += secretLines.join("\n\n") + "\n";
+    changes.push({
+      path: dotenvPath,
+      mode: existsSync(dotenvPath) ? "update" : "create",
+      content: dotenvContent
+    });
+  }
   if (project.hasPackageJson) {
     const nextPackage = structuredClone(project.packageJson);
     nextPackage.scripts = nextPackage.scripts || {};
@@ -747,9 +771,9 @@ npx -y @mvuljevas/pragmatik doctor
 }
 
 function mergeGitignore(current) {
+  let cleaned = current.replace(/# AGENTS[\s\S]*?(?=(#|$))/g, "").trimEnd();
   const block = [
-    "# AGENTS local configuration",
-    ".agents.env",
+    "# Pragmatik local configuration",
     ".agents/",
     "!.agents/skills/",
     "",
@@ -768,10 +792,11 @@ function mergeGitignore(current) {
     ".DS_Store",
     "Thumbs.db"
   ].join("\n");
-  return appendBlock(current, "# AGENTS", block);
+  return appendBlock(cleaned, "# Pragmatik", block);
 }
 
 function mergeGitattributes(current) {
+  let cleaned = current.replace(/# AGENTS[\s\S]*?(?=(#|$))/g, "").trimEnd();
   const block = [
     "# Normalize text files",
     "* text=auto eol=lf",
@@ -785,7 +810,7 @@ function mergeGitattributes(current) {
     "*.ico binary",
     "*.pdf binary"
   ].join("\n");
-  return appendBlock(current, "# AGENTS", block);
+  return appendBlock(cleaned, "# Pragmatik", block);
 }
 
 function appendBlock(current, marker, block) {

@@ -3,7 +3,6 @@ Thumbs.db
 .env
 .env.*
 !.env.example
-.agents.env
 .codex/config.toml
 .cursor/mcp.json
 .mcp.json

@@ -57,7 +57,7 @@ For a new template, copy or merge:
 - `files/.aiignore` and `files/.rgignore` into the project root.
 - `files/.env.example` and `files/.codex/config.example.toml` when the project
   wants optional local AI tool setup.
-- `files/.agents.env.example` and `files/.ai-usage-log.example.md` when the
+- `files/.agents.env` and `files/.ai-usage-log.example.md` when the
   project wants baseline vs `lean-context` measurement.
 - `files/.cursor/mcp.example.json` and `files/.mcp.example.json` when the
   project wants reusable MCP examples for non-Codex clients.

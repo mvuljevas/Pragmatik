@@ -8,7 +8,6 @@ Thumbs.db
 !.env.local.example
 
 # Local AI tool configuration
-.agents.env
 .codex/config.toml
 !.codex/config.example.toml
 .cursor/mcp.json
