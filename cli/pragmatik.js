@@ -10,7 +10,7 @@ import { stdin as input, stdout as output } from "node:process";
 import { homedir } from "node:os";
 import { createHash } from "node:crypto";
 
-const VERSION = "0.4.1";
+const VERSION = "0.5.0";
 const ROOT = process.cwd();
 
 const CLI_DIR = dirname(fileURLToPath(import.meta.url));
@@ -175,7 +175,7 @@ async function main() {
     return;
   }
   if (args.includes("--dashboard")) {
-    printDashboardUnavailable(detectProject(ROOT));
+    await startDashboard({ keepAlive: true, open: !args.includes("--no-open") });
     return;
   }
   if (args.includes("--run")) {
@@ -334,26 +334,6 @@ function printDoctor(project) {
 
   printSection("Recommended next step");
   console.log(`- ${recommendedCommand(project)}`);
-}
-
-function printDashboardUnavailable(project) {
-  printSection("Pragmatik dashboard");
-  console.log("A real Pragmatik dashboard UI is not implemented yet.");
-  console.log("");
-  console.log("Available now:");
-  console.log("- pragmatik doctor: repository readiness and tool status.");
-  console.log("- pragmatik run: execute configured local AI tooling and append reports.");
-  console.log("- docs/AI_USAGE_REPORT.md: aggregate usage observations.");
-  console.log("- docs/AI_OPTIMIZATION_REPORT.md: aggregate optimization observations.");
-  console.log("");
-  console.log("Detected status:");
-  printKV("Repository", project.cwd);
-  printKV("Dashboard data", project.hasAiRuns ? "present" : "missing");
-  printKV("Tools available", `${project.tools.filter((tool) => tool.available).length}/${project.tools.length}`);
-  console.log("");
-  console.log("Next:");
-  console.log("- Use pragmatik doctor for current status.");
-  console.log("- Track the real dashboard as a roadmap item before exposing this as a UI.");
 }
 
 function detectStack(cwd, packageJson) {
@@ -1041,16 +1021,19 @@ async function runAiTools() {
 }
 
 async function startDashboard({ keepAlive, open, port = 8787 }) {
-  const project = detectProject(ROOT);
-  const html = renderDashboard(project);
   const server = createServer((req, res) => {
-    if (req.url === "/data.json") {
-      res.writeHead(200, { "content-type": "application/json" });
-      res.end(JSON.stringify(buildDashboardData(project), null, 2));
+    const urlObj = new URL(req.url, `http://${req.headers.host || "localhost"}`);
+    if (urlObj.pathname === "/data.json") {
+      const scope = urlObj.searchParams.get("scope") || "project";
+      res.writeHead(200, {
+        "content-type": "application/json",
+        "access-control-allow-origin": "*"
+      });
+      res.end(JSON.stringify(buildPragmatikDashboardData(scope), null, 2));
       return;
     }
     res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-    res.end(html);
+    res.end(renderDashboard());
   });
   const selectedPort = await listen(server, port);
   const url = `http://127.0.0.1:${selectedPort}`;
@@ -1063,76 +1046,516 @@ async function startDashboard({ keepAlive, open, port = 8787 }) {
   return server;
 }
 
-function renderDashboard(project) {
-  const data = buildDashboardData(project);
-  const rows = data.tools.map((tool) => `<tr><td>${escapeHtml(tool.id)}</td><td>${tool.available ? "available" : "missing"}</td><td>${escapeHtml(tool.category)}</td><td>${escapeHtml(tool.maturity)}</td></tr>`).join("");
+function renderDashboard() {
   return `<!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pragmatik Dashboard</title>
-<style>
-body{margin:0;font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f7f8fb;color:#12151c}
-main{max-width:1120px;margin:0 auto;padding:32px}
-h1{font-size:32px;margin:0 0 8px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:24px 0}
-.card{background:white;border:1px solid #e4e7ee;border-radius:8px;padding:16px}
-.value{font-size:24px;font-weight:700;margin-top:8px}
-table{width:100%;border-collapse:collapse;background:white;border:1px solid #e4e7ee;border-radius:8px;overflow:hidden}
-td,th{padding:10px;border-bottom:1px solid #eef0f4;text-align:left;font-size:14px}
-.muted{color:#5d6678}
-</style>
+  <meta charset="utf-8">
+  <title>Pragmatik Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090b;
+      --card-bg: rgba(24, 24, 27, 0.6);
+      --border: rgba(63, 63, 70, 0.4);
+      --text: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --primary: #8b5cf6;
+      --primary-glow: rgba(139, 92, 246, 0.15);
+      --accent: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.15);
+      --success: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(9, 9, 11, 0.8);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo-group { display: flex; align-items: center; gap: 0.75rem; }
+    .logo-icon {
+      width: 2.2rem;
+      height: 2.2rem;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.25rem;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+    h1 { font-size: 1.35rem; font-weight: 600; }
+    .scope-selector {
+      display: flex;
+      background: rgba(39, 39, 42, 0.6);
+      border: 1px solid var(--border);
+      padding: 0.25rem;
+      border-radius: 0.75rem;
+      gap: 0.25rem;
+    }
+    .scope-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.4rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      font-size: 0.85rem;
+    }
+    .scope-btn.active {
+      background: var(--primary);
+      color: var(--text);
+      box-shadow: 0 0 10px var(--primary-glow);
+    }
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      width: 100%;
+    }
+    .grid-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s ease;
+    }
+    .card:hover { border-color: var(--primary); }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      opacity: 0.6;
+    }
+    .card-title { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+    .card-value { font-size: 1.85rem; font-weight: 700; margin-top: 0.5rem; }
+    .card-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .grid-charts {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 900px) {
+      .grid-charts { grid-template-columns: 1fr; }
+    }
+    .chart-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .chart-title { font-size: 1rem; font-weight: 600; }
+    .chart-container {
+      width: 100%;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      overflow-x: auto;
+    }
+    .table-title { padding: 1.5rem 1.5rem 1rem 1.5rem; font-size: 1.1rem; font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
+    th {
+      background: rgba(39, 39, 42, 0.4);
+      padding: 1rem 1.5rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 1rem 1.5rem;
+      font-size: 0.85rem;
+      border-bottom: 1px solid rgba(63, 63, 70, 0.2);
+    }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+    .badge-client {
+      background: var(--primary-glow);
+      color: var(--primary);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+    .text-success { color: var(--success); font-weight: 600; }
+    .text-muted { color: var(--text-muted); }
+    .footer { text-align: center; margin-top: auto; padding: 2rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem; }
+  </style>
 </head>
 <body>
-<main>
-<h1>Pragmatik Dashboard</h1>
-<p class="muted">${escapeHtml(data.cwd)}</p>
-<section class="grid">
-<div class="card">Detected agents<div class="value">${data.clients.length}</div></div>
-<div class="card">Available tools<div class="value">${data.tools.filter((tool) => tool.available).length}/${data.tools.length}</div></div>
-<div class="card">Last usage tokens<div class="value">${escapeHtml(data.lastUsage.tokens)}</div></div>
-<div class="card">Estimated cost<div class="value">${escapeHtml(data.lastUsage.cost)}</div></div>
-<div class="card">Optimized context<div class="value">${escapeHtml(data.lastUsage.contextTokens)}</div></div>
-<div class="card">Savings<div class="value">${escapeHtml(data.lastUsage.savings)}</div></div>
-</section>
-<h2>Tool Status</h2>
-<table><thead><tr><th>Tool</th><th>Status</th><th>Category</th><th>Maturity</th></tr></thead><tbody>${rows}</tbody></table>
-<h2>Next Actions</h2>
-<ul>${data.nextActions.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
-</main>
+  <header>
+    <div class="logo-group">
+      <div class="logo-icon">P</div>
+      <div>
+        <h1>Pragmatik Dashboard</h1>
+        <p style="font-size:0.75rem;color:var(--text-muted)" id="project-path">Cargando...</p>
+      </div>
+    </div>
+    <div class="scope-selector">
+      <button class="scope-btn active" id="btn-project" onclick="setScope('project')">Proyecto</button>
+      <button class="scope-btn" id="btn-global" onclick="setScope('global')">Global</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="grid-stats">
+      <div class="card">
+        <div class="card-title">Ahorro Neto</div>
+        <div class="card-value" id="stat-savings" style="color: var(--success);">$0.00</div>
+        <div class="card-sub" id="stat-savings-sub">Ahorro financiero acumulado</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tiempo Salvado</div>
+        <div class="card-value" id="stat-time">0h</div>
+        <div class="card-sub" id="stat-time-sub">Horas de desarrollo optimizadas</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Eficiencia de IA</div>
+        <div class="card-value" id="stat-efficiency">0%</div>
+        <div class="card-sub">Ratio de optimización de costo</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tokens Totales</div>
+        <div class="card-value" id="stat-tokens">0</div>
+        <div class="card-sub" id="stat-cost">IA Cost: $0.00</div>
+      </div>
+    </section>
+
+    <section class="grid-charts">
+      <div class="card chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Comparativa de Costo</div>
+        </div>
+        <div class="chart-container" id="comp-chart">
+          <!-- SVG injected dynamically -->
+        </div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Evolución de Ahorros Acumulados (USD)</div>
+        </div>
+        <div class="chart-container" id="timeline-chart">
+          <!-- SVG injected dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <section class="table-container">
+      <div class="table-title">Historial de Sesiones (<span id="session-count">0</span>)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Tarea / Commit</th>
+            <th>Cliente</th>
+            <th>Duración</th>
+            <th>Tokens</th>
+            <th>Costo IA</th>
+            <th>Ahorro Neto</th>
+          </tr>
+        </thead>
+        <tbody id="sessions-list">
+          <tr>
+            <td colspan="7" class="text-muted" style="text-align: center; padding: 2rem;">Cargando sesiones...</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Pragmatik v<span id="pragmatik-version">0.5.0</span> — Con tecnología de medición autónoma local.
+  </footer>
+
+  <script>
+    let currentScope = 'project';
+
+    function setScope(scope) {
+      currentScope = scope;
+      document.getElementById('btn-project').classList.toggle('active', scope === 'project');
+      document.getElementById('btn-global').classList.toggle('active', scope === 'global');
+      loadData();
+    }
+
+    async function loadData() {
+      try {
+        const response = await fetch(\`/data.json?scope=\${currentScope}\`);
+        const data = await response.json();
+        
+        document.getElementById('project-path').textContent = currentScope === 'project' 
+          ? \`Local: \${data.projectRoot}\`
+          : 'Global: Sesiones de toda la máquina';
+        
+        // Update stats
+        document.getElementById('stat-savings').textContent = \`$\${data.aggregates.cost.money_saved_usd.toFixed(2)}\`;
+        document.getElementById('stat-time').textContent = \`\${data.aggregates.cost.time_saved_hours.toFixed(1)}h\`;
+        document.getElementById('stat-efficiency').textContent = \`\${data.aggregates.cost.efficiency_ratio.toFixed(1)}%\`;
+        document.getElementById('stat-tokens').textContent = data.aggregates.tokens.total.toLocaleString();
+        document.getElementById('stat-cost').textContent = \`IA Cost: $\${data.aggregates.cost.ai_cost_usd.toFixed(4)}\`;
+        document.getElementById('session-count').textContent = data.aggregates.totalSessions;
+        
+        document.getElementById('stat-savings-sub').textContent = \`En \${data.aggregates.totalSessions} sesiones de desarrollo\`;
+        
+        // Render comparison chart
+        drawComparisonChart(data.aggregates.cost.ai_cost_usd, data.aggregates.cost.human_cost_usd);
+
+        // Render timeline chart
+        drawSavingsTimeline(data.sessions);
+
+        // Render session list
+        const tbody = document.getElementById('sessions-list');
+        if (data.sessions.length === 0) {
+          tbody.innerHTML = \`<tr><td colspan="7" class="text-muted" style="text-align: center; padding: 2rem;">No se encontraron sesiones registradas. Corre 'pragmatik measure' para registrar una.</td></tr>\`;
+          return;
+        }
+
+        tbody.innerHTML = data.sessions.map(s => {
+          const date = new Date(s.started_at).toLocaleString();
+          const tokensStr = s.tokens ? s.tokens.total.toLocaleString() : '0';
+          const aiCostStr = s.cost ? \`$\${s.cost.ai_cost_usd.toFixed(4)}\` : '$0.00';
+          const savedStr = s.savings && s.savings.money_saved_usd !== null 
+            ? \`$\${s.savings.money_saved_usd.toFixed(2)}\` 
+            : '-';
+          const durationStr = \`\${s.duration_minutes} min\`;
+          const savedClass = s.savings && s.savings.money_saved_usd > 0 ? 'text-success' : '';
+
+          return \`
+            <tr>
+              <td>\${date}</td>
+              <td style="font-weight: 500;">\${escapeHtml(s.task)}</td>
+              <td><span class="badge-client">\${escapeHtml(s.client)}</span></td>
+              <td>\${durationStr}</td>
+              <td>\${tokensStr}</td>
+              <td>\${aiCostStr}</td>
+              <td class="\${savedClass}">\${savedStr}</td>
+            </tr>
+          \`;
+        }).join('');
+
+      } catch (err) {
+        console.error("Error al cargar datos del dashboard:", err);
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    function drawComparisonChart(aiCost, humanCost) {
+      const container = document.getElementById('comp-chart');
+      const max = Math.max(aiCost, humanCost, 1);
+      const aiPct = (aiCost / max) * 120;
+      const humanPct = (humanCost / max) * 120;
+      
+      container.innerHTML = \`
+        <svg width="100%" height="200" viewBox="0 0 200 200">
+          <rect x="35" y="\${160 - humanPct}" width="40" height="\${humanPct}" fill="#3f3f46" rx="6"></rect>
+          <text x="55" y="180" fill="#a1a1aa" font-size="10" text-anchor="middle">Humano</text>
+          <text x="55" y="\${150 - humanPct}" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">$\${humanCost.toFixed(0)}</text>
+          
+          <rect x="125" y="\${160 - aiPct}" width="40" height="\${aiPct}" fill="url(#grad)" rx="6"></rect>
+          <text x="145" y="180" fill="#a1a1aa" font-size="10" text-anchor="middle">IA Cost</text>
+          <text x="145" y="\${150 - aiPct}" fill="#8b5cf6" font-size="11" font-weight="bold" text-anchor="middle">$\${aiCost.toFixed(2)}</text>
+
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#8b5cf6"></stop>
+              <stop offset="100%" stop-color="#06b6d4"></stop>
+            </linearGradient>
+          </defs>
+        </svg>
+      \`;
+    }
+
+    function drawSavingsTimeline(sessions) {
+      const container = document.getElementById('timeline-chart');
+      if (sessions.length < 2) {
+        container.innerHTML = \`<div style="color: var(--text-muted); font-size: 0.85rem;">Se necesitan al menos 2 sesiones para graficar la evolución.</div>\`;
+        return;
+      }
+      
+      let currentSaving = 0;
+      const cronSessions = [...sessions].reverse();
+      const savingsData = cronSessions.map(s => {
+        currentSaving += s.savings ? (s.savings.money_saved_usd || 0) : 0;
+        return currentSaving;
+      });
+
+      const maxSaving = Math.max(...savingsData, 10);
+      const minSaving = Math.min(...savingsData, 0);
+      const range = maxSaving - minSaving;
+      
+      const width = 600;
+      const height = 200;
+      const padding = 40;
+      
+      const step = (width - padding * 2) / (savingsData.length - 1);
+      const xCoords = savingsData.map((_, i) => padding + i * step);
+      const yCoords = savingsData.map(val => height - padding - ((val - minSaving) / range) * (height - padding * 2));
+      
+      let pathD = \`M \${xCoords[0]} \${yCoords[0]}\`;
+      for (let i = 1; i < savingsData.length; i++) {
+        pathD += \` L \${xCoords[i]} \${yCoords[i]}\`;
+      }
+      
+      let areaD = \`\${pathD} L \${xCoords[xCoords.length - 1]} \${height - padding} L \${xCoords[0]} \${height - padding} Z\`;
+      
+      let circles = xCoords.map((x, i) => \`
+        <circle cx="\${x}" cy="\${yCoords[i]}" r="4" fill="#8b5cf6" stroke="#09090b" stroke-width="2"></circle>
+      \`).join('');
+
+      container.innerHTML = \`
+        <svg width="100%" height="100%" viewBox="0 0 \${width} \${height}">
+          <defs>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.3"></stop>
+              <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"></stop>
+            </linearGradient>
+          </defs>
+          <path d="\${areaD}" fill="url(#areaGrad)"></path>
+          <path d="\${pathD}" fill="none" stroke="#8b5cf6" stroke-width="3" stroke-linecap="round"></path>
+          \${circles}
+          <line x1="\${padding}" y1="\${height - padding}" x2="\${width - padding}" y2="\${height - padding}" stroke="rgba(255,255,255,0.1)"></line>
+        </svg>
+      \`;
+    }
+  </script>
 </body>
 </html>`;
 }
 
-function buildDashboardData(project) {
-  const optimization = readText(join(ROOT, "docs", "AI_OPTIMIZATION_REPORT.md"));
-  const usage = readText(join(ROOT, "docs", "AI_USAGE_REPORT.md"));
-  return {
-    cwd: project.cwd,
-    clients: project.clients,
-    tools: project.tools,
-    lastUsage: {
-      tokens: matchLast(optimization, /Measured tokens: ([^.]+)\./) || "not measured",
-      cost: matchLast(optimization, /Measured cost: ([^.]+)\./) || "not measured",
-      contextTokens: matchLast(optimization, /Optimized Repomix pack: ([^.]+)\./) || "not measured",
-      savings: optimization.includes("Estimated savings: not claimed") ? "baseline required" : "not measured"
-    },
-    reports: {
-      usage: Boolean(usage),
-      optimization: Boolean(optimization)
-    },
-    nextActions: nextActions(project)
-  };
-}
+function buildPragmatikDashboardData(scope) {
+  const sessions = [];
+  
+  if (scope === "project") {
+    const aiRunsDir = join(ROOT, ".ai-runs");
+    if (existsSync(aiRunsDir)) {
+      const entries = readdirSync(aiRunsDir);
+      for (const entry of entries) {
+        const sessionPath = join(aiRunsDir, entry, "session.json");
+        if (existsSync(sessionPath)) {
+          try {
+            sessions.push(JSON.parse(readFileSync(sessionPath, "utf8")));
+          } catch {
+            // ignore
+          }
+        }
+      }
+    }
+  } else {
+    const globalRunsDir = join(homedir(), ".pragmatik", "runs");
+    if (existsSync(globalRunsDir)) {
+      const entries = readdirSync(globalRunsDir);
+      for (const entry of entries) {
+        if (entry.endsWith(".json")) {
+          const sessionPath = join(globalRunsDir, entry);
+          try {
+            sessions.push(JSON.parse(readFileSync(sessionPath, "utf8")));
+          } catch {
+            // ignore
+          }
+        }
+      }
+    }
+  }
 
-function nextActions(project) {
-  const actions = [];
-  if (!project.tools.find((tool) => tool.id === "tokscale")?.available) actions.push("Install or use npx Tokscale for usage measurement.");
-  if (!project.tools.find((tool) => tool.id === "tokless")?.available) actions.push("Tokless is optional; install it only if you want prompt/plugin optimization.");
-  if (!project.hasAgents) actions.push("Add AGENTS.md or run pragmatik setup to adopt governance rules.");
-  if (actions.length === 0) actions.push("Run a matched baseline vs optimized task before claiming savings.");
-  return actions;
+  sessions.sort((a, b) => new Date(b.started_at) - new Date(a.started_at));
+
+  let totalInputTokens = 0;
+  let totalOutputTokens = 0;
+  let totalTokens = 0;
+  let totalAiCost = 0;
+  let totalHumanCost = 0;
+  let totalMoneySaved = 0;
+  let totalTimeSavedHours = 0;
+  let totalSessions = sessions.length;
+  let totalDurationMinutes = 0;
+
+  for (const s of sessions) {
+    totalInputTokens += s.tokens?.input || 0;
+    totalOutputTokens += s.tokens?.output || 0;
+    totalTokens += s.tokens?.total || 0;
+    totalAiCost += s.cost?.ai_cost_usd || 0;
+    totalDurationMinutes += s.duration_minutes || 0;
+
+    if (s.human_estimate?.estimated_cost_usd !== null) {
+      totalHumanCost += s.human_estimate.estimated_cost_usd;
+    }
+    if (s.savings?.money_saved_usd !== null) {
+      totalMoneySaved += s.savings.money_saved_usd;
+    }
+    if (s.savings?.time_saved_hours !== null) {
+      totalTimeSavedHours += s.savings.time_saved_hours;
+    }
+  }
+
+  const efficiencyRatio = totalHumanCost > 0 
+    ? ((totalMoneySaved / totalHumanCost) * 100) 
+    : 0;
+
+  return {
+    scope,
+    projectRoot: ROOT,
+    aggregates: {
+      totalSessions,
+      totalDurationMinutes,
+      tokens: {
+        input: totalInputTokens,
+        output: totalOutputTokens,
+        total: totalTokens
+      },
+      cost: {
+        ai_cost_usd: Number(totalAiCost.toFixed(4)),
+        human_cost_usd: Number(totalHumanCost.toFixed(2)),
+        money_saved_usd: Number(totalMoneySaved.toFixed(2)),
+        time_saved_hours: Number(totalTimeSavedHours.toFixed(2)),
+        efficiency_ratio: Number(efficiencyRatio.toFixed(1))
+      }
+    },
+    sessions
+  };
 }
 
 function suggestTemplate({ idea, issue, dryRun, yes }) {
@@ -1606,6 +2029,12 @@ async function runMeasure(args) {
 
   writeFileSync(join(sessionDir, "session.json"), JSON.stringify(sessionData, null, 2) + "\n");
   writeFileSync(join(aiRunsDir, "latest-session.json"), JSON.stringify(sessionData, null, 2) + "\n");
+
+  const globalRunsDir = join(homedir(), ".pragmatik", "runs");
+  if (!existsSync(globalRunsDir)) {
+    mkdirSync(globalRunsDir, { recursive: true });
+  }
+  writeFileSync(join(globalRunsDir, `${sessionId}.json`), JSON.stringify(sessionData, null, 2) + "\n");
 
   printSection("Pragmatik Measure Complete");
   console.log(`- Session ID:  ${sessionId}`);

@@ -83,6 +83,27 @@ try {
   }
   console.log("\x1b[32m✓\x1b[0m Packed installation successfully runs 'pragmatik report' with comparative analytics.");
 
+  // Verify dashboard API server by spawning it and fetching data.json
+  const { spawn } = await import("node:child_process");
+  const dashboardProcess = spawn(join(project, "node_modules", ".bin", "pragmatik"), ["dashboard", "--no-open"], {
+    cwd: project,
+    env: { ...process.env, HOME: mockHome }
+  });
+
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+
+  try {
+    const res = await fetch("http://127.0.0.1:8787/data.json?scope=project");
+    const data = await res.json();
+
+    if (!data.aggregates || data.aggregates.totalSessions !== 1) {
+      throw new Error(`Dashboard data API returned incorrect aggregated stats:\n${JSON.stringify(data, null, 2)}`);
+    }
+    console.log("\x1b[32m✓\x1b[0m Packed installation successfully runs dashboard API server and returns aggregated JSON stats.");
+  } finally {
+    dashboardProcess.kill("SIGTERM");
+  }
+
 } finally {
   rmSync(sandbox, { recursive: true, force: true });
 }

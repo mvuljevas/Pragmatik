@@ -1697,3 +1697,31 @@ Next suggested step:
 
 - Proceed to Milestone 3: Design and implement the real local Pragmatik dashboard (v0.5.0).
 
+## 2026-07-17 - Block 046: Local Dashboard UI & Aggregator (v0.5.0)
+
+Branch:
+
+- `develop`
+
+Current state:
+
+- `pragmatik dashboard` fully implemented as an interactive local HTTP server.
+- Lector and aggregator logic implemented to read and consolidate sessions across project-local `.ai-runs/**/session.json` and global `~/.pragmatik/runs/*.json` scopes.
+- UI designed as a premium dark-themed Single Page Application with dynamic vector charts (SVG) for cost comparisons and savings evolutions.
+- Interactive filtering added to toggle scopes dynamically between "Proyecto" and "Global" without reloading the page.
+- Test suite updated with spawned dashboard integration checks.
+- Repository version has been updated to `0.5.0`.
+
+Decisions:
+
+- Embed HTML/CSS/JS directly in the CLI tool source to prevent packaging complexity and ensure zero external network dependencies.
+- Autocreate `~/.pragmatik/runs/` during measure runs to preserve global history across workspaces.
+
+Risks:
+
+- Scalability of parsing hundreds of JSON session files in a single synchronous CLI thread could become a latency factor.
+
+Next suggested step:
+
+- Proceed to Milestone 4: Optional submit and cloud platform setup (v0.6.0).
+
