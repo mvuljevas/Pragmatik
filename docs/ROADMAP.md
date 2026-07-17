@@ -83,10 +83,10 @@ and reporting functions.
 3. **v0.5.0** — Design and implement the real local Pragmatik dashboard:
    - HTTP server (already exists as stub) upgraded to serve session history.
    - Visual comparison: AI cost vs human cost, tokens, time saved.
-   - Resolves TD-008.
 4. **v0.6.0** — Optional submit:
    - `pragmatik submit` with dry-run default.
    - Only non-personal aggregate metrics. Never content, paths, or identifiers.
+
 5. Publish `@mvuljevas/pragmatik` to npm and test installation in a clean
    external project.
 6. Run real paired measurements and decide whether `lean-context` reduces token
