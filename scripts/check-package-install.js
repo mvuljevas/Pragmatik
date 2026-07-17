@@ -21,14 +21,11 @@ try {
     name: "pragmatik-install-check",
     private: true
   }, null, 2)}\n`);
-  writeFileSync(join(project, ".agents.env"), [
-    "AGENTS_CONTEXT_MODE=lean-context",
-    "AGENTS_CONTEXT7=off",
-    "AGENTS_REPOMIX=off",
-    "AGENTS_TOKSCALE=off",
-    "AGENTS_MCP=off",
-    "AGENTS_USAGE_REPORT=off",
-    "AGENTS_OPTIMIZATION_REPORT=off",
+  writeFileSync(join(project, ".pragmatik.env"), [
+    "PRAGMATIK_CONTEXT_MODE=lean-context",
+    "PRAGMATIK_SELECTED_TOOLS=",
+    "PRAGMATIK_SUBMIT=off",
+    "PRAGMATIK_DASHBOARD=off",
     ""
   ].join("\n"));
 

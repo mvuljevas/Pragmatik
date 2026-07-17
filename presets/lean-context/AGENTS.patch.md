@@ -85,19 +85,19 @@ Do not invent a next step when neither roadmap nor technical debt provides one.
   `bash scripts/ai-tools.sh setup-machine` when the CLI is not available.
 - Ask before writing secrets, changing machine-wide integrations, or enabling
   MCP servers.
-- During repository analysis, check `.agents.env` when present. If
-  `AGENTS_CONTEXT_MODE=baseline`, skip optional `lean-context` accelerators for
+- During repository analysis, check `.pragmatik.env` when present. If
+  `PRAGMATIK_CONTEXT_MODE=baseline`, skip optional `lean-context` accelerators for
   measurement unless the user explicitly asks.
 - When Pragmatik CLI is available, run `pragmatik run` at the end of an iteration
-  when `.agents.env` marks one or more tools as `on`.
+  when `.pragmatik.env` marks one or more tools as `on`.
 - Use `pragmatik dashboard` when the user wants local dashboard commands,
-  Tokscale TUI guidance, local graph export guidance, or report locations.
+  TUI guidance, local graph export guidance, or report locations.
 - Fall back to `bash scripts/ai-tools.sh run` and
   `bash scripts/ai-tools.sh dashboard` when the CLI is not available.
 - When `.githooks/pre-commit` exists and the user wants automatic iteration
   closure, run `bash scripts/ai-tools.sh install-hooks` once and set
-  `AGENTS_AUTO_RUN_ON_COMMIT=on` in `.agents.env`.
+  `PRAGMATIK_AUTO_RUN_ON_COMMIT=on` in `.pragmatik.env`.
 - With commit automation enabled, the pre-commit hook runs
   `bash scripts/ai-tools.sh run-and-stage` before the iteration commit.
-- Tokscale submit is controlled by `AGENTS_TOKSCALE_SUBMIT=on|dry-run|off`.
+- Pragmatik submit is controlled by `PRAGMATIK_SUBMIT=on|dry-run|off`.
   Templates default to `dry-run`; use `on` only after user confirmation or `off` for local-only runs.

@@ -22,11 +22,25 @@ value_for() {
   local key="$1"
   local default_value="$2"
   local value="${!key:-}"
+
+  local alt_key="$key"
+  if [[ "$key" == AGENTS_* ]]; then
+    alt_key="PRAGMATIK_${key#AGENTS_}"
+    if [ -n "${!alt_key:-}" ]; then
+      value="${!alt_key}"
+    fi
+  elif [[ "$key" == PRAGMATIK_* ]]; then
+    alt_key="AGENTS_${key#PRAGMATIK_}"
+    if [ -n "${!alt_key:-}" ]; then
+      value="${!alt_key}"
+    fi
+  fi
+
   if [ -z "$value" ]; then
-    value="$(read_kv_file ".agents.env" "$key" 2>/dev/null || true)"
+    value="$(read_kv_file ".pragmatik.env" "$key" 2>/dev/null || read_kv_file ".pragmatik.env" "$alt_key" 2>/dev/null || read_kv_file ".agents.env" "$key" 2>/dev/null || true)"
   fi
   if [ -z "$value" ]; then
-    value="$(read_kv_file ".env" "$key" 2>/dev/null || true)"
+    value="$(read_kv_file ".env" "$key" 2>/dev/null || read_kv_file ".env" "$alt_key" 2>/dev/null || true)"
   fi
   if [ -z "$value" ]; then
     value="$default_value"
@@ -34,13 +48,13 @@ value_for() {
   printf '%s' "$value"
 }
 
-flag="$(value_for AGENTS_AUTO_RUN_ON_COMMIT off)"
+flag="$(value_for PRAGMATIK_AUTO_RUN_ON_COMMIT "$(value_for AGENTS_AUTO_RUN_ON_COMMIT off)")"
 
 case "$flag" in
   on|true|1)
     scripts/ai-tools.sh run-and-stage
     ;;
   *)
-    echo "AI tool automation skipped: AGENTS_AUTO_RUN_ON_COMMIT is not on."
+    echo "AI tool automation skipped: PRAGMATIK_AUTO_RUN_ON_COMMIT is not on."
     ;;
 esac

@@ -1641,3 +1641,59 @@ Next suggested step:
 
 - Follow `docs/ROADMAP.md` milestone 2: implement local transcript parsing logic and checksum generation (v0.4.0).
 
+## 2026-07-17 - Block 044: Autonomous Measurement Layer (v0.4.0)
+
+Branch:
+
+- `develop`
+
+Current state:
+
+- `pragmatik measure` implemented to parse local transcripts (Gemini/Antigravity), estimate tokens locally, and compute costs using built-in model pricing.
+- SHA-256 session checksumming is generated to prevent duplicate cloud submissions in the future.
+- `pragmatik report` implemented to render comparative analytics tabulating usage, cost, and human savings in the console.
+- `pragmatik login` implemented to prompt the user for configuration tokens and write them to the local git-ignored `.env` file.
+- Integration tests for `measure` and `report` added to `scripts/check-package-install.js` to ensure the packed package remains functional.
+- Repository version has been updated to `0.4.0`.
+
+Decisions:
+
+- Use `chars / 4` as a reliable local token estimation heuristic.
+- Persist session data to `.ai-runs/<sessionId>/session.json` and a symlink-like `.ai-runs/latest-session.json`.
+
+Risks:
+
+- The configuration file `.agents.env` contains dirty legacy diagnostics and `AGENTS_` prefixes.
+
+Next suggested step:
+
+- Clean up config prefixes, rename to `.pragmatik.env`, and implement local-first config folder hierarchy (v0.4.1).
+
+## 2026-07-17 - Block 045: Config Cleanup and Hourly Rate Hierarchy (v0.4.1)
+
+Branch:
+
+- `develop`
+
+Current state:
+
+- `.agents.env` renamed to `.pragmatik.env` across root, presets, and templates, and all references in `AGENTS.md` and pre-commit hooks updated.
+- Prefix mapping migrated from `AGENTS_` to `PRAGMATIK_`. Cleaned up dirty diagnostic variables from the default `.pragmatik.env` file.
+- Backward compatibility wrapper added to `scripts/ai-tools.sh` and pre-commit hooks to support both prefix variants.
+- Hourly rate hierarchy implemented to read from flag -> project `.env` -> project `.pragmatik.env` -> global `~/.pragmatik/config.json` -> interactive prompt -> default `80`.
+- Task description is no longer required and defaults to the latest git commit message if available.
+- Repository version has been updated to `0.4.1`.
+
+Decisions:
+
+- Keep global CLI execution working by reading config files relative to `process.cwd()` for project context and `homedir()` for global configuration.
+- Automatically extract the task description from git logs when `--task` is omitted.
+
+Risks:
+
+- Portable execution of global commands depends on correct path resolution on other operating systems.
+
+Next suggested step:
+
+- Proceed to Milestone 3: Design and implement the real local Pragmatik dashboard (v0.5.0).
+

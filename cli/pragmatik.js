@@ -10,7 +10,7 @@ import { stdin as input, stdout as output } from "node:process";
 import { homedir } from "node:os";
 import { createHash } from "node:crypto";
 
-const VERSION = "0.4.0";
+const VERSION = "0.4.1";
 const ROOT = process.cwd();
 
 const CLI_DIR = dirname(fileURLToPath(import.meta.url));
@@ -279,7 +279,7 @@ Detected here:
 
 function detectProject(cwd) {
   const packageJson = readJson(join(cwd, "package.json"));
-  const env = readEnv(join(cwd, ".agents.env")) || readEnv(join(cwd, ".agents.env.example"));
+  const env = readEnv(join(cwd, ".pragmatik.env")) || readEnv(join(cwd, ".agents.env"));
   const templates = listTemplates();
   const stack = detectStack(cwd, packageJson);
   const projectState = detectProjectState(cwd, packageJson);
@@ -375,7 +375,7 @@ function detectStack(cwd, packageJson) {
 }
 
 function detectProjectState(cwd, packageJson) {
-  if (existsSync(join(cwd, "AGENTS.md")) && existsSync(join(cwd, ".agents.env"))) return "agents-configured";
+  if (existsSync(join(cwd, "AGENTS.md")) && existsSync(join(cwd, ".pragmatik.env"))) return "agents-configured";
   if (existsSync(join(cwd, "AGENTS.md"))) return "agents-partial";
   if (packageJson || existsSync(join(cwd, "composer.json")) || existsSync(join(cwd, "artisan")) || existsSync(join(cwd, "manifest.json"))) return "existing-project";
   if (isGithubMinimalRepo(cwd)) return "github-minimal";
@@ -407,7 +407,7 @@ function assessProject(project) {
   items.push({
     level: project.env ? "ok" : "warn",
     label: "Local config",
-    message: project.env ? ".agents.env or sample config is present." : ".agents.env is missing; setup can create non-secret local defaults."
+    message: project.env ? ".pragmatik.env is present." : ".pragmatik.env is missing; setup can create non-secret local defaults."
   });
   items.push({
     level: project.hasReadme ? "ok" : "warn",
@@ -527,7 +527,7 @@ async function guideSelectedTools(selectedTools, answers) {
       console.log("  Run later: npx -y tokscale@latest login");
     } else if (id === "context7") {
       console.log("- Context7: requires an API key. Pragmatik will propose adding CONTEXT7_API_KEY placeholder to `.env`.");
-      console.log("  Do NOT commit secrets to `.agents.env` (which is versioned).");
+      console.log("  Do NOT commit secrets to `.pragmatik.env` (which is versioned).");
     } else if (id === "tokless") {
       console.log("- Tokless: configure only the plugins you intend to use. Measure before and after enabling it.");
     } else if (id === "repomix") {
@@ -607,7 +607,7 @@ async function setupProject({ initMode, dryRun, yes }) {
 
 function buildSetupChanges(project, answers) {
   const changes = [];
-  const envPath = join(ROOT, ".agents.env");
+  const envPath = join(ROOT, ".pragmatik.env");
   if (!project.hasAgents) {
     changes.push({
       path: join(ROOT, "AGENTS.md"),
@@ -658,7 +658,7 @@ function buildSetupChanges(project, answers) {
     changes.push({
       path: envPath,
       mode: "create",
-      content: renderAgentsEnv(answers)
+      content: renderPragmatikEnv(answers)
     });
   }
   const dotenvPath = join(ROOT, ".env");
@@ -934,20 +934,13 @@ Track accepted shortcuts, risks, and cleanup items.
 `;
 }
 
-function renderAgentsEnv(answers) {
-  return `# Local non-secret Pragmatik configuration.
-AGENTS_CONTEXT_MODE=lean-context
-AGENTS_SETUP_PROFILE=${answers.profile}
-AGENTS_SELECTED_TOOLS=${answers.selectedTools.join(",")}
-AGENTS_TOKSCALE_SUBMIT=${answers.privacy}
-AGENTS_DASHBOARD=on
-AGENTS_DASHBOARD_AUTOSTART=on
-AGENTS_DASHBOARD_WRAPPER_ONLY=on
-AGENTS_REPOMIX=${answers.selectedTools.includes("repomix") ? "on" : "ask"}
-AGENTS_TOKSCALE=${answers.selectedTools.includes("tokscale") ? "on" : "ask"}
-AGENTS_TOKLESS=${answers.selectedTools.includes("tokless") ? "on" : "ask"}
-AGENTS_CONTEXT7=${answers.selectedTools.includes("context7") ? "on" : "ask"}
-AGENTS_MCP=ask
+function renderPragmatikEnv(answers) {
+  return `# Pragmatik Project Configuration
+PRAGMATIK_CONTEXT_MODE=lean-context
+PRAGMATIK_SETUP_PROFILE=${answers.profile}
+PRAGMATIK_SELECTED_TOOLS=${answers.selectedTools.join(",")}
+PRAGMATIK_SUBMIT=${answers.privacy}
+PRAGMATIK_DASHBOARD=on
 `;
 }
 
@@ -1353,8 +1346,51 @@ function handleRequest(req) {
   console.log(`- Created ${relative(target)}`);
 }
 
+function getGlobalConfigPath() {
+  return join(homedir(), ".pragmatik", "config.json");
+}
+
+function readGlobalConfig() {
+  const path = getGlobalConfigPath();
+  if (!existsSync(path)) return {};
+  try {
+    return JSON.parse(readFileSync(path, "utf8"));
+  } catch {
+    return {};
+  }
+}
+
+function writeGlobalConfig(config) {
+  const path = getGlobalConfigPath();
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, JSON.stringify(config, null, 2) + "\n");
+}
+
+function resolveHourlyRate(args, env, dotenv) {
+  let rate = numberArgWithFallback(args, "--hourly-rate", null);
+  if (rate !== null) return rate;
+
+  if (dotenv.PRAGMATIK_HOURLY_RATE) {
+    rate = Number(dotenv.PRAGMATIK_HOURLY_RATE);
+    if (Number.isFinite(rate) && rate >= 0) return rate;
+  }
+
+  if (env.PRAGMATIK_HOURLY_RATE) {
+    rate = Number(env.PRAGMATIK_HOURLY_RATE);
+    if (Number.isFinite(rate) && rate >= 0) return rate;
+  }
+
+  const globalConfig = readGlobalConfig();
+  if (globalConfig.hourlyRate !== undefined) {
+    rate = Number(globalConfig.hourlyRate);
+    if (Number.isFinite(rate) && rate >= 0) return rate;
+  }
+
+  return null;
+}
+
 async function runMeasure(args) {
-  const env = readEnv(join(ROOT, ".agents.env")) || {};
+  const env = readEnv(join(ROOT, ".pragmatik.env")) || readEnv(join(ROOT, ".agents.env")) || {};
 
   let client = valueArg(args, "--client");
   if (!client) {
@@ -1441,7 +1477,39 @@ async function runMeasure(args) {
   const outputTokens = Math.ceil(totalOutputChars / 4);
   const totalTokens = inputTokens + outputTokens;
 
-  const hourlyRate = numberArgWithFallback(args, "--hourly-rate", Number(env.PRAGMATIK_HOURLY_RATE) || 80);
+  const dotenv = readEnv(join(ROOT, ".env")) || {};
+  let hourlyRate = resolveHourlyRate(args, env, dotenv);
+
+  if (hourlyRate === null) {
+    const interactive = process.stdin.isTTY && !args.includes("--yes");
+    if (interactive) {
+      const readline = createInterface({ input, output });
+      const answer = await readline.question("Hourly rate not configured. Enter hourly rate in USD [Default: 80]: ");
+      const parsed = Number(answer.trim() || "80");
+      hourlyRate = Number.isFinite(parsed) && parsed >= 0 ? parsed : 80;
+
+      const saveChoice = await readline.question("Save this hourly rate? (g)lobally / (l)ocally in .env / (s)kip: ");
+      readline.close();
+      if (saveChoice.toLowerCase() === "g") {
+        const config = readGlobalConfig();
+        config.hourlyRate = hourlyRate;
+        writeGlobalConfig(config);
+        console.log(`- Saved global hourly rate $${hourlyRate}/hour to ~/.pragmatik/config.json`);
+      } else if (saveChoice.toLowerCase() === "l") {
+        const dotenvPath = join(ROOT, ".env");
+        let dotenvContent = existsSync(dotenvPath) ? readText(dotenvPath) : "";
+        if (dotenvContent && !dotenvContent.endsWith("\n")) {
+          dotenvContent += "\n";
+        }
+        dotenvContent += `# Private project hourly rate (USD)\nPRAGMATIK_HOURLY_RATE=${hourlyRate}\n`;
+        writeFileSync(dotenvPath, dotenvContent);
+        console.log(`- Saved project private hourly rate $${hourlyRate}/hour to .env`);
+      }
+    } else {
+      hourlyRate = 80;
+    }
+  }
+
   const humanHours = numberArgWithFallback(args, "--human-hours", null);
 
   const priceInputOverride = numberArgWithFallback(args, "--model-price-input", null);
@@ -1475,7 +1543,20 @@ async function runMeasure(args) {
     timeSavedHours = Number((humanHours - (durationMinutes / 60)).toFixed(2));
   }
 
-  const task = valueArg(args, "--task") || "AI development session";
+  let task = valueArg(args, "--task");
+  if (!task) {
+    try {
+      const gitLog = spawnSync("git", ["log", "-1", "--pretty=%s"], { encoding: "utf8" });
+      if (gitLog.status === 0 && gitLog.stdout.trim()) {
+        task = gitLog.stdout.trim();
+      }
+    } catch {
+      // ignore
+    }
+  }
+  if (!task) {
+    task = `Development session in ${projectRootBasename}`;
+  }
 
   const sessionData = {
     schema: "pragmatik-session/1",

@@ -24,11 +24,20 @@ value_for() {
   local key="$1"
   local default_value="$2"
   local value="${!key:-}"
+
+  local alt_key="$key"
+  if [[ "$key" == AGENTS_* ]]; then
+    alt_key="PRAGMATIK_${key#AGENTS_}"
+    if [ -n "${!alt_key:-}" ]; then
+      value="${!alt_key}"
+    fi
+  fi
+
   if [ -z "$value" ]; then
-    value="$(read_kv_file ".agents.env" "$key" 2>/dev/null || true)"
+    value="$(read_kv_file ".pragmatik.env" "$key" 2>/dev/null || read_kv_file ".pragmatik.env" "$alt_key" 2>/dev/null || read_kv_file ".agents.env" "$key" 2>/dev/null || true)"
   fi
   if [ -z "$value" ]; then
-    value="$(read_kv_file ".env" "$key" 2>/dev/null || true)"
+    value="$(read_kv_file ".env" "$key" 2>/dev/null || read_kv_file ".env" "$alt_key" 2>/dev/null || true)"
   fi
   if [ -z "$value" ]; then
     value="$default_value"

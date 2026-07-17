@@ -38,11 +38,11 @@ The agent must:
 2. Inspect the project structure and current git state.
 3. Identify whether this is a new project or an existing project adopting the
    template.
-4. Check `.agents.env` when present. This file is reserved for non-secret local
+4. Check `.pragmatik.env` when present. This file is reserved for non-secret local
    experiment flags.
-5. If `AGENTS_CONTEXT_MODE=baseline`, run the baseline analysis path and skip
+5. If `PRAGMATIK_CONTEXT_MODE=baseline`, run the baseline analysis path and skip
    optional `lean-context` accelerators unless the user explicitly asks.
-6. If `AGENTS_CONTEXT_MODE=lean-context` or the file is missing, use the normal
+6. If `PRAGMATIK_CONTEXT_MODE=lean-context` or the file is missing, use the normal
    template workflow.
 7. Check optional AI tooling guidance in `docs/AI_CLIENTS.md`,
    `docs/AI_TOOL_SETUP.md`, and related AI docs when present.
@@ -73,10 +73,10 @@ how to adopt the template rules without disrupting existing conventions.
 When optional AI tool files exist, the agent should offer a minimal setup path
 for the user's current client.
 
-Skip this bootstrap when `.agents.env` sets:
+Skip this bootstrap when `.pragmatik.env` sets:
 
 ```text
-AGENTS_CONTEXT_MODE=baseline
+PRAGMATIK_CONTEXT_MODE=baseline
 ```
 
 In baseline mode, only report that optional tooling is available but disabled
@@ -111,22 +111,22 @@ When `scripts/ai-tools.sh` exists:
   Tokscale and client setup.
 - Run `bash scripts/ai-tools.sh dashboard` when the user wants local dashboard
   commands or report locations.
-- Run `bash scripts/ai-tools.sh run` at the end of an iteration when `.agents.env`
+- Run `bash scripts/ai-tools.sh run` at the end of an iteration when `.pragmatik.env`
   marks one or more tools as `on`.
 - Run `bash scripts/ai-tools.sh measure-pair` when a matched baseline and
   `lean-context` comparison should be appended to `docs/AI_USAGE_REPORT.md`
   without hand-editing.
 - When `.githooks/pre-commit` exists and the user wants automatic iteration
   closure, run `bash scripts/ai-tools.sh install-hooks` once and set
-  `AGENTS_AUTO_RUN_ON_COMMIT=on` in `.agents.env`.
+  `PRAGMATIK_AUTO_RUN_ON_COMMIT=on` in `.pragmatik.env`.
 - With commit automation enabled, the pre-commit hook must run
   `bash scripts/ai-tools.sh run-and-stage` so active tools execute before the
   iteration commit and the aggregate usage report is staged automatically.
 - Keep raw outputs under `.ai-runs/`; they are local and ignored.
 - Commit only aggregate, non-sensitive summaries such as
   `docs/AI_USAGE_REPORT.md` and `docs/AI_OPTIMIZATION_REPORT.md`.
-- Tokscale submission must be controlled by
-  `AGENTS_TOKSCALE_SUBMIT=on|dry-run|off`. Templates default to `dry-run`; use `on` only after user confirmation or `off` for local-only runs.
+- Pragmatik submission must be controlled by
+  `PRAGMATIK_SUBMIT=on|dry-run|off`. Templates default to `dry-run`; use `on` only after user confirmation or `off` for local-only runs.
 - Do not run remote sharing commands outside Tokscale submit, write secrets, or
   run MCP mutation commands unless the user explicitly approves them.
 
