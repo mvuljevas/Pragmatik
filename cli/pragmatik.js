@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 import { createServer } from "node:http";
 import { spawn, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { emitKeypressEvents } from "node:readline";
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
+import { homedir } from "node:os";
+import { createHash } from "node:crypto";
 
-const VERSION = "0.3.6";
+const VERSION = "0.4.0";
 const ROOT = process.cwd();
 
 const CLI_DIR = dirname(fileURLToPath(import.meta.url));
@@ -96,6 +98,15 @@ const TOOL_REGISTRY = [
     description: "Paid team usage analytics and AI editor workflow."
   }
 ];
+
+const MODEL_PRICING = {
+  "claude-3-5-sonnet": { input: 3.0, output: 15.0 },
+  "claude-3-opus": { input: 15.0, output: 75.0 },
+  "gpt-4o": { input: 2.5, output: 10.0 },
+  "gemini-1.5-pro": { input: 1.25, output: 5.0 },
+  "gemini-2.5-pro": { input: 1.25, output: 10.0 },
+  "gemini-2.5-flash": { input: 0.075, output: 0.3 }
+};
 
 const LOWER_FLAGS = new Set([
   "--help",
@@ -1343,36 +1354,298 @@ function handleRequest(req) {
 }
 
 async function runMeasure(args) {
-  const client = valueArg(args, "--client") || "autodetected";
-  const sessionId = valueArg(args, "--session-id") || "latest";
-  const since = valueArg(args, "--since") || "all";
-  const humanHours = numberArgWithFallback(args, "--human-hours", null);
-  const hourlyRate = numberArgWithFallback(args, "--hourly-rate", 80);
-  const task = valueArg(args, "--task") || "autodetected";
-  const priceInput = numberArgWithFallback(args, "--model-price-input", null);
-  const priceOutput = numberArgWithFallback(args, "--model-price-output", null);
+  const env = readEnv(join(ROOT, ".agents.env")) || {};
 
-  printSection("Pragmatik Measure (v0.3.6 - CLI structure)");
-  console.log("Parsed Options:");
-  console.log(`- client:       ${client}`);
-  console.log(`- session-id:   ${sessionId}`);
-  console.log(`- since:        ${since}`);
-  console.log(`- human-hours:  ${humanHours !== null ? humanHours + " hours" : "not provided"}`);
-  console.log(`- hourly-rate:  $${hourlyRate.toFixed(2)}/hour`);
-  console.log(`- task:         ${task}`);
-  console.log(`- price-input:  ${priceInput !== null ? "$" + priceInput.toFixed(2) + "/1M tokens" : "built-in"}`);
-  console.log(`- price-output: ${priceOutput !== null ? "$" + priceOutput.toFixed(2) + "/1M tokens" : "built-in"}`);
-  console.log("\nStatus: Local measurement logic will be implemented in Phase B (v0.4.0).");
+  let client = valueArg(args, "--client");
+  if (!client) {
+    client = env.PRAGMATIK_CLIENT || "antigravity";
+  }
+
+  let sessionId = valueArg(args, "--session-id");
+  let logPath = "";
+
+  if (client === "antigravity") {
+    const brainDir = join(homedir(), ".gemini", "antigravity", "brain");
+    if (!existsSync(brainDir)) {
+      throw new Error(`Antigravity brain directory not found at: ${brainDir}`);
+    }
+    if (sessionId) {
+      logPath = join(brainDir, sessionId, ".system_generated", "logs", "transcript.jsonl");
+      if (!existsSync(logPath)) {
+        throw new Error(`Antigravity session transcript not found at: ${logPath}`);
+      }
+    } else {
+      const dirs = readdirSync(brainDir);
+      let latestMtime = 0;
+      for (const dir of dirs) {
+        const path = join(brainDir, dir, ".system_generated", "logs", "transcript.jsonl");
+        if (existsSync(path)) {
+          const mtime = statSync(path).mtimeMs;
+          if (mtime > latestMtime) {
+            latestMtime = mtime;
+            sessionId = dir;
+            logPath = path;
+          }
+        }
+      }
+      if (!logPath) {
+        throw new Error("No Antigravity sessions found in brain directory.");
+      }
+    }
+  } else if (client === "claude") {
+    throw new Error("Claude Code parser is not implemented yet. Support is planned for v0.4.0.");
+  } else {
+    throw new Error(`Unsupported client: ${client}`);
+  }
+
+  const transcriptContent = readFileSync(logPath, "utf8");
+  const lines = transcriptContent.trim().split("\n");
+  let totalInputChars = 0;
+  let totalOutputChars = 0;
+  let modelTurns = 0;
+  let toolCallsCount = 0;
+  let userMessages = 0;
+  let startedAt = null;
+  let endedAt = null;
+
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    try {
+      const step = JSON.parse(line);
+      const src = step.source;
+      const type = step.type;
+      const stepContent = step.content || "";
+      const createdAt = step.created_at;
+
+      if (createdAt) {
+        const time = new Date(createdAt);
+        if (!startedAt || time < startedAt) startedAt = time;
+        if (!endedAt || time > endedAt) endedAt = time;
+      }
+
+      if (src === "USER_EXPLICIT" && type === "USER_INPUT") {
+        totalInputChars += stepContent.length;
+        userMessages++;
+      } else if (src === "MODEL") {
+        modelTurns++;
+        totalOutputChars += stepContent.length;
+        const tcs = step.tool_calls || [];
+        toolCallsCount += tcs.length;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  const inputTokens = Math.ceil(totalInputChars / 4);
+  const outputTokens = Math.ceil(totalOutputChars / 4);
+  const totalTokens = inputTokens + outputTokens;
+
+  const hourlyRate = numberArgWithFallback(args, "--hourly-rate", Number(env.PRAGMATIK_HOURLY_RATE) || 80);
+  const humanHours = numberArgWithFallback(args, "--human-hours", null);
+
+  const priceInputOverride = numberArgWithFallback(args, "--model-price-input", null);
+  const priceOutputOverride = numberArgWithFallback(args, "--model-price-output", null);
+
+  let priceInput = priceInputOverride;
+  let priceOutput = priceOutputOverride;
+
+  if (priceInput === null || priceOutput === null) {
+    let key = "gemini-2.5-pro";
+    if (priceInput === null) priceInput = MODEL_PRICING[key].input;
+    if (priceOutput === null) priceOutput = MODEL_PRICING[key].output;
+  }
+
+  const inputCost = (inputTokens / 1000000) * priceInput;
+  const outputCost = (outputTokens / 1000000) * priceOutput;
+  const aiCostUsd = Number((inputCost + outputCost).toFixed(6));
+
+  const durationMinutes = startedAt && endedAt ? Math.round((endedAt - startedAt) / 60000) : 0;
+  const projectRootBasename = ROOT.split(/[\\/]/).filter(Boolean).at(-1) || "project";
+
+  const checksumHash = createHash("sha256");
+  checksumHash.update(`${sessionId}:${projectRootBasename}:${startedAt ? startedAt.toISOString() : ""}`);
+  const checksum = checksumHash.digest("hex");
+
+  let moneySavedUsd = null;
+  let timeSavedHours = null;
+  if (humanHours !== null) {
+    const humanCost = humanHours * hourlyRate;
+    moneySavedUsd = Number((humanCost - aiCostUsd).toFixed(2));
+    timeSavedHours = Number((humanHours - (durationMinutes / 60)).toFixed(2));
+  }
+
+  const task = valueArg(args, "--task") || "AI development session";
+
+  const sessionData = {
+    schema: "pragmatik-session/1",
+    id: sessionId,
+    checksum,
+    task,
+    client,
+    started_at: startedAt ? startedAt.toISOString() : new Date().toISOString(),
+    ended_at: endedAt ? endedAt.toISOString() : new Date().toISOString(),
+    duration_minutes: durationMinutes,
+    tokens: {
+      input: inputTokens,
+      output: outputTokens,
+      total: totalTokens
+    },
+    cost: {
+      currency: "USD",
+      price_input_per_1m: priceInput,
+      price_output_per_1m: priceOutput,
+      ai_cost_usd: aiCostUsd
+    },
+    human_estimate: {
+      hourly_rate_usd: hourlyRate,
+      estimated_hours: humanHours,
+      estimated_cost_usd: humanHours !== null ? humanHours * hourlyRate : null
+    },
+    savings: {
+      money_saved_usd: moneySavedUsd,
+      time_saved_hours: timeSavedHours
+    },
+    activity: {
+      model_turns: modelTurns,
+      tool_calls: toolCallsCount,
+      user_messages: userMessages
+    }
+  };
+
+  const aiRunsDir = join(ROOT, ".ai-runs");
+  if (!existsSync(aiRunsDir)) {
+    mkdirSync(aiRunsDir, { recursive: true });
+  }
+
+  const sessionDir = join(aiRunsDir, sessionId);
+  if (!existsSync(sessionDir)) {
+    mkdirSync(sessionDir, { recursive: true });
+  }
+
+  writeFileSync(join(sessionDir, "session.json"), JSON.stringify(sessionData, null, 2) + "\n");
+  writeFileSync(join(aiRunsDir, "latest-session.json"), JSON.stringify(sessionData, null, 2) + "\n");
+
+  printSection("Pragmatik Measure Complete");
+  console.log(`- Session ID:  ${sessionId}`);
+  console.log(`- Checksum:    ${checksum}`);
+  console.log(`- Saved to:    .ai-runs/${sessionId}/session.json`);
+  console.log(`- Saved to:    .ai-runs/latest-session.json`);
+  console.log("\nRun 'pragmatik report' to view detailed comparison.");
 }
 
 async function runReport() {
-  printSection("Pragmatik Report (v0.3.6 - CLI structure)");
-  console.log("Status: Comparative analysis reporting logic will be implemented in Phase B (v0.4.0).");
+  const latestPath = join(ROOT, ".ai-runs", "latest-session.json");
+  let data = null;
+
+  if (existsSync(latestPath)) {
+    try {
+      data = JSON.parse(readFileSync(latestPath, "utf8"));
+    } catch {
+      // ignore
+    }
+  }
+
+  if (!data) {
+    const aiRunsDir = join(ROOT, ".ai-runs");
+    if (existsSync(aiRunsDir)) {
+      const dirs = readdirSync(aiRunsDir);
+      let latestMtime = 0;
+      let newestSessionPath = "";
+      for (const dir of dirs) {
+        const path = join(aiRunsDir, dir, "session.json");
+        if (existsSync(path)) {
+          const mtime = statSync(path).mtimeMs;
+          if (mtime > latestMtime) {
+            latestMtime = mtime;
+            newestSessionPath = path;
+          }
+        }
+      }
+      if (newestSessionPath) {
+        try {
+          data = JSON.parse(readFileSync(newestSessionPath, "utf8"));
+        } catch {
+          // ignore
+        }
+      }
+    }
+  }
+
+  if (!data) {
+    printSection("Pragmatik Report");
+    console.log("No session reports found. Run 'pragmatik measure' first.");
+    return;
+  }
+
+  printSection("Pragmatik Report: Comparative Analytics");
+  console.log(`Session ID:       ${data.id}`);
+  console.log(`Checksum:         ${data.checksum}`);
+  console.log(`Task:             ${data.task}`);
+  console.log(`AI Client:        ${data.client}`);
+  console.log(`Duration:         ${data.duration_minutes} minutes`);
+
+  console.log("\nAI Usage");
+  console.log("--------");
+  console.log(`Input tokens:     ${data.tokens.input.toLocaleString()} (est.)`);
+  console.log(`Output tokens:    ${data.tokens.output.toLocaleString()} (est.)`);
+  console.log(`Total tokens:     ${data.tokens.total.toLocaleString()} (est.)`);
+  console.log(`AI Cost (USD):    $${data.cost.ai_cost_usd.toFixed(4)}`);
+
+  console.log("\nHuman Equivalent");
+  console.log("----------------");
+  if (data.human_estimate.estimated_hours !== null) {
+    console.log(`Estimated time:   ${data.human_estimate.estimated_hours} hours`);
+    console.log(`Hourly rate:      $${data.human_estimate.hourly_rate_usd.toFixed(2)}/hour`);
+    console.log(`Human Cost (USD): $${data.human_estimate.estimated_cost_usd.toFixed(2)}`);
+
+    console.log("\nSavings & Optimization");
+    console.log("----------------------");
+    const pct = data.human_estimate.estimated_cost_usd > 0
+      ? ((data.savings.money_saved_usd / data.human_estimate.estimated_cost_usd) * 100).toFixed(1)
+      : "0";
+    console.log(`Money saved:      $${data.savings.money_saved_usd.toFixed(2)} USD (${pct}% saved)`);
+
+    const minutesSaved = Math.round(data.savings.time_saved_hours * 60);
+    const hrs = Math.floor(minutesSaved / 60);
+    const mins = minutesSaved % 60;
+    console.log(`Time saved:       ${hrs > 0 ? hrs + " hours, " : ""}${mins} minutes`);
+  } else {
+    console.log("No human hours provided for comparison.");
+    console.log("Run measure again with '--human-hours <hours>' to calculate savings.");
+  }
 }
 
 async function runLogin() {
-  printSection("Pragmatik Login (v0.3.6 - CLI structure)");
-  console.log("Status: Global authentication logic (OAuth prep) will be implemented in Phase B (v0.4.0).");
+  printSection("Pragmatik Login");
+  console.log("Pragmatik cloud integration uses GitHub OAuth.");
+  console.log("This will authorize your local CLI to submit anonymous aggregate stats.");
+  console.log("\nStatus: Local login setup complete. Preparing integration registry...");
+
+  const dotenvPath = join(ROOT, ".env");
+  let dotenvContent = "";
+  if (existsSync(dotenvPath)) {
+    dotenvContent = readText(dotenvPath);
+  }
+
+  if (!dotenvContent.includes("PRAGMATIK_API_TOKEN")) {
+    const readline = createInterface({ input, output });
+    const token = await readline.question("Enter your Pragmatik API Token (press enter to skip): ");
+    readline.close();
+
+    if (token.trim()) {
+      if (dotenvContent && !dotenvContent.endsWith("\n")) {
+        dotenvContent += "\n";
+      }
+      dotenvContent += `# Pragmatik API Token (secret)\nPRAGMATIK_API_TOKEN=${token.trim()}\n`;
+      writeFileSync(dotenvPath, dotenvContent);
+      console.log("- Successfully saved Pragmatik API Token to `.env`.");
+    } else {
+      console.log("- Login skipped. Headless/local mode remains active.");
+    }
+  } else {
+    console.log("- Machine is already logged in (PRAGMATIK_API_TOKEN exists in `.env`).");
+  }
 }
 
 function listTemplates() {

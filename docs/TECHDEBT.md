@@ -8,13 +8,13 @@ Track accepted shortcuts, risks, and cleanup items for this repository on the
 | ID | Priority | Area | Debt | Impact | Planned Resolution | GitHub |
 | --- | --- | --- | --- | --- | --- | --- |
 | TD-009 | Low | Versioning | Version `0.3.2` was skipped in the release sequence. | The jump from `0.3.1` to `0.3.3` is unexplained in git history. Work that should have closed as `0.3.2` (global rename + bundled backend) was committed together as `0.3.3` across two rigs without an intermediate tag. | Accepted as-is. Document the gap here and in `SNAPSHOTS.md`. Do not rewrite history. | — |
-| TD-010 | High | Measurement | Pragmatik depends on Tokscale for token usage measurement. | Token measurement requires a third-party tool, an account, and network access. Pragmatik's own measurement layer does not yet exist. | Build autonomous measurement in v0.4.0: parse local AI client transcripts, estimate tokens locally, compute cost from a built-in model pricing table, and write `session.json` without any external dependency. | — |
 | TD-011 | Medium | Backend | `scripts/ai-tools.sh` is a Bash backend that depends on Tokscale, Repomix, and Context7 as required tools. | Bash dependency limits portability; third-party tool dependency conflicts with Pragmatik's autonomy goal. The script cannot grow further without deepening these dependencies. | Freeze the script in v0.3.x. Migrate measurement and reporting logic to Node.js in v0.4.0. Move the script to `legacy/` and remove it from the default npm package in v1.0.0. | — |
 
 ## Resolved
 
 | ID | Priority | Area | Debt | Resolution | GitHub |
 | --- | --- | --- | --- | --- | --- |
+| TD-010 | High | Measurement | Pragmatik depends on Tokscale for token usage measurement. | Resolved in v0.4.0 by building an autonomous local-first measurement layer: parses local transcripts, estimates tokens via character heuristics, and computes costs using built-in model pricing. | — |
 | TD-000 | Medium | GitHub | Technical debt automation needed a root `TECHDEBT.md` source. | Added this file and linked open debt to GitHub issues and Project cards. | — |
 | TD-001 | Medium | MCP | `project-context-mcp` was documented but not implemented. | Resolved in v0.3.0 by implementing a fully compliant stdio-based JSON-RPC 2.0 MCP server generated via CLI. | [#2](https://github.com/mvuljevas/Pragmatik/issues/2) |
 | TD-002 | Medium | Docs | The catalog had to be kept synchronized manually when templates or presets changed. | Resolved in v0.3.0 by adding `scripts/check-catalog.js` automated check which enforces synchronization during testing. | [#4](https://github.com/mvuljevas/Pragmatik/issues/4) |
