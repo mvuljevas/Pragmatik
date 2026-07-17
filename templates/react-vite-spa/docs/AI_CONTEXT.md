@@ -3,7 +3,7 @@
 ## Project
 
 - Name: React Vite SPA Shell.
-- Purpose: AGENTS shell for a future React, Vite, SPA, or PWA project.
+- Purpose: Pragmatik shell for a future React, Vite, SPA, or PWA project.
 - Current version: 0.14.0.
 - Version source: `VERSION`.
 

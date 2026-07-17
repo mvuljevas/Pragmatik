@@ -3,7 +3,7 @@
 ## Project
 
 - Name: Docs Only Shell.
-- Purpose: AGENTS shell for documentation, workflow, governance, or planning repositories.
+- Purpose: Pragmatik shell for documentation, workflow, governance, or planning repositories.
 - Current version: 0.14.0.
 - Version source: `VERSION`.
 

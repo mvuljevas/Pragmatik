@@ -76,11 +76,11 @@ Do not invent a next step when neither roadmap nor technical debt provides one.
 - Keep MCP outputs bounded and summarize large results.
 - During repository analysis, check `docs/AI_TOOLS.md`,
   `docs/AI_CLIENTS.md`, and `docs/AI_TOOL_SETUP.md` when present.
-- During repository analysis, run `agents --doctor` when available; otherwise
+- During repository analysis, run `pragmatik doctor` when available; otherwise
   run `bash scripts/ai-tools.sh check` when present.
 - Report whether Context7, Tokscale, Repomix CLI, MCP config examples, global
   Tokscale access, Tokscale login, and selected client syncs are available.
-- Offer `agents --setup` when AGENTS CLI setup is available and tooling,
+- Offer `pragmatik setup` when Pragmatik CLI setup is available and tooling,
   dashboard, or client setup is missing. Fall back to
   `bash scripts/ai-tools.sh setup-machine` when the CLI is not available.
 - Ask before writing secrets, changing machine-wide integrations, or enabling
@@ -88,9 +88,9 @@ Do not invent a next step when neither roadmap nor technical debt provides one.
 - During repository analysis, check `.agents.env` when present. If
   `AGENTS_CONTEXT_MODE=baseline`, skip optional `lean-context` accelerators for
   measurement unless the user explicitly asks.
-- When AGENTS CLI is available, run `agents --run` at the end of an iteration
+- When Pragmatik CLI is available, run `pragmatik run` at the end of an iteration
   when `.agents.env` marks one or more tools as `on`.
-- Use `agents --dashboard` when the user wants local dashboard commands,
+- Use `pragmatik dashboard` when the user wants local dashboard commands,
   Tokscale TUI guidance, local graph export guidance, or report locations.
 - Fall back to `bash scripts/ai-tools.sh run` and
   `bash scripts/ai-tools.sh dashboard` when the CLI is not available.

@@ -8,8 +8,9 @@ import { emitKeypressEvents } from "node:readline";
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 
-const VERSION = "0.3.1";
+const VERSION = "0.3.4";
 const ROOT = process.cwd();
+
 const CLI_DIR = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(CLI_DIR, "..");
 
@@ -966,12 +967,16 @@ async function runWithDashboard(args) {
 }
 
 async function runAiTools() {
-  const script = join(ROOT, "scripts", "ai-tools.sh");
+  const projectScript = join(ROOT, "scripts", "ai-tools.sh");
+  const packageScript = join(PACKAGE_ROOT, "scripts", "ai-tools.sh");
+  const script = existsSync(projectScript) ? projectScript : packageScript;
   if (!existsSync(script)) {
-    console.log("No scripts/ai-tools.sh found. Nothing to run.");
-    return;
+    throw new Error("Pragmatik AI-tool backend is missing from both the project and the installed package.");
   }
-  const result = spawnSync("bash", [script, "run"], { stdio: "inherit" });
+  const result = spawnSync("bash", [script, "run"], { cwd: ROOT, stdio: "inherit" });
+  if (result.error) {
+    throw result.error;
+  }
   if (result.status && result.status !== 0) {
     throw new Error(`ai-tools failed with exit code ${result.status}`);
   }

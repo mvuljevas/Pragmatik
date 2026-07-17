@@ -3,7 +3,7 @@
 ## Current State
 
 - Minimal React/Vite shell.
-- AGENTS workflow and lean-context docs included.
+- Pragmatik workflow and lean-context docs included.
 
 ## Next Milestones
 

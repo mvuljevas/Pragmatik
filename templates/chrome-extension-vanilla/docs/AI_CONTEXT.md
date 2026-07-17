@@ -3,7 +3,7 @@
 ## Project
 
 - Name: Chrome Extension Vanilla Shell.
-- Purpose: AGENTS shell for a future Chrome extension using vanilla HTML, CSS, and JavaScript.
+- Purpose: Pragmatik shell for a future Chrome extension using vanilla HTML, CSS, and JavaScript.
 - Current version: 0.14.0.
 - Version source: `VERSION`.
 

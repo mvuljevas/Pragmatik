@@ -8,9 +8,9 @@ tool credentials must stay out of version control.
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Local mode: `AGENTS_CONTEXT_MODE=lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Run: `lean-context-local-001`.
 - Client: Codex.
 
@@ -32,7 +32,7 @@ Measurements:
 
 | Source | Result |
 | --- | --- |
-| Tokscale task report | `Work on AGENTS`: 1 session, approximately 1.9M tokens, approximately $30.28. |
+| Tokscale task report | `Work on Pragmatik`: 1 session, approximately 1.9M tokens, approximately $30.28. |
 | Tokscale all local Codex report | 17 sessions, approximately 297.7M tokens, approximately $1668.33. |
 | Repomix bounded repository pack | 106 files, 48,012 tokens, 200,871 characters, no suspicious files detected. |
 | Context7 CLI validation | Successfully returned Vite documentation for a dev-server configuration query. |
@@ -58,11 +58,11 @@ Next measurement:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -88,11 +88,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -118,11 +118,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -150,11 +150,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -182,11 +182,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -214,11 +214,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -246,11 +246,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -278,11 +278,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -316,11 +316,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -354,11 +354,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -392,11 +392,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -430,11 +430,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -468,11 +468,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -506,11 +506,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -544,11 +544,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -584,11 +584,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -624,11 +624,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -664,11 +664,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -704,11 +704,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -744,11 +744,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -784,11 +784,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -824,11 +824,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -864,11 +864,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -904,11 +904,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -944,11 +944,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -984,11 +984,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -1024,11 +1024,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -1064,11 +1064,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 
@@ -1104,11 +1104,11 @@ Notes:
 
 Scope:
 
-- Repository: AGENTS.
+- Repository: Pragmatik.
 - Context mode: `lean-context`.
-- Experiment ID: `agents-repo-token-measurement`.
+- Experiment ID: `pragmatik-repo-token-measurement`.
 - Experiment run: `lean-context-local-001`.
-- Task: Configure AGENTS repository for lean-context usage measurement.
+- Task: Configure Pragmatik repository for lean-context usage measurement.
 
 Tool state:
 

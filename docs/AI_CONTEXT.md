@@ -7,7 +7,7 @@ This file is the compact project summary for agents working in this repository.
 - Name: Pragmatik.
 - Purpose: reusable documentation, workflow, preset, and template library for
   AI-assisted software projects.
-- Current version: 0.3.1.
+- Current version: 0.3.3.
 - Primary audience: Mauricio Vuljevas projects and future reusable project
   foundations.
 
@@ -30,7 +30,7 @@ This file is the compact project summary for agents working in this repository.
 ├── cli/
 │   └── pragmatik.js
 ├── docs/
-│   ├── AGENTS_CLI.md
+│   ├── PRAGMATIK_CLI.md
 │   ├── AI_CONTEXT.md
 │   ├── AI_CLIENTS.md
 │   ├── AI_SEARCH.md
@@ -92,7 +92,7 @@ git diff --check
 - `package.json`: npm package metadata for `@mvuljevas/pragmatik`.
 - `cli/pragmatik.js`: project CLI with `pragmatik help`, setup, doctor,
   dashboard, suggest, run, and MCP scaffold commands.
-- `docs/AGENTS_CLI.md`: public CLI usage guide.
+- `docs/PRAGMATIK_CLI.md`: public CLI usage guide.
 - `docs/AI_TOOL_REGISTRY.md`: optional tool registry and adapter contract.
 - `docs/CATALOG.md`: source of truth for available and planned templates and
   presets.
@@ -170,19 +170,34 @@ git diff --check
   technical debt second, and user preference third.
 - Pushes remain explicit; local commits and tags may be created during closed
   versioned iterations.
-- `agents` is the public CLI command.
-- The CLI is the preferred setup and dashboard path; `scripts/ai-tools.sh`
-  remains a compatibility backend.
-- Existing repositories should receive additive scripts such as `agents:dev`,
+- `pragmatik` is the public CLI command.
+- The CLI is the preferred setup and dashboard path. `pragmatik run` falls back
+  to the backend bundled in the npm package when a project-local
+  `scripts/ai-tools.sh` override is absent.
+- Existing repositories should receive additive scripts such as `pragmatik:dev`,
   not automatic replacement of normal `dev` scripts.
+- Pragmatik must not depend on any third-party service for its core measurement
+  and reporting functions. Token estimation reads local AI client transcripts.
+  Cost estimation uses a built-in model pricing table. Human-vs-AI comparison is
+  computed locally. External tools (Tokscale, Repomix, Context7) are optional
+  plugins, not required dependencies.
+- `scripts/ai-tools.sh` is frozen at v0.3.x and will be deprecated in v1.0.0.
+  All new measurement and reporting logic is built in Node.js.
+- `PRAGMATIK_HOURLY_RATE` and `PRAGMATIK_MODEL_PRICE_INPUT/OUTPUT` in
+  `.agents.env` control the human-vs-AI cost comparison.
+- Submit is opt-in (`PRAGMATIK_SUBMIT=on`). Only non-personal aggregate metrics
+  are ever sent. Content, paths, and identifiers are never included.
 
 ## Current Risks
 
-- `agents mcp-create` creates an initial read-only MCP scaffold, but it is not
+- `pragmatik mcp-create` creates an initial read-only MCP scaffold, but it is not
   a full MCP runtime implementation yet.
 - `lean-context` has not yet proven token savings with real measurements.
 - Third-party MCP, tracking, and compression tools can change quickly and should
   be rechecked before automation is added.
+- The autonomous measurement layer (`pragmatik measure`) does not yet exist.
+  Until v0.4.0, token measurement still requires Tokscale or manual input.
+- Version `0.3.2` was skipped. See TD-009 in `docs/TECHDEBT.md`.
 
 ## Search Notes
 

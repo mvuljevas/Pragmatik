@@ -1,6 +1,6 @@
 # Catalog
 
-This catalog is the source of truth for AGENTS templates and presets.
+This catalog is the source of truth for Pragmatik templates and presets.
 
 Agents must check this file before recommending a template or preset.
 
@@ -17,9 +17,9 @@ Agents must check this file before recommending a template or preset.
 | Name | Path | Status | Use When |
 | --- | --- | --- | --- |
 | `docs-only` | `templates/docs-only/` | available | Documentation, workflow, governance, or planning repositories. |
-| `react-vite-spa` | `templates/react-vite-spa/` | available | New React, Vite, SPA, or PWA projects that should start from an AGENTS shell before app files are generated. |
-| `laravel-react` | `templates/laravel-react/` | available | New Laravel applications with a React-capable frontend or Inertia-style UI that should start from an AGENTS shell before framework files are generated. |
-| `chrome-extension-vanilla` | `templates/chrome-extension-vanilla/` | available | New Chrome extensions that should start from an AGENTS shell before manifest and runtime files are generated. |
+| `react-vite-spa` | `templates/react-vite-spa/` | available | New React, Vite, SPA, or PWA projects that should start from an Pragmatik shell before app files are generated. |
+| `laravel-react` | `templates/laravel-react/` | available | New Laravel applications with a React-capable frontend or Inertia-style UI that should start from an Pragmatik shell before framework files are generated. |
+| `chrome-extension-vanilla` | `templates/chrome-extension-vanilla/` | available | New Chrome extensions that should start from an Pragmatik shell before manifest and runtime files are generated. |
 
 Available templates are intentionally lightweight shells. They include
 `AGENTS.md`, `README.md`, `VERSION`, `.gitignore`, `.gitattributes`,

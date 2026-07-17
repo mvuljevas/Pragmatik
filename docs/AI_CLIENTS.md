@@ -143,9 +143,9 @@ When the user asks the agent to analyze the repository, the agent should:
    when present.
 4. Detect the active client when possible.
 5. Check whether local example files exist for MCP and environment setup.
-6. Run `agents doctor` when available; otherwise run `bash scripts/ai-tools.sh check` when present.
+6. Run `pragmatik doctor` when available; otherwise run `bash scripts/ai-tools.sh check` when present.
 7. Report which tools are available, missing, or require restart/login.
-8. Offer `agents setup` when available; otherwise offer `bash scripts/ai-tools.sh setup-machine` when global Tokscale, login, or
+8. Offer `pragmatik setup` when available; otherwise offer `bash scripts/ai-tools.sh setup-machine` when global Tokscale, login, or
    selected client syncs are missing.
 9. Ask before writing secrets, enabling MCP servers, or changing machine-wide
    client integrations.

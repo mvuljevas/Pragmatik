@@ -1,6 +1,6 @@
 # Conventions
 
-This document defines repository-wide conventions for AGENTS templates.
+This document defines repository-wide conventions for Pragmatik templates.
 
 ## Repository Purpose
 
@@ -94,7 +94,7 @@ This applies to:
 
 Templates and presets have different responsibilities.
 
-Templates are lightweight project-start shells. They should provide AGENTS
+Templates are lightweight project-start shells. They should provide Pragmatik
 governance and minimal project context, but should not include framework
 runtime files or generated application code before the user describes what will
 be built.
@@ -120,7 +120,7 @@ Shared source material may live under:
 templates/_shared/
 ```
 
-Each project-type template should still be usable as a self-contained AGENTS
+Each project-type template should still be usable as a self-contained Pragmatik
 starting point.
 
 Presets are reusable workflow layers that can be integrated into templates or

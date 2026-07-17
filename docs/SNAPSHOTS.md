@@ -73,10 +73,10 @@ Branch:
 
 Current state:
 
-- The project has been renamed from AGENTS to Pragmatik.
-- npm package name changed from `@mvuljevas/agents` to `@mvuljevas/pragmatik`.
-- CLI binary changed from `agents` to `pragmatik`.
-- `cli/agents.js` renamed to `cli/pragmatik.js`.
+- The project is named Pragmatik.
+- npm package name is `@mvuljevas/pragmatik`.
+- CLI binary is now `pragmatik`.
+- CLI implementation is `cli/pragmatik.js`.
 - All documentation, templates, and preset references updated.
 - TD-007 (package naming conflict) is now resolved and moved to the Resolved
   section of `docs/TECHDEBT.md`.
@@ -95,7 +95,7 @@ Decisions:
 
 Risks:
 
-- GitHub repository and issues still reference the old name `AGENTS`. The
+- GitHub repository and issues still reference the previous project name. The
   repository should be renamed on GitHub before the next push.
 - Existing GitHub issue URLs in `docs/TECHDEBT.md` have been updated to
   `mvuljevas/pragmatik` but will only resolve after the GitHub rename.
@@ -405,7 +405,7 @@ Current state:
   `docs/CATALOG.md`.
 - Available templates are `docs-only`, `react-vite-spa`, `laravel-react`, and
   `chrome-extension-vanilla`.
-- Each template includes active AGENTS rules, lean-context docs, ignore files,
+- Each template includes active Pragmatik workflow rules, lean-context docs, ignore files,
   snapshots, roadmap, and technical debt tracking.
 - `react-vite-spa` and `chrome-extension-vanilla` include minimal runnable
   starter files.
@@ -480,7 +480,7 @@ Current state:
 
 Decisions:
 
-- `docs/ROADMAP.md` is the primary source for AGENTS next-step suggestions.
+- `docs/ROADMAP.md` is the primary source for Pragmatik next-step suggestions.
 - `docs/TECHDEBT.md` is the fallback source and durable local debt index.
 - GitHub issues remain the operational board items for actionable debt.
 
@@ -524,6 +524,41 @@ Next suggested step:
 
 - Follow `docs/ROADMAP.md`: measure whether `lean-context` reduces token usage
   in real sessions.
+
+## 2026-07-13 - Block 039: Pragmatik Documentation Cleanup
+
+Branch:
+
+- `develop`
+
+Current state:
+
+- Current documentation, templates, presets, examples, and historical reports
+  consistently use the Pragmatik product, package, CLI, and npm script names.
+- Obsolete CLI commands and package references have been removed.
+- CLI guides have been renamed from the legacy filename to
+  `PRAGMATIK_CLI.md` across root, preset, and templates.
+- The measurement documentation now points to the implemented
+  `bash scripts/ai-tools.sh measure-pair` command.
+- Standard `AGENTS.md` filenames and `.agents*` configuration identifiers remain
+  because they are active implementation conventions rather than product names.
+- Repository version has been updated to `0.3.2`.
+
+Decisions:
+
+- Preserve generic references to software agents where they describe actors.
+- Preserve active compatibility identifiers until the implementation provides a
+  separately planned migration path.
+
+Risks:
+
+- Renaming `.agents*` paths or `AGENTS_*` environment variables would require a
+  code and migration change outside this documentation cleanup.
+
+Next suggested step:
+
+- Follow `docs/ROADMAP.md`: design and implement the real local Pragmatik
+  dashboard or remove the placeholder command.
 
 ## 2026-06-29 - Block 016: Context Mode Measurement Switch
 
@@ -570,11 +605,11 @@ Branch:
 
 Current state:
 
-- The AGENTS repository has local ignored measurement files active:
+- The Pragmatik repository has local ignored measurement files active:
   `.agents.env`, `.ai-usage-log.md`, `.env`, and `.codex/config.toml`.
 - `AGENTS_CONTEXT_MODE=lean-context` is active locally.
 - Context7 CLI validation succeeded using local ignored configuration.
-- Tokscale local reporting is available and grouped one AGENTS task at
+- Tokscale local reporting is available and grouped one Pragmatik task at
   approximately 1.9M tokens and $30.28.
 - Repomix generated a broad bounded repository pack of 48,012 tokens across 106
   files with no suspicious files detected.
@@ -759,7 +794,7 @@ Next suggested step:
   `AGENTS_CONTEXT_MODE=baseline` and compare against automated
   `lean-context` runs.
 
-## 2026-06-30 - Block 026: AGENTS CLI Foundation
+## 2026-06-30 - Block 026: Pragmatik CLI Foundation
 
 Branch:
 
@@ -767,27 +802,27 @@ Branch:
 
 Current state:
 
-- The repository now includes npm package metadata for `@mvuljevas/agents`.
-- `cli/agents.js` provides the `agents` command with lowercase flags for help,
+- The repository now includes npm package metadata for `@mvuljevas/pragmatik`.
+- `cli/pragmatik.js` provides the `pragmatik` command with lowercase flags for help,
   init, setup, doctor, run, dashboard, suggest, and MCP scaffold flows.
-- `agents --dashboard` serves a local dashboard using local reports and tool
+- `pragmatik dashboard` serves a local dashboard using local reports and tool
   detection.
-- `agents --setup` previews additive changes for existing repositories and does
+- `pragmatik setup` previews additive changes for existing repositories and does
   not replace normal `dev` scripts by default.
-- `agents --suggest --issue` prepares a template request issue draft and can
+- `pragmatik suggest` prepares a template request issue draft and can
   create it with GitHub CLI only when explicitly confirmed.
-- `docs/AGENTS_CLI.md` and `docs/AI_TOOL_REGISTRY.md` document the new CLI and
+- `docs/PRAGMATIK_CLI.md` and `docs/AI_TOOL_REGISTRY.md` document the new CLI and
   optional tool registry.
-- Templates now include `package.json` project tooling for AGENTS where useful.
+- Templates now include `package.json` project tooling for Pragmatik where useful.
 - Repository version has been updated to `0.20.0`.
 - Template versions have been updated to `0.11.0`.
 
 Decisions:
 
-- `agents` is the public command for setup, dashboard, and project governance.
+- `pragmatik` is the public command for setup, dashboard, and project governance.
 - Tools remain optional; local-safe options can be preselected by the wizard but
   still require confirmation before installation or config changes.
-- Existing repositories receive additive wrappers such as `agents:dev`; normal
+- Existing repositories receive additive wrappers such as `pragmatik:dev`; normal
   project scripts are not replaced by default.
 
 Risks:
@@ -800,7 +835,7 @@ Risks:
 
 Next suggested step:
 
-- Follow `docs/ROADMAP.md`: publish or locally pack `@mvuljevas/agents` and
+- Follow `docs/ROADMAP.md`: publish or locally pack `@mvuljevas/pragmatik` and
   test installation in a clean external project.
 
 ## 2026-06-30 - Block 027: CLI Documentation Cleanup
@@ -858,7 +893,7 @@ Risks:
 
 Next suggested step:
 
-- Follow `docs/ROADMAP.md`: test `@mvuljevas/agents` from a clean external
+- Follow `docs/ROADMAP.md`: test `@mvuljevas/pragmatik` from a clean external
   project using `npm pack` or local link.
 
 ## 2026-06-30 - Block 029: Technical Debt Issue Automation
@@ -871,7 +906,7 @@ Current state:
 
 - Technical debt issue creation has been approved for this repository.
 - Created GitHub issues for `TD-004`, `TD-005`, and `TD-006`.
-- Added the new issues to the `AGENTS` GitHub Project.
+- Added the new issues to the Pragmatik GitHub Project.
 - Set Project fields for the new debt items: Status, Priority, Type, Area, and
   Target Version.
 - Updated `docs/TECHDEBT.md` with issue links.
@@ -891,7 +926,7 @@ Risks:
 
 Next suggested step:
 
-- Follow `docs/ROADMAP.md`: test `@mvuljevas/agents` from a clean external
+- Follow `docs/ROADMAP.md`: test `@mvuljevas/pragmatik` from a clean external
   project using `npm pack` or local link.
 
 ## 2026-06-30 - Block 030: Package Lock Policy
@@ -922,7 +957,7 @@ Risks:
 
 Next suggested step:
 
-- Follow `docs/ROADMAP.md`: test `@mvuljevas/agents` from a clean external
+- Follow `docs/ROADMAP.md`: test `@mvuljevas/pragmatik` from a clean external
   project using `npm pack` or local link.
 
 ## 2026-07-01 - Block 031: Professional CLI Interaction
@@ -933,15 +968,15 @@ Branch:
 
 Current state:
 
-- `agents --help` now shows purpose, command actions, common flows, safety
+- `pragmatik help` now shows purpose, command actions, common flows, safety
   rules, project-without-Node usage, detected state, and recommended next step.
-- `agents --doctor` now prints stack-aware diagnostics, readiness checks,
+- `pragmatik doctor` now prints stack-aware diagnostics, readiness checks,
   optional tool status, available templates, and an actionable next command.
-- `agents --setup` now creates useful base workflow files when absent:
+- `pragmatik setup` now creates useful base workflow files when absent:
   `AGENTS.md`, `README.md`, `docs/AI_CONTEXT.md`, `docs/ROADMAP.md`,
   `docs/SNAPSHOTS.md`, and `docs/TECHDEBT.md`.
 - Non-interactive setup no longer writes files unless `--yes` is provided.
-- `agents --suggest` now explains the recommendation and next action.
+- `pragmatik suggest` now explains the recommendation and next action.
 - CLI documentation was updated in root, `lean-context`, and all templates.
 - Repository version has been updated to `0.21.0`.
 - Template versions have been updated to `0.12.0`.
@@ -960,7 +995,7 @@ Risks:
 
 Next suggested step:
 
-- Follow `docs/ROADMAP.md`: test `@mvuljevas/agents` from a clean external
+- Follow `docs/ROADMAP.md`: test `@mvuljevas/pragmatik` from a clean external
   project using `npm pack` or local link.
 
 ## 2026-07-01 - Block 032: GitHub Minimal Repository Detection
@@ -976,28 +1011,28 @@ Current state:
   as `github-minimal`.
 - `github-minimal` repositories use stack `unselected` instead of being treated
   as `docs-only`.
-- `agents --doctor` now recommends `agents --suggest --idea "..."` before
+- `pragmatik doctor` now recommends `pragmatik suggest --idea "..."` before
   initialization for conceptually new repositories.
-- `agents --setup --dry-run` preserves GitHub-created `README.md`, `.gitignore`,
-  and `LICENSE` while previewing missing AGENTS workflow files.
+- `pragmatik setup` preserves GitHub-created `README.md`, `.gitignore`,
+  and `LICENSE` while previewing missing Pragmatik workflow files.
 - Repository version has been updated to `0.21.1`.
 
 Decisions:
 
 - Minimal GitHub bootstrap files are not enough evidence to classify a project
   as existing or documentation-only.
-- AGENTS should treat this common workflow as a new project until a stack,
+- Pragmatik should treat this common workflow as a new project until a stack,
   template, or implementation artifact is present.
 
 Risks:
 
 - Some genuine documentation-only repositories with only a README may first be
   classified as `github-minimal`; users can still choose `docs-only` through
-  `agents --suggest`.
+  `pragmatik suggest`.
 
 Next suggested step:
 
-- Follow `docs/ROADMAP.md`: test `@mvuljevas/agents` from a clean external
+- Follow `docs/ROADMAP.md`: test `@mvuljevas/pragmatik` from a clean external
   project using `npm pack` or local link.
 
 ## 2026-07-01 - Block 033: GitHub Minimal Completion And CLI Scripts
@@ -1008,23 +1043,23 @@ Branch:
 
 Current state:
 
-- `github-minimal` repositories are still treated as new projects, but AGENTS
-  can now complete placeholder `README.md`, append AGENTS-safe `.gitignore`
+- `github-minimal` repositories are still treated as new projects, but Pragmatik
+  can now complete placeholder `README.md`, append Pragmatik-safe `.gitignore`
   defaults, and create or complete `.gitattributes` after preview.
-- Root and template npm scripts now expose `agents` as the CLI entrypoint and
-  `agents:help` as the explicit help script.
-- Documentation now explains that npm consumes `npm run agents --help`; users
-  should run `npm run agents`, `npm run agents:help`, or
-  `npm run agents -- --doctor`.
+- Root and template npm scripts now expose `pragmatik` as the CLI entrypoint and
+  `pragmatik:help` as the explicit help script.
+- Documentation now explains that npm consumes `npm run pragmatik --help`; users
+  should run `npm run pragmatik`, `npm run pragmatik:help`, or
+  `npm run pragmatik`.
 - This repository now includes committed `.agents/config.json` and
-  `.agents/ROLLBACK.md` generated by `agents --setup --yes`.
+  `.agents/ROLLBACK.md` generated by `pragmatik setup --yes`.
 - Repository version has been updated to `0.22.0`.
 - Template versions have been updated to `0.13.0`.
 
 Decisions:
 
 - GitHub-created minimal files are placeholders, not protected project
-  conventions. AGENTS may complete them when previewed and approved.
+  conventions. Pragmatik may complete them when previewed and approved.
 - Keep npm script UX explicit because npm owns flags before `--`.
 
 Risks:
@@ -1034,7 +1069,7 @@ Risks:
 
 Next suggested step:
 
-- Follow `docs/ROADMAP.md`: test `@mvuljevas/agents` from a clean external
+- Follow `docs/ROADMAP.md`: test `@mvuljevas/pragmatik` from a clean external
   project using `npm pack` or local link.
 
 ## 2026-07-01 - Block 034: CLI Subcommands And Template Shells
@@ -1045,12 +1080,12 @@ Branch:
 
 Current state:
 
-- CLI usage now prefers subcommands: `agents doctor`, `agents setup`,
-  `agents init`, `agents dashboard`, `agents suggest`, `agents run`, and
-  `agents mcp-create`.
-- `npm run agents` now runs the default repository diagnosis instead of relying
+- CLI usage now prefers subcommands: `pragmatik doctor`, `pragmatik setup`,
+  `pragmatik init`, `pragmatik dashboard`, `pragmatik suggest`, `pragmatik run`, and
+  `pragmatik mcp-create`.
+- `npm run pragmatik` now runs the default repository diagnosis instead of relying
   on forwarded flags.
-- Templates have been reduced to lightweight AGENTS shells with no generated
+- Templates have been reduced to lightweight Pragmatik shells with no generated
   application files, package manifests, runtime scaffolding, or stack-specific
   starter code.
 - Templates now share a minimal structure: `AGENTS.md`, `README.md`, `VERSION`,
@@ -1058,13 +1093,13 @@ Current state:
 - Added `docs/INSTALLATION.md` with local test commands and future distribution
   channels.
 - Added `TD-007` for unresolved public package and binary naming because the
-  unscoped npm package name `agents` is already taken.
+  the originally considered unscoped npm package name is unavailable.
 - Repository version has been updated to `0.23.0`.
 - Template versions have been updated to `0.14.0`.
 
 Decisions:
 
-- AGENTS templates are project-start shells, not prebuilt applications.
+- Pragmatik templates are project-start shells, not prebuilt applications.
 - Real framework files should be generated only after the user describes the
   project and approves the selected template/preset.
 - Keep flag-style commands as compatibility, but document subcommands as the
@@ -1078,7 +1113,7 @@ Risks:
 Next suggested step:
 
 - Follow `docs/ROADMAP.md`: resolve the final public package and binary name for
-  AGENTS.
+  Pragmatik.
 
 ## 2026-07-01 - Block 035: Interactive Setup Shortcuts
 
@@ -1088,7 +1123,7 @@ Branch:
 
 Current state:
 
-- `agents setup` now uses interactive selectors when the terminal supports TTY
+- `pragmatik setup` now uses interactive selectors when the terminal supports TTY
   input.
 - Single-choice prompts show explicit shortcuts and explain that Enter accepts
   the displayed default.
@@ -1098,15 +1133,15 @@ Current state:
   and `0` for None.
 - Tool guidance now warns about overlapping measurement tools and context
   optimization conflicts.
-- `agents dashboard` now reports that a real dashboard UI is not implemented
+- `pragmatik dashboard` now reports that a real dashboard UI is not implemented
   and points to available commands/reports instead of pretending the dashboard
   is complete.
-- Added `TD-008` and GitHub issue #10 for the real AGENTS dashboard.
+- Added `TD-008` and GitHub issue #10 for the real Pragmatik dashboard.
 - Repository version has been updated to `0.24.0`.
 
 Decisions:
 
-- Keep AGENTS dependency-free for now; implement terminal selection with Node's
+- Keep Pragmatik dependency-free for now; implement terminal selection with Node's
   built-in readline/key handling.
 - Do not collect or write secrets such as Context7 API keys directly into
   committed files. Guide users to local ignored secret storage instead.
@@ -1119,7 +1154,7 @@ Risks:
 Next suggested step:
 
 - Follow `docs/ROADMAP.md`: resolve public package naming, then design the real
-  AGENTS dashboard.
+  Pragmatik dashboard.
 
 ## 2026-07-01 - Block 036: Multi-Select Wizard Clarity
 
@@ -1135,7 +1170,7 @@ Current state:
   saying it skips the category.
 - When `None` is highlighted while tools are already selected, the wizard shows
   which tools will be cleared.
-- `docs/AGENTS_CLI.md` and template/preset CLI docs now document the same
+- `docs/PRAGMATIK_CLI.md` and template/preset CLI docs now document the same
   multi-select behavior.
 - The ignored local root `package-lock.json` was refreshed to match the current
   project version because it was still declaring `0.21.1`.
@@ -1156,7 +1191,7 @@ Risks:
 Next suggested step:
 
 - Follow `docs/ROADMAP.md`: resolve public package naming, then design the real
-  AGENTS dashboard.
+  Pragmatik dashboard.
 
 ## 2026-07-03 - Block 037: Repeatable Context Measurement Pair
 
@@ -1174,7 +1209,7 @@ Current state:
   default, including available Repomix and Tokscale measurements.
 - Root, preset, and template `.agents.env.example` files now include
   measurement-pair override flags.
-- `npm run agents:measure` is available in this repository, and the CLI setup
+- `bash scripts/ai-tools.sh measure-pair` is available in this repository, and the CLI setup
   wizard offers the same script for adopters with `package.json`.
 - Repository version has been updated to `0.3.0`.
 - Template versions have been updated to `0.15.0`.
@@ -1363,7 +1398,7 @@ Current state:
   Antigravity, OpenCode, DeepSeek, Ollama, and local-model workflows.
 - Root, preset, and templates include Cursor MCP and generic MCP example files
   in addition to Codex examples.
-- Templates include `docs/AI_CLIENTS.md` and updated AGENTS rules so
+- Templates include `docs/AI_CLIENTS.md` and updated repository rules so
   `Analiza el repo.` can guide tool setup before implementation work.
 - Repository version has been updated to `0.12.0`.
 - Template versions have been updated to `0.4.0`.
@@ -1435,7 +1470,7 @@ Branch:
 Current state:
 
 - Each available template now includes `docs/AI_TOOLS.md`.
-- Template README and AGENTS rules now point agents to optional AI tool setup
+- Template README and repository rules now point agents to optional AI tool setup
   guidance.
 - The preset now distinguishes token usage tracking from token reduction:
   Tokscale is observability, while Repomix compression and MCP optimization
@@ -1461,3 +1496,82 @@ Next suggested step:
 
 - Follow `docs/ROADMAP.md`: measure whether `lean-context` reduces token usage
   in real sessions.
+
+## 2026-07-13 - Block 040: Installed Package Tool Backend
+
+Branch:
+
+- `develop`
+
+Current state:
+
+- `pragmatik run` uses a project-local `scripts/ai-tools.sh` override when
+  present and otherwise uses the backend bundled in the installed npm package.
+- The bundled backend always runs with the consumer repository as its working
+  directory, so configuration, raw logs, and reports stay in that project.
+- The test suite packs Pragmatik, installs the tarball in a clean temporary
+  project, and verifies that the bundled backend runs without a copied script.
+- Repository version has been updated to `0.3.3`.
+
+Decisions:
+
+- Package installation must provide a functional default without generating or
+  duplicating the backend script in every consumer repository.
+- Project-local backends remain supported as explicit overrides.
+
+Risks:
+
+- The bundled automation backend requires Bash; cross-platform support for
+  environments without Bash remains a separate portability concern.
+
+Next suggested step:
+
+- Follow `docs/ROADMAP.md`: design and implement the real local Pragmatik
+  dashboard or remove the placeholder command.
+
+## 2026-07-16 - Block 041: Autonomous Architecture and v0.3.4
+
+Branch:
+
+- `develop`
+
+Current state:
+
+- Pragmatik's four-pillar vision is formally documented in `docs/ROADMAP.md`:
+  Templates, CLI Companion, Dashboard (pending), and Comparative Analytics
+  (pending).
+- Core autonomy principle adopted: Pragmatik must not depend on any third-party
+  service for measurement, reporting, or cost analysis.
+- `scripts/ai-tools.sh` is frozen at v0.3.x. All new measurement and reporting
+  logic will be built in Node.js. The script is registered as TD-011 for
+  deprecation in v1.0.0.
+- TD-009 documents the skipped version `0.3.2`. The gap between `0.3.1` and
+  `0.3.3` resulted from work committed across two rigs without an intermediate
+  tag. History is preserved as-is.
+- TD-010 documents the missing autonomous measurement layer; planned for v0.4.0.
+- TD-011 documents `ai-tools.sh` as legacy; planned for deprecation in v1.0.0.
+- `PRAGMATIK_HOURLY_RATE`, `PRAGMATIK_MODEL_PRICE_INPUT/OUTPUT`,
+  `PRAGMATIK_CLIENT`, and `PRAGMATIK_SUBMIT` added to `.agents.env.example`.
+- `docs/AI_CONTEXT.md` updated with the autonomy decision and current risks.
+- Repository version has been updated to `0.3.4`.
+
+Decisions:
+
+- Token estimation will read local AI client transcripts (chars / 4 heuristic).
+- Cost estimation will use a built-in model pricing table; no external API.
+- Human-vs-AI comparison is computed locally from session data.
+- Submit is opt-in and sends only non-personal aggregate metrics.
+- Third-party tools (Tokscale, Repomix, Context7) remain as optional plugins.
+
+Risks:
+
+- The `pragmatik measure` command does not exist yet; v0.4.0 is required.
+- Local transcript formats vary by AI client and version; reader coverage is
+  limited to Antigravity and Claude Code in the MVP.
+
+Next suggested step:
+
+- Follow `docs/ROADMAP.md` milestone 2: implement `pragmatik measure` with
+  Antigravity and Claude Code transcript readers, session.json, and
+  `pragmatik report` (v0.4.0).
+

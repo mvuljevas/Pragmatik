@@ -1,6 +1,6 @@
 # GitHub Project Fields
 
-Use these fields for GitHub Projects linked to AGENTS templates.
+Use these fields for GitHub Projects linked to Pragmatik templates.
 
 ## Required Fields
 

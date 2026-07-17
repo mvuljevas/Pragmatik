@@ -9,14 +9,14 @@ application idea, not to install everything by default.
 ## When To Use
 
 Use this flow when the user says they want to build a new project, start an app,
-adopt AGENTS rules, or asks which template or preset fits their idea.
+adopt Pragmatik workflow rules, or asks which template or preset fits their idea.
 
 Examples:
 
 ```text
 I want to build a Laravel app with React.
 Quiero crear una extensión de Chrome.
-I have an existing Vite app and want to add AGENTS.
+I have an existing Vite app and want to add Pragmatik.
 Which template should I use for this product?
 ```
 
@@ -114,7 +114,7 @@ Before applying:
 ```text
 Recommended adoption path:
 - Keep existing project structure.
-- Add selected AGENTS workflow docs.
+- Add selected Pragmatik workflow docs.
 - Add `lean-context` docs and ignores.
 - Map existing roadmap, logs, or technical debt into the standard docs.
 

@@ -1,6 +1,6 @@
 # Agent Workflow
 
-This template is an AGENTS shell. It intentionally contains no application
+This template is an Pragmatik shell. It intentionally contains no application
 runtime files.
 
 ## Start
@@ -8,7 +8,7 @@ runtime files.
 When the user asks to analyze the repository:
 
 1. Read `README.md`, `AGENTS.md`, `docs/AI_CONTEXT.md`, and recent snapshots.
-2. Run `agents doctor` when the CLI is available.
+2. Run `pragmatik doctor` when the CLI is available.
 3. Identify whether this is a new project or an existing project adopting the
    template.
 4. Summarize the current state.

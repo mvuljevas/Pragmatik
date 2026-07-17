@@ -1,6 +1,6 @@
 # AI Tool Registry
 
-This registry lists tools AGENTS can detect, recommend, or configure. No tool is
+This registry lists tools Pragmatik can detect, recommend, or configure. No tool is
 mandatory.
 
 ## Measurement And Cost
@@ -34,7 +34,7 @@ mandatory.
 
 ## Adapter Contract
 
-Each AGENTS tool adapter should expose:
+Each Pragmatik tool adapter should expose:
 
 - `detect`: determine local availability without mutation.
 - `install`: print or run install steps after confirmation.

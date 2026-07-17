@@ -2,9 +2,9 @@
 
 This repository supports AI tooling for current documentation lookup, usage
 tracking, bounded context packing, local optimization reporting, and a local
-AGENTS dashboard.
+Pragmatik dashboard.
 
-The preferred interface is the `agents` CLI. Tools remain optional: credentials,
+The preferred interface is the `pragmatik` CLI. Tools remain optional: credentials,
 browser login, MCP mutation, package installation, and machine-wide setup still
 require explicit user action.
 
@@ -18,11 +18,11 @@ should include an AI tooling check after reading the project docs:
    disabled for measurement and skip setup.
 3. Read `docs/AI_CLIENTS.md`, this file, and related AI docs when present.
 4. Detect the active client when possible.
-5. Run `agents doctor` when the CLI is available; otherwise run
+5. Run `pragmatik doctor` when the CLI is available; otherwise run
    `bash scripts/ai-tools.sh check` when present.
 6. Report whether Context7, Tokscale, Repomix CLI, MCP examples, global
    `tokscale`, Tokscale login, and selected client syncs are available.
-7. Offer `agents setup` when setup is missing. Fall back to
+7. Offer `pragmatik setup` when setup is missing. Fall back to
    `bash scripts/ai-tools.sh setup-machine` for compatibility.
 8. Ask before writing local config, adding secrets, starting MCP servers,
    logging in, or changing machine-wide client integrations.
@@ -48,18 +48,20 @@ See `docs/AI_MEASUREMENT.md` for the full A/B workflow.
 
 ## Automation
 
-Use the AGENTS CLI for project setup and automation:
+Use the Pragmatik CLI for project setup and automation:
 
 ```bash
-agents doctor
-agents setup
-agents run
-agents dashboard
-agents suggest --idea "React PWA"
-agents mcp-create
+pragmatik doctor
+pragmatik setup
+pragmatik run
+pragmatik dashboard
+pragmatik suggest --idea "React PWA"
+pragmatik mcp-create
 ```
 
-The shell script remains as a compatibility backend:
+The npm package includes the shell backend used by `pragmatik run`. Projects do
+not need to copy it during setup. A project-local script remains available as an
+override and for direct compatibility commands:
 
 ```bash
 bash scripts/ai-tools.sh check
@@ -138,8 +140,9 @@ comparisons. It creates matched baseline and `lean-context` raw-output
 directories, keeps Tokscale submit off by default, and appends a comparison
 table to `docs/AI_USAGE_REPORT.md`.
 
-Prefer `agents run` for new projects because it starts the AGENTS dashboard
-and delegates to the compatibility backend when available.
+Prefer `pragmatik run` for installed projects because it starts the Pragmatik
+dashboard and always delegates to either the project-local override or the
+backend bundled with the package.
 
 ## Commit Hook Automation
 

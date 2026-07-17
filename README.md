@@ -110,7 +110,7 @@ All templates in this repository should share:
 ## Documentation Map
 
 - [Agent rules](AGENTS.md)
-- [Pragmatik CLI](docs/AGENTS_CLI.md)
+- [Pragmatik CLI](docs/PRAGMATIK_CLI.md)
 - [Installation](docs/INSTALLATION.md)
 - [AI Context](docs/AI_CONTEXT.md)
 - [AI Clients](docs/AI_CLIENTS.md)
@@ -138,10 +138,11 @@ tooling or dashboard setup is missing. Use `pragmatik run` to execute configured
 AI tools, append aggregate usage summaries, and append optimization observations
 when enabled. Use `pragmatik dashboard` for the local Pragmatik dashboard.
 
-`scripts/ai-tools.sh` remains available as a compatibility backend for existing
-templates and hooks. Use `bash scripts/ai-tools.sh measure-pair` or
-`npm run agents:measure` to run a matched baseline-vs-`lean-context`
-measurement and append the comparison to `docs/AI_USAGE_REPORT.md`.
+The npm package includes the AI-tool backend, so `pragmatik run` works as soon
+as Pragmatik is installed. A project-local `scripts/ai-tools.sh` remains an
+optional override for templates, hooks, and advanced workflows. Use
+`bash scripts/ai-tools.sh measure-pair` when that local script is present to run
+a matched baseline-vs-`lean-context` measurement.
 
 Template defaults keep external tools optional. The Pragmatik dashboard and local reports are available by default, while external submission stays in `dry-run` until the user chooses `on`.
 Multi-client measurement is available through `AGENTS_TOKSCALE_CLIENTS`, with

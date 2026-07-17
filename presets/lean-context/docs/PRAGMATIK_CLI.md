@@ -63,9 +63,14 @@ When a project has `package.json`, `pragmatik setup` can add these scripts:
 The wrapper keeps normal project scripts intact unless the user explicitly
 approves a deeper integration.
 
-`agents:measure` is a repository-local compatibility script. It runs the
-repeatable baseline-vs-`lean-context` measurement pair and appends the
-comparison to `docs/AI_USAGE_REPORT.md`.
+`pragmatik run` does not require a copied `scripts/ai-tools.sh`. It first uses a
+project-local backend when one exists, then falls back to the backend shipped in
+the installed npm package. In both cases, configuration, logs, and reports are
+resolved from the consumer project directory.
+
+For repository-local baseline-vs-`lean-context` measurements, run
+`bash scripts/ai-tools.sh measure-pair`. It appends the comparison to
+`docs/AI_USAGE_REPORT.md`.
 
 Projects without `package.json` should use:
 

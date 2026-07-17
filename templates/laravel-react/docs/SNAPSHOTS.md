@@ -50,7 +50,7 @@ Next suggested step:
 
 - Confirm app purpose, frontend pattern, and database target.
 
-## 2026-06-30 - Block 003: AGENTS CLI Tooling
+## 2026-06-30 - Block 003: Pragmatik CLI Tooling
 
 Branch:
 
@@ -58,14 +58,14 @@ Branch:
 
 Current state:
 
-- The template includes AGENTS CLI documentation and optional project tooling.
-- `package.json` includes AGENTS scripts where useful.
+- The template includes Pragmatik CLI documentation and optional project tooling.
+- `package.json` includes Pragmatik scripts where useful.
 - The safe dashboard wrapper is available without replacing normal project scripts.
 - Template version has been updated to `0.11.0`.
 
 Decisions:
 
-- Use `agents` as the public setup and dashboard command.
+- Use `pragmatik` as the public setup and dashboard command.
 - Keep all external tools optional and user-confirmed.
 
 Risks:
@@ -74,7 +74,7 @@ Risks:
 
 Next suggested step:
 
-- Run `npm run agents:doctor` after creating a project from this template.
+- Run `npm run pragmatik` after creating a project from this template.
 
 ## 2026-06-30 - Block 004: CLI Documentation Cleanup
 
@@ -84,7 +84,7 @@ Branch:
 
 Current state:
 
-- CLI documentation lists only supported `agents` commands.
+- CLI documentation lists only supported `pragmatik` commands.
 - Unsupported flag variants are no longer documented as a user-facing concept.
 - Template version has been updated to `0.11.1`.
 
@@ -100,7 +100,7 @@ Risks:
 
 Next suggested step:
 
-- Run `npm run agents:doctor` after creating a project from this template.
+- Run `npm run pragmatik` after creating a project from this template.
 
 ## 2026-07-01 - Block 005: Professional CLI Interaction
 
@@ -110,14 +110,14 @@ Branch:
 
 Current state:
 
-- AGENTS CLI documentation now describes command actions, common flows, safe
+- Pragmatik CLI documentation now describes command actions, common flows, safe
   setup behavior, non-Node usage, and error handling.
 - Template dev dependency guidance now targets `@mvuljevas/pragmatik` `^0.21.0`.
 - Template version has been updated to `0.12.0`.
 
 Decisions:
 
-- Keep `agents` as the single guided entrypoint for doctor, setup, dashboard,
+- Keep `pragmatik` as the single guided entrypoint for doctor, setup, dashboard,
   recommendation, and MCP scaffold flows.
 
 Risks:
@@ -126,7 +126,7 @@ Risks:
 
 Next suggested step:
 
-- Run `npm run agents:doctor` after creating a project from this template.
+- Run `npm run pragmatik` after creating a project from this template.
 
 ## 2026-07-01 - Block 006: CLI Script And GitHub Minimal Completion
 
@@ -136,9 +136,9 @@ Branch:
 
 Current state:
 
-- AGENTS CLI docs now explain GitHub-minimal repository completion and npm
+- Pragmatik CLI docs now explain GitHub-minimal repository completion and npm
   script flag forwarding.
-- Template npm scripts expose `agents` and `agents:help`.
+- Template npm scripts expose `pragmatik` and `pragmatik:help`.
 - Template version has been updated to `0.13.0`.
 
 Decisions:
@@ -152,7 +152,7 @@ Risks:
 
 Next suggested step:
 
-- Run `npm run agents:doctor` after creating a project from this template.
+- Run `npm run pragmatik` after creating a project from this template.
 
 ## 2026-07-01 - Block 007: Lightweight Template Shell
 
@@ -162,7 +162,7 @@ Branch:
 
 Current state:
 
-- The template is now a lightweight AGENTS shell.
+- The template is now a lightweight Pragmatik shell.
 - Removed package manifests, generated app files, tool scripts, and heavy
   optional AI-tool docs from the template copy.
 - Template version has been updated to `0.14.0`.
@@ -178,4 +178,4 @@ Risks:
 
 Next suggested step:
 
-- Run `agents doctor` after creating a project from this template.
+- Run `pragmatik doctor` after creating a project from this template.

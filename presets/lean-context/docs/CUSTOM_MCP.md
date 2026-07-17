@@ -1,7 +1,7 @@
 # Custom MCP: project-context-mcp
 
 `project-context-mcp` is a proposed read-only MCP server for projects generated
-from AGENTS templates.
+from Pragmatik templates.
 
 It is not required by this preset. It is a recommended implementation path when
 the user wants consistent context retrieval across AI tools.
